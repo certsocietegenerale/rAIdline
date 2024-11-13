@@ -1,0 +1,755 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T11:10:57.305Z",
+  "id": "7QjyfcPgu833K6vh",
+  "name": "Ensure Update Coherency",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "1ff77828-2896-4af8-b0e9-1ec554b2505f",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -840,
+        620
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"run_id\":\"tez6b1cqrbnzinhtoh934w9osa\",\n  \"update\":\"As you dive deeper into the investigation, you've uncovered some crucial leads that could shed more light on the unauthorized account creation. The temporary disablement of the subscription feature has halted the attackers' ability to create new accounts, giving you a brief window of opportunity to focus on finding the root cause.\\n\\nThe recent modification date on the 'user_data.log' file is particularly intriguing, hinting at a possible connection between the introduction of the new feature and the compromise. Your analysis suggests that the logging script's plaintext password storage could be exploited by an attacker seeking to create new accounts with ease. With this information in mind, you have three strategic choices to make: 1) Investigate the server hosting the subscription database for any signs of unusual activity or suspicious network traffic; 2) Review the code implementation of the new feature and look for potential security vulnerabilities; or 3) Analyze the access logs further to determine if there were any unusual login attempts or suspicious user behavior preceding the compromise. Which path will you take?\"\n}"
+      },
+      "id": "d9b8a51b-564d-4391-9503-d9a24db2026a",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        620
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "8fcaaa43-8f04-4a31-9cd8-dd5bc36af000",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $('input_item').item.json[\"run_id\"] }}"
+            }
+          ]
+        }
+      },
+      "id": "7c7911c8-80e1-4973-93d6-cfc1fd606937",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "d8198b27-7986-4cd9-bf29-5532386704a9",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2820,
+        1380
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "f745dd09-7667-48fb-826b-99b1b392c0bd",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1380,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "status_posts",
+        "options": {}
+      },
+      "id": "a3a2e242-fe52-41f9-b1e7-96626afc497d",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        120,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "beae5796-8715-40e0-ba7c-418211d05e32",
+              "leftValue": "={{ $json.delete_at }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "61278987-6a84-400c-b3ac-38d6da612ba6",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        340,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Admsaw3h8DsbEyZC",
+        "options": {}
+      },
+      "id": "f4edded5-d0ca-4aec-aa6a-f47c327199c3",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        560,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "status_updates",
+        "options": {}
+      },
+      "id": "9c3d3b40-ed0d-4a48-8fc6-de4b86b0c8e8",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1463d1da-adac-4f78-b16e-fdb6300b5101",
+              "name": "msg",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "fe88368a-7fe8-4101-81d8-c87a95f0bf63",
+              "name": "author",
+              "value": "={{ $json.props.authorUsername }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "35d45d18-11c4-41ae-8e04-643cdd05dd85",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        780,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"coherence\": false,\n  \"contradiction\": [\n    {\n      \"fact_id\": \"Update 1\",\n     \"reason_for_contradiction\": \"The new fact states that the event will be held on campus, but Update 1 stated that it would be held online.\"\n    },\n    {\n      \"fact_id\": \"Update 2\", \"reason_for_contradiction\": \"The new fact contradicts Update 2's statement about the budget for the event.\"\n    }\n  ]\n}"
+      },
+      "id": "a6c6f022-0b4c-4f2b-8ffb-ae31ef008cc3",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"coherence\": false,\n  \"contradiction\": [\n    {\n      \"fact_id\": \"Update 1\",\n     \"reason_for_contradiction\": \"The new fact states that the event will be held on campus, but Update 1 stated that it would be held online.\"\n    },\n    {\n      \"fact_id\": \"Update 2\", \"reason_for_contradiction\": \"The new fact contradicts Update 2's statement about the budget for the event.\"\n    }\n  ]\n}"
+      },
+      "id": "40979271-54a2-485c-b70e-30e94e31e5e5",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3820,
+        1380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cce8b955-dfea-4ce3-98f7-810eabe7000b",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1c220556-e976-4934-aaa7-65d0e613919e",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8120d940-e5e1-4ab3-941f-50bfc9a3c5b9",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2180,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cce8b955-dfea-4ce3-98f7-810eabe7000b",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c4967ae0-be76-40a7-b6b3-848d70abbd87",
+      "name": "If2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3580,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "SldK2SJnxZK6HZwL"
+      },
+      "id": "62a70813-1b0d-409c-9533-0a2b9e435184",
+      "name": "Workflow Retriever1",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4040,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Task: Evaluating New Scenario Update**\n\n**Objective:** Assess the coherence and consistency of a new scenario update with respect to a given\nset of TRUE facts.\n\n**Step 1: Reviewing Known Facts**\n\nA list of known facts has been provided, which are considered TRUE. These facts are contained in the\nworkflow retriever.\n\nThese statements have been established as true and should be taken as such for the purpose of this\nexercise.\n\n**Step 2: Evaluating New Scenario Update**\n\nA new scenario update has been introduced, which is:\n\n{{ $('input_item').item.json[\"update\"] }}\n\nYour task is to evaluate whether this new update:\n\n* Contradicts any of the TRUE facts listed in Step 1\n* Is still coherent and consistent with the original facts\n\n**Task Requirements:**\n\nTo complete this task, you must provide a written response addressing the following points:\n\n1. Does the new scenario update contradict any of the TRUE facts listed in Step 1? If so, which\nspecific fact is contradicted and how?\n2. Is the new scenario update still coherent and consistent with the original facts?\n\n**Submission Guidelines:**\n\nYour response should be submitted as a JSON document containing the following fields:\n\n* `contradiction`: An array of objects, each representing a TRUE fact that is contradicted by the new\nupdate. If there is no contradiction, this field should contain an empty array.\n* `coherence`: A boolean indicating whether the new scenario update is still coherent and consistent\nwith the original facts.\n\n**Example JSON Response:**\n\n```json\n{\n  \"contradiction\": [\n    {\n      \"fact_id\": \"F1\",\n      \"reason_for_contradiction\": \"The new update states X, but Fact F1 states Y.\"\n    },\n    {\n      \"fact_id\": \"F2\",\n      \"reason_for_contradiction\": \"The new update contradicts Fact F2 on the basis of Z and W.\"\n    }\n  ],\n  \"coherence\": false\n}\n```"
+      },
+      "id": "7fa47bcf-fb03-4922-8147-584d37497890",
+      "name": "Verify coherency with Incident facts",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        2500,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "efd0805d-711e-4cc0-8605-78f9e3e6dc75",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3760,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ensure the input is in the correct format\n{{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "5d20d0b4-36a5-4a9e-85b9-04b293a41f1c",
+      "name": "Format output",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        3060,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Task: Evaluating New Scenario Update**\n\n**Objective:** To assess the coherence and consistency of a new scenario update with respect to a\ngiven set\nof TRUE facts.\n\n**Step 1: Reviewing Known Facts**\n\nA list of known facts has been provided, which are considered TRUE. These facts are contained in the\nworkflow retriever.\n\nThese statements have been established as true and should be taken as such for the purpose of this\nexercise.\n\n**Step 2: Evaluating New Scenario Update**\n\nA new scenario update has been introduced, which is:\n\n{{ $('input_item').item.json[\"update\"] }}\n\nYour task is to evaluate whether this new scenario update:\n\n* Contradicts any of the TRUE facts listed in Step 1\n* Is still coherent and consistent with the original facts\n\n**Task Requirements:**\n\nTo complete this task, you must provide a written response addressing the following points:\n\n1. Does the new scenario update contradict any of the TRUE facts listed in Step 1? If so, which\nspecific fact is\ncontradicted and how?\n2. Is the new scenario update still coherent and consistent with the original facts?\n\n**Submission Guidelines:**\n\nYour response should be submitted as a JSON document containing the following fields:\n\n* `contradiction`: An array of objects, each representing a TRUE fact that is contradicted by the new\nscenario update. If there is no contradiction, this field should contain an empty array.\n* `coherence`: A boolean indicating whether the new scenario update is still coherent and consistent\nwith the\noriginal facts.\n\n**Example JSON Response:**\n\n```json\n{\n  \"contradiction\": [\n    {\n      \"fact_id\": \"F1\",\n      \"reason_for_contradiction\": \"The new scenario update states X, but Fact F1 states Y.\"\n    },\n    {\n      \"fact_id\": \"F2\",\n      \"reason_for_contradiction\": \"The new scenario update contradicts Fact F2 on the basis of Z and\nW.\"\n    }\n  ],\n  \"coherence\": false\n}\n```\n\nNote: If there is no contradiction, the `contradiction` field should contain an empty array:\n\n```json\n{\n  \"contradiction\": [],\n  \"coherence\": true\n}\n```"
+      },
+      "id": "8ce58488-23ac-4136-a357-75ecd26379bb",
+      "name": "Ensure coherency with world facts",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        3860,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ensure the input is in the correct format\n{{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "12f145d0-e70a-423e-baf6-db9e8b8eab4f",
+      "name": "Format output1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        4320,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5f437ccb-8f55-4f07-9e31-5cbf814d9c31",
+      "name": "input_item",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -460,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Task: Assessing Coherence across Multiple Updates**\n\n**Objective:** To evaluate the coherence of a given new scenario update with respect to all previous\nupdates in a sequence.\n\nYou will be provided with a sequence of updates, which may include:\n\n* Initial information or context\n* Subsequent changes or developments\n* Additional details or clarifications\n\nYour task is to assess whether a given new scenario update is coherent with respect to all previous\nupdates in the sequence.\n\n**Initial Context:**\n\nThe initial context provided is as follows:\n{{ $json[\"summary\"] }}\n\n**Updates:**\n\nA sequence of updates has been provided, which includes the following:\n\n{{ $json[\"status_updates\"].map(x => x.author + \":\" + x.msg).join('\\n') }}\n\nEach update should be considered as part of the evolving context, and your evaluation should take\ninto account the changes or developments that have occurred over time.\n\n**New Scenario Update:**\n\nA new scenario update has been introduced, which is:\n{{ $('input_item').item.json[\"update\"] }}\n\nUsing all of the above information, assess whether this new scenario update is coherent with respect to the entire sequence of updates.\n\n**Task Requirements:**\n\nTo complete this task, you must provide a written response addressing the following points:\n\n* Does the new scenario update contradict any of the previous updates?\n* Is the new scenario update coherent with respect to the entire sequence of events (i.e., all\nprevious updates)?\n\nIf there is a contradiction, please indicate which specific update(s) it contradicts and provide a\nbrief explanation for each.\n\n**Submission Guidelines:**\n\nYour response should be submitted solely as a JSON document containing the following fields:\n\n* `coherence`: A boolean indicating whether the new scenario update is coherent with respect to the\nentire sequence of updates.\n* `contradiction`: An array of objects, where each object has the following structure:\n\t+ `fact_id`: The ID or label of the update that the new scenario update contradicts.\n\t+ `reason_for_contradiction`: A brief explanation for why the new scenario update contradicts the\nspecified update.\n\n**Example JSON Response:**\n\n```json\n{\n  \"coherence\": false,\n  \"contradiction\": [\n    {\n      \"fact_id\": \"Update 1\",\n      \"reason_for_contradiction\": \"The new scenario update states that the event will be held on\ncampus, but Update 1 stated that it would be held online.\"\n    },\n    {\n      \"fact_id\": \"Update 2\",\n      \"reason_for_contradiction\": \"The new scenario update contradicts Update 2's statement about the\nbudget for the event.\"\n    }\n  ]\n}\n```",
+        "hasOutputParser": true
+      },
+      "id": "b46df41c-dd74-4b23-a6b8-9ce1e035e399",
+      "name": "Verify coherency with status updates",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1600,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow ensures the update generated in Raidline is coherent with the established facts. In case of discrespancy detected, an LLM will be called to rewrite the update to make it coherent enough."
+      },
+      "id": "6b8f5b89-5a4a-4cf6-ade7-6b22ed6760ee",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        140
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Verify coherency with Incident facts",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Verify coherency with Incident facts",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Verify coherency with status updates",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Format output",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Ensure coherency with world facts",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Format output1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Verify coherency with status updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Verify coherency with status updates",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Format output",
+            "type": "ai_outputParser",
+            "index": 0
+          },
+          {
+            "node": "Format output1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Verify coherency with Incident facts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Ensure coherency with world facts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever1": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Ensure coherency with world facts",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify coherency with Incident facts": {
+      "main": [
+        [
+          {
+            "node": "Format output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format output": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensure coherency with world facts": {
+      "main": [
+        [
+          {
+            "node": "Format output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "input_item": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify coherency with status updates": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "input_item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "52f3617d-5b54-4c17-b778-c9abd9929299",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:59:57.307Z",
+      "updatedAt": "2024-11-07T14:59:57.307Z",
+      "id": "klD2jfmCgxMUKetU",
+      "name": "coherency_checks"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-08T09:56:01.699Z",
+      "updatedAt": "2024-11-08T09:56:01.699Z",
+      "id": "hBollWdIEkBNcsIY",
+      "name": "validate_data"
+    }
+  ]
+}

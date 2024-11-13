@@ -1,0 +1,30 @@
+{
+    "categorize_channel_enabled": true,
+    "category_name": "drill_user",
+    "members_ids": [],
+    "checklists": [
+        {
+            "items": [],
+            "title": "Win conditions"
+        },
+        {
+            "items": [],
+            "title": "Lose conditions"
+        }
+    ],
+    "create_channel_member_on_new_participant": true,
+    "create_channel_member_on_removed_participant": true,
+    "description": "This playbook is used to play the serious drill game \"Raidline Response\".\nDO NOT MODIFY THIS PLAYBOOK, IT WILL BE AUTOMATICALLY ENHANCED BY THE BOT.",
+    "message_on_join": "Hi there ! I'm the gamemaster, here are the rules to help you get started on this game ! :)\n\n## Rules\nYou're going to play as the incident handler in this game.\n\nBased on this scenario and any information you're able to gather, you are expected to write a status update regarding what you've been able to do in the incident. \n\nYou HAVE to post an update daily. The status update is the only trace of what you've been able to gather on this incident. If there's no status update, we'll just conclude that you didn't work on the incident, and as you know, an incident undealt with can go south fast. \n\nA little important reminder : THIS IS A (serious) GAME. No \"real\" lives are at stake here. If you're getting overwhelmed, reach out to the GM, take a break or end this run. If it's starting to affect you, I would very much prefer that you stop and do something that will bring you joy instead.\n\nAlso important : This is a LLM-powered game, meaning that it may (and most certainly will) get stuff wrong. Don't take it too seriously as it is a probabilistic way of playing our game, 'kay ? :)\n\nNow onto some stuff that will help you play the game to its fullest! \n\n## Commands\nYou have the following slash commands to help you play the game \n`/queries` -\u003e Access the available queries regarding the incident. This can help you reassess what you currently need to analyze.\n`/ask` -\u003e Ask the GM for information that you would try to gather in the game. Want to know if the server is still on ? Want to know if you can get some info on an IP ? Ask away !",
+    "message_on_join_enabled": true,
+    "metrics": [],
+    "reminder_message_template": "### Current Status\n\n- This is a list containing the current status that you managed during your turn. Use imperative phrasing and do not refer to these as new events. Indicate that this came from your investigations to avoid confusion from the GLLM.\n\n### Actions taken\n- In this section, you are expected to indicate what actions you are taking to contain and solve this incident.\n- Use imperative tone, present tense and indicate that these actions were DONE. Do NOT ask for teams to do the incident and do not say that those actions are expected to be done (as this could be interpreted negatively).",
+    "reminder_timer_default_seconds": 604800,
+    "retrospective_enabled": true,
+    "retrospective_template": "### Summary\nThis should contain 2-3 sentences that give a reader an overview of what happened, what was the cause, and what was done. The briefer the better as this is what future teams will look at first for reference.\n\n### What was the impact?\nThis section describes the impact of this playbook run as experienced by internal and external customers as well as stakeholders.\n\n### What were the contributing factors?\nThis playbook may be a reactive protocol to a situation that is otherwise undesirable. If that's the case, this section explains the reasons that caused the situation in the first place. There may be multiple root causes - this helps stakeholders understand why.\n\n### What was done?\nThis section tells the story of how the team collaborated throughout the event to achieve the outcome. This will help future teams learn from this experience on what they could try.\n\n### What did we learn?\nThis section should include perspective from everyone that was involved to celebrate the victories and identify areas for improvement. For example: What went well? What didn't go well? What should be done differently next time?\n\n### Follow-up tasks\nThis section lists the action items to turn learnings into changes that help the team become more proficient with iterations. It could include tweaking the playbook, publishing the retrospective, or other improvements. The best follow-ups will have a clear owner as well as due date.\n\n### Timeline highlights\nThis section is a curated log that details the most important moments. It can contain key communications, screen shots, or other artifacts. Use the built-in timeline feature to help you retrace and replay the sequence of events.",
+    "status_update_enabled": true,
+    "title": "Raidline Response - PLAYER",
+    "create_public_playbook_run": true,
+    "public": true,
+    "version": 1
+}

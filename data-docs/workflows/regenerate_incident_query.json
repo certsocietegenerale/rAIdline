@@ -1,0 +1,782 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:29.186Z",
+  "id": "UEWqr1HpwjRrC8H9",
+  "name": "regenerate_incident_query",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.html}}",
+        "options": {}
+      },
+      "id": "c3116709-b510-46f1-a9b1-6e3ea27686a7",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3840,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5df06404-668a-42bb-b738-4cadf3d8b516",
+              "name": "_id",
+              "value": "={{ $json.query.query_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ae54be6c-1266-4be9-93b0-86ef715a4df2",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b9368a69-f928-4432-956d-c6bbdf8138c0",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "21a968c3-fcb4-4ea0-b854-315713b0d0dc",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        1020
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "HAUnDrntDbvEagc7",
+        "options": {}
+      },
+      "id": "73bae933-32bb-4cc4-80d2-ea5d7729bf55",
+      "name": "Retrieve Incidents",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        640
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {},
+      "id": "e914ca1e-5cab-456f-bea7-ba26e5273d15",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2700,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"new_fact\": \"The new fact generated\"\n}"
+      },
+      "id": "fc971bc0-d679-47ec-ac46-daffe38ac8a5",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2820,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Yt83LQvhN8nLtcEz",
+        "options": {}
+      },
+      "id": "fef11645-2f09-4346-b8b7-bfeb23c39860",
+      "name": "Retrieve query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        460
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "path": "4b861b84-e6d5-4e9d-a05a-7f0b45d69be5",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e00431df-a1b4-441a-be0a-72decc4dddcd",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        520,
+        680
+      ],
+      "webhookId": "4b861b84-e6d5-4e9d-a05a-7f0b45d69be5"
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "options": {}
+      },
+      "id": "aad522ea-cad1-4cd9-8530-6e77830ac986",
+      "name": "Retrieve Incident Facts",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        860
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "id": "fdbf16b9-4729-4cd0-aada-c2e9c6186864",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2260,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "4e3bf23b-23c9-4464-983c-2e2e7c1d101a",
+              "leftValue": "={{ $json.query_id }}",
+              "rightValue": "={{ $('Edit Fields').item.json._id }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "id": "cf6e1710-febc-4432-895c-412cb74d65c9",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [
+        1640,
+        860
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "facts",
+        "options": {}
+      },
+      "id": "9dca841c-254a-4a62-b78d-ae1b796c3e4e",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "facts",
+        "options": {}
+      },
+      "id": "985cd883-b8a3-404a-a349-952939ae3586",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Retrieving the query and fact\n",
+        "height": 748.1037653093458,
+        "width": 1244.9696800990278
+      },
+      "id": "027a75a4-0855-4aec-8c2e-0ca8b4b37e1f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Regenerating an incident query",
+        "height": 741.0858206159179,
+        "width": 807.0499312290599,
+        "color": 4
+      },
+      "id": "d3ec1f06-2d43-4d94-8a03-76f8b80f2273",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Updating the query\n",
+        "height": 300.3588938685796,
+        "width": 1017.5882720319319
+      },
+      "id": "95e0a010-73f1-466e-a558-b56568d8112a",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3160,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Regenerating the incident facts linked to this query",
+        "height": 256.8476367693201,
+        "width": 644.2336143415098,
+        "color": 6
+      },
+      "id": "e354e5bd-7af2-4ace-a959-7f28d6dfb06a",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4080,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5669289-8774-44e8-aaee-81a955f9a066",
+              "name": "run_id",
+              "value": "={{ $('Edit Fields').item.json.run_id}}",
+              "type": "string"
+            },
+            {
+              "id": "b34a6ef6-3911-4deb-906a-0027a751df3e",
+              "name": "_id",
+              "value": "={{ $('Edit Fields').item.json._id}}",
+              "type": "string"
+            },
+            {
+              "id": "c080f1bf-ea4b-49d6-ac21-27b22673b621",
+              "name": "query",
+              "value": "={{$json.output.new_fact}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1c50eba-b16e-4539-adac-27f5fd93bc70",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3200,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "DP0Z87X09IwPK62L",
+        "options": {}
+      },
+      "id": "75fd012e-a095-433e-8e5a-c642688cc503",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        3400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "4e3bf23b-23c9-4464-983c-2e2e7c1d101a",
+              "leftValue": "={{ $json.query_id }}",
+              "rightValue": "={{ $('Edit Fields').item.json._id }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "id": "50f3544a-ecf0-468f-bc36-af3d59517101",
+      "name": "Filter1",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [
+        1660,
+        1180
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "id": "95581807-5e2d-498d-b807-112e81999e82",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3840,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "34071c4a-185f-4c68-b57a-c71b393b85ff",
+              "leftValue": "={{$json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c15ca18a-5cfa-490e-a7de-b375bbb98345",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        4200,
+        1120
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n<link href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css\" rel=\"stylesheet\"/>  \n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - {{ $('Edit Fields').item.json.run_id }} </title>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Regeneration complete</h1>\n    \n    <a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $('Edit Fields').item.json.run_id }}\" role='button'>Go back</a>\n  </div>\n</body>\n</html>\n"
+      },
+      "id": "99080a7a-c52e-4792-a71c-5aef59087001",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        3620,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=## Prompt: Regenerate Incident Query\n\n**Scenario:**\n\n{{ $json.summary }}\n\n**Current Incident Query to Change:**\n\n{{ $json.query }}\n\n**Incident Facts:**\n{{ $json.facts.map(x => \"*\" + x.fact + \"\\n\") }}\n\n**Instructions for the LLM:**\n\nYou are an experienced Game Master specializing in cybersecurity tabletop RPG scenarios. \n\nGiven the scenario above, the current incident query that needs changing, and the provided incident facts, generate a **new, plausible QUESTION** that is essential for the players to answer in order to unravel key truths about the scenario. This new question should NOT provide an answer or solution to the current query. It should act as a pivotal point in their investigation, prompting them to delve deeper into the established narrative and potentially uncover hidden connections or motives.\n\nConsider the following when generating your new question:\n\n* **Technical Plausibility:** Ensure the new question reflects real-world cybersecurity threats and vulnerabilities, aligning with the information provided in the incident facts.\n* **Narrative Impact:** The new question should have a significant impact on the scenario, potentially introducing new challenges or complications for the players. It could reveal a deeper layer to the attack, lead to unexpected consequences, or require the players to shift their focus based on the established facts. \n* **Player Engagement:** Aim for a question that encourages player creativity, problem-solving, and roleplaying. Make it open-ended enough to allow for multiple approaches and interpretations, while still grounding the query in the provided scenario and incident facts.  \n",
+        "hasOutputParser": true
+      },
+      "id": "d7926824-43a6-4e47-a914-56e059620df1",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2600,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "k03OTeLG5kNJB9od",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "90a351ac-34b1-455e-b49a-46ec43def7a6",
+      "name": "Regenerate incident fact",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4440,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will generate an incident query for a given raidline game. It takes in input a fact_id and a run_id and wwill generate a new coherent fact with an LLM. It will then replace the old fact with the newly generated fact.",
+        "height": 221.1825856095087,
+        "width": 317.654820196684
+      },
+      "id": "0087f154-5b21-4ce7-823b-7a38f6258692",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -40
+      ]
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incidents",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retrieve query",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retrieve Incident Facts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve query": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incidents": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Facts": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Regenerate incident fact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "231865d4-a053-4987-810d-da66035323aa",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:45:35.512Z",
+      "updatedAt": "2024-11-07T14:45:35.512Z",
+      "id": "5IWTlyeuIjrdZRQR",
+      "name": "update_resource"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:00.819Z",
+      "updatedAt": "2024-11-07T14:30:00.819Z",
+      "id": "0cZGcKUfkpgg1Vgb",
+      "name": "access_incident_facts"
+    }
+  ]
+}

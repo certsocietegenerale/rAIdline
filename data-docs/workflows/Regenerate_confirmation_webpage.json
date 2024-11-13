@@ -1,0 +1,280 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:27.111Z",
+  "id": "PjOTpWVyRtzmLD86",
+  "name": "Regenerate confirmation webpage",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.html}}",
+        "options": {}
+      },
+      "id": "0db455ac-c175-4882-b912-0dc78f55cb0b",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1960,
+        320
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n<link href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css\" rel=\"stylesheet\"/>  \n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - {{ $json.query.run_id }} </title>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Regenerate Query - Confirm</h1>\n    <i>{{ $json.query.toJsonString() }}</i>\n    \n    <h2>Are you sure you want to regenerate this ?</h2>\n    <a href=\"http://localhost:5678/webhook/4b861b84-e6d5-4e9d-a05a-7f0b45d69be5?run_id={{ $json.query.run_id }}&query_id={{ $json.query.query_id }}\" role='button'>Yes</a>\n    <a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $json.query.run_id }}\" role='button''>No</a>\n  </div>\n</body>\n</html>\n"
+      },
+      "id": "bfe05301-15d3-47f9-823f-e0b3ce7ac2e2",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1620,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "path": "d14082e3-6117-40d3-b55a-7ebc7d62868b",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "cc3cf864-a4f1-4abb-b562-60fb71850dfd",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        400,
+        320
+      ],
+      "webhookId": "d14082e3-6117-40d3-b55a-7ebc7d62868b"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "05ca7cf8-68c4-40cb-aba4-da1faf3eb4c6",
+              "leftValue": "={{$json.query.query_id}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "053f2c81-68a6-4c3b-ba00-201498793541",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        620,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n<link href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css\" rel=\"stylesheet\"/>  \n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - {{ $json.query.run_id }} </title>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Regenerate Fact - Confirm</h1>\n    <i>{{ $json.query.toJsonString() }}</i>\n    <h2>Are you sure you want to regenerate this ?</h2>\n    <a href=\"http://localhost:5678/webhook/ba908e88-a313-4a22-b247-ca334130392a?run_id={{ $json.query.run_id }}&fact_id={{ $json.query.fact_id }}\" role='button'>Yes</a>\n    <a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $json.query.run_id }}\" role='button''>No</a>\n  </div>\n</body>\n</html>\n"
+      },
+      "id": "d8323f4a-d3f7-4e25-89cf-2b35b62452b5",
+      "name": "HTML1",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1400,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a18d2d61-17ca-466a-a5fd-bbb6c0ba2ea6",
+              "name": "_id",
+              "value": "={{ $json.query.query_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a39b280b-5c5c-49dc-bda0-7764e0885428",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1cccc61b-0324-4fa5-8ee7-33f525f06532",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "d088ec3b-c400-4c88-b00a-537240092729",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1300,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Yt83LQvhN8nLtcEz",
+        "options": {}
+      },
+      "id": "3472b25e-cad4-4e0c-8984-f14b9584a1bd",
+      "name": "Retrieve Incident Query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Query": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "9cf83332-8d28-4786-b2ca-fb1812e96525",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    }
+  ]
+}

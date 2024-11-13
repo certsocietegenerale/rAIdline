@@ -1,0 +1,570 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:28:02.117Z",
+  "id": "cf0zCRxB7RAzydlv",
+  "name": "Get prompts",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"msgs\": \"[\\\"**Status Update: FID-001 - Subscription Database Hacked**\\\\nSource of the breach has been identified. It was a vulnerability in the database. It was patched. \\\\n\\\\nWe're trying to identify all the accounts that were created to delete them. We're also monitoring the database for unlawful connections. No new connection has been observed.\\\\n\\\\nWe're trying to reach out to the different backup teams to try to restore the legitimate data.\\\",\\\"**Status Update: FID-001 - Subscription Database Hacked**\\\\n\\\\n**Analytical Assessment:** Following the initial breach, the compromised subscription database has continued to evolve with thousands of new accounts added, making it increasingly challenging to distinguish between legitimate and malicious users.\\\\n\\\\n**New Developments:** Recent network traffic analysis reveals a suspicious pattern of high-traffic activity on specific user profiles, indicating potential unauthorized access attempts. Furthermore, our monitoring systems have detected a surge in failed login attempts from unknown IP addresses, suggesting an attempt to gain further access into the system.\\\\n\\\\n**Escalation:** The rapid proliferation of new accounts and the persistence of these malicious activities has heightened concerns regarding the potential impact on our subscribers' sensitive information. This increased activity may indicate that the attackers are actively attempting to exploit vulnerabilities in our systems or create additional backdoors for future attacks.\\\\n\\\\n**Recommendations:** Immediate attention is required to investigate these new developments, assess the scope of the breach, and develop a comprehensive plan to mitigate further threats. It is crucial to prioritize containment efforts while also identifying potential root causes and developing strategies for remediation.\\\\n\\\\n**Consequence:** The situation has worsened due to the lack of timely updates, allowing the attackers to maintain momentum in their malicious activities.\\\",\\\"Based on the status update provided, it appears that the investigation is progressing satisfactorily.\\\\n\\\\nAs the game-master, I am introducing a new positive element to this scenario: \\\\n\\\\nA preliminary analysis of the system logs suggests that a previously unknown backup server was activated during the incident, which has been passively logging data since 02:00 AM. This unexpected development may provide valuable insights into the root cause of the issue and potentially even a solution.\\\\n\\\\nThe backup server is currently operating in an autonomous mode, gathering information without human intervention. If the players can establish communication with this server, they may be able to tap into its logs and uncover previously hidden details that could aid their investigation.\\\\n\\\\nThis development de-escalates the incident in an advantageous fashion for the players, as it provides a potential new avenue of inquiry and potentially even a solution to the problem at hand. The players must now decide whether to prioritize investigating this new lead or continue pursuing other avenues of inquiry.\\\",\\\"We have conducted investigations on the web application logs. We identified an IP address conducting massive requests to the application. By cross-checking with account creations we identified 40 accounts which were illegitimate. We're still investigating to make sure there's no other unlawful accounts.\\\"]\",\n    \"initial_context\": \"## FID-001 - Subscription Database Hacked\\n\\nOur subscription database has been compromised, thousands of new accounts have been added and they're hard to distinguish from our existing ones.\",\n    \"last_msg\": \"**Status Update: FID-001 - Subscription Database Hacked**\\nSource of the breach has been identified. It was a vulnerability in the database. It was patched. \\n\\nWe're trying to identify all the accounts that were created to delete them. We're also monitoring the database for unlawful connections. No new connection has been observed.\\n\\nWe're trying to reach out to the different backup teams to try to restore the legitimate data.\",\n    \"checklist\": [\n      {\n        \"id\": \"wshjcpguw7dcpcajdfsypa18xr\",\n        \"title\": \"Win_Conditions\",\n        \"items\": [\n          {\n            \"id\": \"85yiiqc8xpntfn6mbicsjh7b3e\",\n            \"title\": \"Untitled task\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": []\n          },\n          {\n            \"id\": \"8apijm8xmjr57jc4pn5ytpjxce\",\n            \"title\": \"Win_condition 0\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Identify the source of the breach\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"4p56yakmptn9zqt6ubftibj3mh\",\n            \"title\": \"Win_condition 1\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Contain the unauthorized accounts\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"ud3pynwuiifbm8f7ipmhtmh8th\",\n            \"title\": \"Win_condition 2\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Restore legitimate user data\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          }\n        ]\n      },\n      {\n        \"id\": \"cgjiwqfey3y5dgw5hjezg5qakh\",\n        \"title\": \"Lose_Conditions\",\n        \"items\": [\n          {\n            \"id\": \"qos68ineb3dy5r7gfsqjwh1eac\",\n            \"title\": \"Lose condition 0\",\n            \"state\": \"closed\",\n            \"state_modified\": 1721207752934,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Allow compromised accounts to remain active\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          }\n        ]\n      }\n    ],\n    \"run_id\": \"jbfn7gz56bfjxksaqzt6n4dzre\"\n  }\n]"
+      },
+      "id": "106e38da-1b84-455b-80db-c0fe812dca1f",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "fe778c86-b5ac-4fcd-865f-fd3a8e2b8e76",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "Win_Conditions",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "19c6a91b-8ff5-4aa7-a8b3-1eb0e327c482",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "checklist",
+        "options": {}
+      },
+      "id": "2120860c-2fb9-4779-b851-ecbbe8eae45d",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1595d872-34c9-4e21-b4fa-5ac378336286",
+              "name": "checklist",
+              "value": "={{ $json.checklist }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7e4a96fb-160e-4c8a-812d-6116d95e3c38",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e738ae2b-7404-463f-a05d-325faeb9410f",
+              "name": "items",
+              "value": "={{ $json.items.filter( x => x.state == \"closed\" && x.state_modified != 0) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "48f5bf47-2eae-4447-bb68-5baca4258e9e",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1720,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e738ae2b-7404-463f-a05d-325faeb9410f",
+              "name": "items",
+              "value": "={{ $json.items.filter( x => x.state == \"closed\" && x.state_modified != 0) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "315634d1-21c2-4370-a745-ed4f6f354df3",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1740,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a286c64-70de-4407-844d-25346a5f7265",
+              "name": "win_conditions_prompt",
+              "value": "=Here are the win conditions that the players have successfully completed : \n\n* {{ $json.items.map(x => x.description).filter(x =>x).join('\\n* ') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69f82637-edc3-4cf4-95f7-357675e48d34",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2440,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "55d9a065-d296-432f-afdf-8c5e9d1175ab",
+              "leftValue": "={{ $json.items }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c25ae7f2-18e2-42a2-be00-8735226cb48e",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "55d9a065-d296-432f-afdf-8c5e9d1175ab",
+              "leftValue": "={{ $json.items }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c64c78a7-cbdb-4174-af9f-55cc3eb4d8e7",
+      "name": "If2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4ac8b69-a8c8-46d2-ac4e-d5fb66af3c4e",
+              "name": "win_conditions_prompt",
+              "value": "The players have yet to fill in a successful win condition.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6bd11ffa-ed3c-4e09-b8a5-d10a395bf24d",
+      "name": "Edit Fields4",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2440,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a286c64-70de-4407-844d-25346a5f7265",
+              "name": "lose_conditions_prompt",
+              "value": "=Here are the lose conditions that the players have triggered : \n\n* {{ $json.items.map(x => x.description).filter(x =>x).join('\\n* ') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "57de3be1-5cbc-4ee0-99b3-45fc65d93636",
+      "name": "Edit Fields6",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4ac8b69-a8c8-46d2-ac4e-d5fb66af3c4e",
+              "name": "lose_conditions_prompt",
+              "value": "The players have not triggered a lose condition yet.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ff68e8bc-1f86-4642-a497-abd105da1a6a",
+      "name": "Edit Fields5",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2420,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "0f720a25-6bfc-4afd-8c5c-9b3839cd2813",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2820,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "6c0d8b72-3efe-487d-9c1e-076b59b68809",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        360
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"summary\": \"this text will contain the summary inputted by the LLM\"\n}"
+      },
+      "id": "ef31f365-2833-4649-be55-b0e463b1e988",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3440,
+        380
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "2e26a637-715f-4c0f-8350-483d788e406e",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        780,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game master that runs a tabletop roleplaying game to help incident handlers in a financial institution to drill in cybersecurity incidents.\n\nThose incident handlers are submitting regularly status reports about the ongoing incident. There are two types of conditions that can drastically change the flow of the game.\nA win condition is a key element that will help successfully contain and remediate the incident.\nA lose condition is a blunder committed by the security analyst that can hinder or completely jeopardize the success of an incident response.\n\nThe players are working on the following scenario : \n{{ $('Execute Workflow Trigger').item.json.initial_context }}\n\nNow here is the status regarding the conditions.\n\n{{ $json.win_conditions_prompt }}\n\n{{ $json.lose_conditions_prompt }} \n\nPlease generate a summary that integrates the elements of the conditions. Write in an analytical tone as your summary will be used by the gamemaster to generate the next status update.",
+        "hasOutputParser": true
+      },
+      "id": "4ee344d3-ff3a-49ab-87a2-65f84b4016fe",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        3260,
+        180
+      ]
+    }
+  ],
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "e716840f-4a56-42a9-8fe2-38fc96e96a18",
+  "triggerCount": 0,
+  "tags": []
+}

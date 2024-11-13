@@ -1,0 +1,684 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:28.148Z",
+  "id": "k03OTeLG5kNJB9od",
+  "name": "regenerate_incident_fact",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.html}}",
+        "options": {}
+      },
+      "id": "dacdbd28-35fe-4501-8851-f81c0e0dc915",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2720,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5df06404-668a-42bb-b738-4cadf3d8b516",
+              "name": "_id",
+              "value": "={{ $json.query.fact_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ae54be6c-1266-4be9-93b0-86ef715a4df2",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce5efd90-da3d-4e0a-a6fe-d8b778fba772",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "b333fb9d-b95e-4c70-b5cb-318aa5bf1d91",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        660
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "xP2HH4CCj5IBfBsJ",
+        "options": {}
+      },
+      "id": "12a8ca6d-97ca-4914-9b63-1d1f3c97a375",
+      "name": "Retrieve fact",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        620,
+        280
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": "HAUnDrntDbvEagc7",
+        "options": {}
+      },
+      "id": "19c77629-13c9-4aaf-8c93-704506e0d5f1",
+      "name": "Retrieve Incidents",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        700,
+        500
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {},
+      "id": "49ccc055-d19c-42ee-adfd-7730894e0e9d",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"new_fact\": \"The new fact generated\"\n}"
+      },
+      "id": "c971a96a-db21-4e17-946c-4540d7761c9b",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1860,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.query_id}}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Retrieve Query"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "5da62066-aa27-440f-9861-a5c8f1d80a8e",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Yt83LQvhN8nLtcEz",
+        "options": {}
+      },
+      "id": "b3d420eb-501f-4643-9468-b02ad3eda18b",
+      "name": "Retrieve fact1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        140
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7c5e9ce3-801e-45ec-899f-585616d3c35c",
+              "name": "_id",
+              "value": "={{$json.query_id.replaceAll(\"\\\"\",\"\")}}",
+              "type": "string"
+            },
+            {
+              "id": "364b09d4-fea3-4815-b7d8-2a24379e5fdc",
+              "name": "run_id",
+              "value": "={{$json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d77e4ec2-bea2-43ba-b1df-73ca40e56078",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1060,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "id": "76f2adff-a5c3-435d-9003-6a31178f9326",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "path": "ba908e88-a313-4a22-b247-ca334130392a",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ef5a358e-9851-4f36-a313-000af5312cfb",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        320
+      ],
+      "webhookId": "ba908e88-a313-4a22-b247-ca334130392a"
+    },
+    {
+      "parameters": {},
+      "id": "8ae2cf26-bd6e-4af6-a254-3dec4a1ba11a",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "8c6aaa3a-aeef-4fa8-ae08-746cd17e0f14",
+              "leftValue": "={{$json.query}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a663dcb8-e63f-4221-813a-633c1137738c",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        -20,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5df06404-668a-42bb-b738-4cadf3d8b516",
+              "name": "_id",
+              "value": "={{ $json._id }}",
+              "type": "string"
+            },
+            {
+              "id": "ae54be6c-1266-4be9-93b0-86ef715a4df2",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "68f07c9f-6744-48f6-991a-86bd1fdab8d8",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6c3fbfe-faaf-495b-bb1b-611bc049aad1",
+              "name": "_id",
+              "value": "={{ \"\" + $('Retrieve fact').item.json._id }}",
+              "type": "string"
+            },
+            {
+              "id": "693d665c-2342-4415-ada0-a0b9e1861855",
+              "name": "run_id",
+              "value": "={{ $('Retrieve fact1').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "5f3569b8-b675-4c4f-88b7-e011d61ce1a1",
+              "name": "fact",
+              "value": "={{$json.output.new_fact}}",
+              "type": "string"
+            },
+            {
+              "id": "85431dbe-1c25-49c4-8580-9e92d98c12c5",
+              "name": "query_id",
+              "value": "={{ \"\" + $('Retrieve fact').item.json.query_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": true
+        }
+      },
+      "id": "b22f5ed7-f773-40f5-b847-73ef14572eca",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1940,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "9aevxeg2voJv4H4H",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "6c40f182-e478-4834-a632-39ef3f569057",
+      "name": "Updating the fact",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n<link href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css\" rel=\"stylesheet\"/>  \n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - {{ $('Edit Fields3').item.json.run_id }} </title>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Regeneration complete</h1>\n    \n    <a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $('Edit Fields3').item.json.run_id }}\" role='button'>Go back</a>\n  </div>\n</body>\n</html>\n"
+      },
+      "id": "0fd77a70-0184-42d2-884e-e4e876a61a9a",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2380,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=## Prompt: Regenerate Incident Fact\n\n**Scenario:**  \n\n{{ $json.summary }}\n\n**Current Incident Fact to Change:**\n\n{{ $json.fact }}\n\n**Instructions for the LLM:**\n\nYou are an experienced Game Master specializing in cybersecurity tabletop RPG scenarios.\n\nGiven the scenario above and the current incident fact that needs changing, generate a **new, plausible incident fact** that fits within the established narrative and raises the stakes for the players. Do not use conditional language (\"may,\" \"could,\" \"might\"). State the fact as it is.\n\nConsider the following when generating your new fact:\n\n* **Technical plausibility:** Ensure the new fact reflects real-world cybersecurity threats and vulnerabilities.\n* **Narrative impact:** The new fact should have a significant impact on the scenario, potentially introducing new challenges or complications for the players. \n* **Player engagement:** Aim for a fact that encourages player creativity, problem-solving, and roleplaying.\n\n{{ $if($ifEmpty($json.query, false),\"Please note that the new fact generated MUST be a factual answer to the following incident query :\" + $json.query) }}\n",
+        "hasOutputParser": true
+      },
+      "id": "c9c6b43c-00c1-44ec-b56b-6b703abc2bfa",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1560,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retrieve fact",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retrieve Incidents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve fact": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Retrieve Incidents": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve fact1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Retrieve fact1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Retrieve fact",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Retrieve Incidents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Updating the fact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Updating the fact": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "9617ae5d-ae28-44d1-9906-e551d3674e4a",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:00.819Z",
+      "updatedAt": "2024-11-07T14:30:00.819Z",
+      "id": "0cZGcKUfkpgg1Vgb",
+      "name": "access_incident_facts"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

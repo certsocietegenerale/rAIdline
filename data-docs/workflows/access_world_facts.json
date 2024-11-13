@@ -1,0 +1,150 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T08:50:08.157Z",
+  "id": "SldK2SJnxZK6HZwL",
+  "name": "access_world_facts",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "collection": "world_facts",
+        "options": {}
+      },
+      "id": "3bdd9f04-63cd-4f67-ae4a-629dea8a44ee",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        440
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "3ce68aab-8428-4464-8cfd-58ed91de473d",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        880,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "a450819c-60b0-48d8-a415-456f11470c42",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "903cc0d2-3d23-4278-835b-adf1ab0f6baf",
+              "name": "output",
+              "value": "={{$json.data.toJsonString()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9eb193f4-6c12-4850-9919-2d4a54688776",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1500,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow is used as a helper subworkflow. It retrieves each World Fact."
+      },
+      "id": "6914653d-aec9-4063-ad07-b4fb0bf3be99",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        900,
+        240
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "1a50c507-a415-4884-a5ac-b390c54f0337",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T16:48:31.105Z",
+      "updatedAt": "2024-11-07T16:48:31.105Z",
+      "id": "c9Iw6mfrEvojy4kq",
+      "name": "access_world_facts"
+    }
+  ]
+}

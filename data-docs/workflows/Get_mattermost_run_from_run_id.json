@@ -1,0 +1,94 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T13:48:29.347Z",
+  "id": "uli2MV4DimpDPoHD",
+  "name": "Get mattermost run from run_id",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d1037581-66eb-45bf-818b-45cc961e1f8f",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $json.run_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "6202ad74-06e2-4268-9e16-46dd2029ef97",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1380,
+        580
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This subworkflow will retrieve a Mattermost Run from a given run_id field.",
+        "height": 218
+      },
+      "id": "b2a14b19-6476-42f0-af07-34433a72c464",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "c7b6613f-5d9e-4a8f-8b72-835aca77783e",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

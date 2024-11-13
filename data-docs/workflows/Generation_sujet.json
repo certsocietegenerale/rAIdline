@@ -1,0 +1,303 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:22:53.750Z",
+  "id": "22YNxUQZ0s3fsn1o",
+  "name": "Generation sujet",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "175967c7-57e9-4783-8255-a815cee723a3",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        680,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "id": "d3e4f377-6a39-47a1-8163-7035bbbee092",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        340
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game-master that helps incident handler drill in their spare-time.\nThe players are playing the following scenario : \"{{ $('Execute Workflow Trigger').first().initial_context }}\"\n\nPlayers are expected to submit regularly a status update of the result of their investigations.\n\nPlayers have sent an unsatisfactory status update in the expected timerange.\n\nHere's the last status : \"{{ $('Execute Workflow Trigger').first().last_msg }}\"\n\nAs such, you have to provide a content update that introduces a new negative element to this scenario. This new introduced element MUST escalate the incident in an disadvantageous fashion for the players or add tension to the incident. The description must be written in an analytical and neutral fashion.\n\n{{ $('Execute Workflow Trigger').first().output.summary }}\n\nEnsure the update is coherent with the incident facts provided."
+      },
+      "id": "bb797c7c-6c28-479a-a9ed-777dd1fb23b2",
+      "name": "Negative Escalation",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1360,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $('Execute Workflow Trigger').first().run_id }}"
+            }
+          ]
+        }
+      },
+      "id": "6d5ee40e-b7b6-475f-a3eb-aa12f92f70f6",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game-master that helps incident handler drill in their spare-time.\nThe players are playing the following scenario : {{ $('Execute Workflow Trigger').first().initial_context }}\n\nPlayers are expected to submit regularly a status update of the result of their investigations.\nPlayers have sent a satisfactory status update in the expected timerange.\nHere's the last status : \"{{ $('Execute Workflow Trigger').first().last_msg }}\"\n\nAs such, you have to provide a content update that introduces a new positive element to this scenario. This new introduced element must de-escalate the incident in an advantageous fashion for the players. The description must be written in an analytical and neutral fashion.\n\n{{ $('Execute Workflow Trigger').first().output.summary }}"
+      },
+      "id": "24a64562-0b6e-43bf-a180-6e2b65283ff0",
+      "name": "Positive Escalation",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1340,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nYou're a game-master that helps incident handler drill in their spare-time.\nThe players are playing the following scenario : \"{{ $('Execute Workflow Trigger').first().initial_context }}\"\n\nPlayers are expected to submit regularly a status update of the result of their investigations.\nPlayers have sent a status update that's neither satisfactory nor unsatisfactory in the expected timerange.\n\nHere's the last status : \"{{ $('Execute Workflow Trigger').first().last_msg }}\"\n\nAs such, you have to provide a content update that introduces a new neutral element to this scenario. This new introduced element must maintain the status quo of the incident for the players. The description must be written in an analytical and neutral fashion. You must not provide explanation as to why the update maintains the status quo.\n\n{{ $('Execute Workflow Trigger').first().output.summary }}"
+      },
+      "id": "8f99ddb1-4c2e-417c-b43e-49056700713e",
+      "name": "Status Quo ",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1340,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.escalation_decision }}",
+                    "rightValue": "NEGATIVE_ESCALATION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "NEG"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "bcfd8ae4-94e5-4833-9bbc-f69f3c2857d3",
+                    "leftValue": "={{ $json.escalation_decision }}",
+                    "rightValue": "POSITIVE_ESCALATION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "POS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "616bcd24-5148-4187-b3f9-ca0abc2f40b1",
+                    "leftValue": "={{ $json.escalation_decision }}",
+                    "rightValue": "STATUS_QUO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "STAT_QUO"
+            }
+          ]
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "id": "839b53b4-b17d-40bd-a16a-85bbcf6358ac",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        900,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Negative Escalation",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Status Quo ",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Positive Escalation",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Negative Escalation",
+            "type": "ai_retriever",
+            "index": 0
+          },
+          {
+            "node": "Status Quo ",
+            "type": "ai_retriever",
+            "index": 0
+          },
+          {
+            "node": "Positive Escalation",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Negative Escalation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Positive Escalation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Status Quo ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "65858be2-0794-469a-8861-0a5542426a55",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-06-17T09:22:49.032Z",
+      "updatedAt": "2024-06-17T09:22:49.032Z",
+      "id": "D0FT6GtK38NdAtuM",
+      "name": "drill"
+    },
+    {
+      "createdAt": "2024-06-18T11:14:35.511Z",
+      "updatedAt": "2024-06-18T11:14:35.511Z",
+      "id": "A15j2z8tvVDTX2Cy",
+      "name": "content_writing"
+    },
+    {
+      "createdAt": "2024-11-08T14:40:58.120Z",
+      "updatedAt": "2024-11-08T14:40:58.120Z",
+      "id": "Dh18CsMn3Lm5Cx7K",
+      "name": "delete_me"
+    }
+  ]
+}

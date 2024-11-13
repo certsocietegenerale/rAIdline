@@ -1,0 +1,136 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:30:05.267Z",
+  "id": "VAXjEICncWfGOqju",
+  "name": "Retrieve Playbook Runs",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f5c1af7c-4017-43a2-b091-14fcbf145413",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        680,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "statuses",
+              "value": "InProgress"
+            },
+            {
+              "name": "playbook_id",
+              "value": "={{ $json.playbook_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d30e3e01-e206-477d-8396-d84c84ea291f",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1080,
+        320
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"pccbq73z4pb53csucqdec44cxe\";\n}\n\nreturn $input.all();"
+      },
+      "id": "ad3630be-12fe-4dab-977c-8378168281fa",
+      "name": "playbook_id",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow retrieves all runs associated to the Raidline playbook in Mattermost"
+      },
+      "id": "2b861549-f4a1-443c-af2d-ca30529c4519",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        500,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "playbook_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "playbook_id": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "ae11f73c-a616-4eb2-a890-59b4c14cc319",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

@@ -1,0 +1,550 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:22:06.102Z",
+  "id": "sJU8sgD5uSlj4HZ5",
+  "name": "Generate an incident_fact for each incident_question",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "6544d77e-3b4c-4da9-8614-3967c2eeec7f",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        660,
+        280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "questions",
+        "options": {}
+      },
+      "id": "f1c7f715-416a-455e-b72c-9037105455c8",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "8684bc21-cd79-4777-83ac-36133fd96096",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        360
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "qgjAEFpEYwJ1uess",
+        "options": {}
+      },
+      "id": "ceadbab0-9f01-4520-a95d-cc2cb76e9adb",
+      "name": "Retrieve incident queries",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "2db0a2af-0513-4ddd-b49a-6627b93c33bb",
+      "name": "Retrieve Run",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "options": {}
+      },
+      "id": "52833b34-7517-4582-ad6a-6c29d8f5f0ef",
+      "name": "Retrieve Incident Facts",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "e67cf7b6-add7-4f76-8a12-96de3be0aed0",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"question\": \"The question here\",\n  \"answer\": \"<THE ANSWER HERE>\"\n}"
+      },
+      "id": "8819f8b1-61a3-4433-9581-5da75dcc1957",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2700,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "zPoGaab68KufyiK1",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "c92b27f7-95f2-41c3-ae94-09756f2c0994",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        3480,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "NLzPpQsgN9Acx1SJ",
+        "options": {}
+      },
+      "id": "81a83ec9-2298-42f2-b67b-6c3c64559b17",
+      "name": "Create Incident Fact",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "db320105-250e-4bd2-a08c-ef2ec8841596",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1711f518-9b28-4017-8575-2212425837fb",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3840,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "754ad104-75df-456d-8841-80c8a20a5991",
+              "name": "run_id",
+              "value": "={{ $('Edit Fields').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "0bed0634-06e7-4e0e-84e6-07813daa6554",
+              "name": "fact",
+              "value": "={{ $('Edit Fields').item.json.fact }}",
+              "type": "string"
+            },
+            {
+              "id": "968605db-026d-4d28-8f89-6cb14aff201c",
+              "name": "query_id",
+              "value": "={{ \"\" + $('Split Out').item.json._id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cdc64f71-4c01-42e6-a922-1083490d3eb1",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        4060,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Parse the following output so it stays compliant with the expected document format\n\n{{$json.text}}",
+        "hasOutputParser": true
+      },
+      "id": "13417bd7-1926-42e9-a819-83f6645fd591",
+      "name": "Basic LLM Chain1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2560,
+        0
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "f55aa8f7-a2f3-4e17-92f6-c86502f937b0",
+              "leftValue": "={{$json.output.answer}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "eac17918-b770-4574-81e7-046fae4e9df8",
+              "leftValue": "={{$json.output.question}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d9e8e4c0-64be-4a9f-994f-449966184d13",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3020,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c6c25cd-7198-4dc0-b0a3-43b8409c9259",
+              "name": "run_id",
+              "value": "={{ $('Retrieve Run').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "de9d80db-fef7-461b-aa06-670bc78dc3fc",
+              "name": "fact",
+              "value": "={{ $json.output.answer }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "02097383-c7a3-4c56-b7d0-59a9e8dcdf7b",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3260,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Assessing Coherence: Answering Singular Questions in a Digital Forensics Investigation**\n\n**Objective:** Evaluate the ability to answer simple questions while maintaining coherence within a fictional digital forensics investigation scenario.\n\n**Task Description:**\n\n* You are a junior digital forensic analyst assisting lead investigator Agent Lee.\n* Assume the following about the world: Computer systems operate according to established protocols, data can be analyzed to reveal user activity, and cybersecurity best practices exist but may not be applied in this scenario.\n* Use your understanding of the provided context to answer the question concisely and informatively. \n* Maintain a neutral tone, as if providing factual information to Agent Lee.\n\n**Initial Context:**\n\n{{ $json[\"summary\"] }}\n\n\n**List of Facts:**\n\n{{ $('Merge').item.json[\"facts\"] }}\n\n**Question:**\n\n{{ $('Split Out').item.json[\"query\"] }}\n\n\n\n**Submission Guidelines:**\n\n* Your response should be submitted as a JSON document with the following format:\n\n```json\n{ \n  \"question\": \"{{ $('Split Out').item.json['query'] }}\", \n  \"answer\": \"[THE ANSWER HERE]\" \n}\n```\n\n\n"
+      },
+      "id": "2fc37d7c-6bd3-48f2-b048-e9ac1b2fd72c",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2060,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "For each incident question, generate a new incident fact that will answer said question."
+      },
+      "id": "3e2d258f-d793-46e2-97c3-edc034e997a8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -300
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Facts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve incident queries": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Run": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Facts": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Retrieve incident queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Create Incident Fact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "2e27fd55-54b4-454e-b09c-2bdaf1e342b3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T10:53:06.682Z",
+  "id": "k15CDePm46ZcWAKF",
+  "name": "Message admin when error",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "30b82c2e-73af-45ec-bd58-0384ebf93a46",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        580,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://raidline_mattermost:8065/api/v4/posts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"message\" : \"@here. A workflow execution failed. Here is the stack trace :\\n```\\n\" + $json.toJsonString()+\"\\n```\", \"channel_id\":\"me3ad6wr33858pub5nraqjziqr\"}.toJsonString() }}",
+        "options": {}
+      },
+      "id": "a8f13c57-bc3f-4649-beb8-a6e9a39bea98",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        340
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "In case a workflow throws an error, publish a message in the appropriate Mattermost channel."
+      },
+      "id": "252b2d71-8ebb-4dc7-aa98-aad9fc1d2039",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        180
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "8d5056f5-87fc-4b05-b1d5-1246ff68a5a4",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:13.671Z",
+      "updatedAt": "2024-11-07T15:00:13.671Z",
+      "id": "pUwmj7QSUuMZfoRV",
+      "name": "communication"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

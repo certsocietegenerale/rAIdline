@@ -1,0 +1,296 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:14.469Z",
+  "id": "qJa6wHpmMEYmGzRp",
+  "name": "Access questions",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "collection": "incident_questions",
+        "options": {},
+        "query": "={{ JSON.stringify({\"run_id\": $json.run_id }) }}"
+      },
+      "id": "7e9ea9fa-b916-4048-8700-ec81fff60fd9",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        280
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "43e9a933-6fd4-4e53-a8e4-786fb500b31d",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "774c78ee-a1d1-4124-947a-5682a84792a3",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nmsg_final = \"|Query|Player Answer|\\n|--|--|\\n\"\ninput = $input.first().json\nfor (const item of input.questions) {\n  msg_final = msg_final + \"|\" + item.query + \"|\"\n  if (item.player_answer != null && item.player_answer != \"\"){\n    msg_final = msg_final + item.player_answer +\"|\\n\"\n  }\n  else{\n   msg_final = msg_final +\"No answer yet.|\\n\"\n  }\n}\n\nreturn [{\"msg\":msg_final}];"
+      },
+      "id": "610c9941-d35b-4512-bcca-d595d81307fe",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1880,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "questions",
+        "options": {}
+      },
+      "id": "6e2c3177-f6a5-4fdf-a023-cb698600df50",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"run_id\":\"xcwy1x13ft8m8bgi6xf9sksjna\",\n    \"initial_scenario\":\"Unauthorized Logging Method\\n\\nA script has been logging exported variables containing full user registration objects. This logging method is full of plaintext passwords.\"\n  }\n]"
+      },
+      "id": "ad4dd7ad-7c23-4184-ad7a-cd49a82b8e05",
+      "name": "Debug Node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        280
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": "2d9fQRgZBd8bLbQJ",
+        "options": {}
+      },
+      "id": "5092702b-0292-4fa6-a50c-adefec75a73c",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        800,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "path": "7f63dfce-dc8b-4c4a-9268-8956f715bf6e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "acad9db4-0760-406d-8408-e9c7200e4786",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        400,
+        280
+      ],
+      "webhookId": "7f63dfce-dc8b-4c4a-9268-8956f715bf6e"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"text\": \"Sorry, there's doesn't seem to be any queries for now ! Ask your gamemaster to see if we can generate some queries to get you started :)\",\n  \"user\":\"@gamemaster\"\n}",
+        "options": {}
+      },
+      "id": "af1644c4-6d4a-47b5-865d-2b0d49fc31d2",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1620,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({\"text\": \"### Current questions ongoing for your incident\\n\\n\" + $json.msg }) }}",
+        "options": {}
+      },
+      "id": "6346b363-05aa-4638-acad-e0b33c1726db",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2100,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow allows a player on Mattermost to get the list of incident queries through the `/query` command."
+      },
+      "id": "1bb36191-2dee-46fa-bf86-770491cf59b3",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -120
+      ]
+    }
+  ],
+  "connections": {
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Debug Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug Node": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "819463ed-9137-40c1-b70c-c864e239829d",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T15:28:52.539Z",
+      "updatedAt": "2024-11-07T15:28:52.539Z",
+      "id": "JYN6ATf8VoInoElD",
+      "name": "player_interaction"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

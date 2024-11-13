@@ -1,0 +1,289 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T14:35:06.436Z",
+  "id": "alg4dvzzfkvZtEu3",
+  "name": "Get user details from run_id",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "93b5cc50-f506-41a6-b203-d71e5f4cb905",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        1140,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "participant_ids",
+        "options": {}
+      },
+      "id": "7681bf93-456f-4b26-b26b-2584d51af6a5",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"id\": \"qeyysa9hxfg4pemsjckd4k1cky\",\n    \"name\": \"Network Infrastructure Compromise\",\n    \"summary\": \"## Vulnerability Report\\n\\nAn adversary has access to my vulnerable Jenkins server. Jenkins jobs with credentials are visible to everyone.\",\n    \"summary_modified_at\": 1722243464657,\n    \"owner_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n    \"reporter_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n    \"team_id\": \"54autix6r3fe8c1rqbku9xrfhh\",\n    \"channel_id\": \"59qorqusr7ghxbwq5z99tzdcme\",\n    \"create_at\": 1722240772736,\n    \"end_at\": 1722247904797,\n    \"delete_at\": 0,\n    \"active_stage\": 0,\n    \"active_stage_title\": \"\",\n    \"post_id\": \"\",\n    \"playbook_id\": \"pccbq73z4pb53csucqdec44cxe\",\n    \"checklists\": [\n      {\n        \"id\": \"5npgxqf81jy93q8mj3a7s9dggr\",\n        \"title\": \"Win conditions\",\n        \"items\": [\n          {\n            \"id\": \"6s3m99xt8jdi3pwfewfgzoapeh\",\n            \"title\": \"Win_condition 0\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Securely patch the vulnerable Jenkins server.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"bk5977seefgujkffghzs4pwn4r\",\n            \"title\": \"Win_condition 1\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Revoke compromised credentials and rotate sensitive data.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"dtru8s1pzbyn8eqcehejeo4txw\",\n            \"title\": \"Win_condition 2\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Implement multi-factor authentication (MFA) for all Jenkins users.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"3bg49htp7pgdmqridn6h1oy4fo\",\n            \"title\": \"Win_condition 3\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Conduct a thorough forensic analysis to identify the scope of the breach and any potential lateral movement.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          }\n        ]\n      },\n      {\n        \"id\": \"b4gm3yggxpy1if5cexgnyxue7a\",\n        \"title\": \"Lose conditions\",\n        \"items\": [\n          {\n            \"id\": \"d9qdmgzh9tdzpe95kcuu3xry8h\",\n            \"title\": \"Lose condition 0\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Delaying patching of the vulnerable Jenkins server.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"hgnwopcj1tdi7kap8dr6on4rra\",\n            \"title\": \"Lose condition 1\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Failure to revoke compromised credentials.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          },\n          {\n            \"id\": \"ygunuk1k4pyjbe3xpwwjurchsh\",\n            \"title\": \"Lose condition 2\",\n            \"state\": \"\",\n            \"state_modified\": 0,\n            \"assignee_id\": \"\",\n            \"assignee_modified\": 0,\n            \"command\": \"\",\n            \"command_last_run\": 0,\n            \"description\": \"Ignoring security alerts or suspicious activity within the environment.\",\n            \"delete_at\": 0,\n            \"due_date\": 0,\n            \"task_actions\": null\n          }\n        ]\n      }\n    ],\n    \"status_posts\": [],\n    \"current_status\": \"Finished\",\n    \"last_status_update_at\": 1722240772736,\n    \"reminder_post_id\": \"\",\n    \"previous_reminder\": 0,\n    \"reminder_message_template\": \"\",\n    \"reminder_timer_default_seconds\": 604800,\n    \"status_update_enabled\": true,\n    \"invited_user_ids\": [\n      \"fj9cgad6p38n7gt9whjasktx3h\",\n      \"1q7eiocmi7fqmcfpr759i8pg3w\"\n    ],\n    \"invited_group_ids\": [],\n    \"timeline_events\": [\n      {\n        \"id\": \"7w9gq5opwfnwxgei635i5pb1fh\",\n        \"playbook_run_id\": \"qeyysa9hxfg4pemsjckd4k1cky\",\n        \"create_at\": 1722240772736,\n        \"delete_at\": 0,\n        \"event_at\": 1722240772736,\n        \"event_type\": \"incident_created\",\n        \"summary\": \"\",\n        \"details\": \"\",\n        \"post_id\": \"\",\n        \"subject_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n        \"creator_user_id\": \"\"\n      },\n      {\n        \"id\": \"bsufjywzxpd8jr3kudkszbbtrw\",\n        \"playbook_run_id\": \"qeyysa9hxfg4pemsjckd4k1cky\",\n        \"create_at\": 1722240772790,\n        \"delete_at\": 0,\n        \"event_at\": 1722240772790,\n        \"event_type\": \"user_joined_left\",\n        \"summary\": \"\",\n        \"details\": \"{\\\"action\\\":\\\"joined\\\",\\\"requester\\\":\\\"gamemaster\\\",\\\"users\\\":[\\\"gamemaster\\\"]}\",\n        \"post_id\": \"\",\n        \"subject_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n        \"creator_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\"\n      },\n      {\n        \"id\": \"3hpeknshabgd9p9naypaqqrzww\",\n        \"playbook_run_id\": \"qeyysa9hxfg4pemsjckd4k1cky\",\n        \"create_at\": 1722240772819,\n        \"delete_at\": 0,\n        \"event_at\": 1722240772819,\n        \"event_type\": \"participants_changed\",\n        \"summary\": \"\",\n        \"details\": \"{\\\"action\\\":\\\"joined\\\",\\\"requester\\\":\\\"playbooks\\\",\\\"users\\\":[\\\"gamemaster\\\",\\\"ade\\\"]}\",\n        \"post_id\": \"\",\n        \"subject_user_id\": \"mm5bs85e17f8tqekfrkdfmwmue\",\n        \"creator_user_id\": \"mm5bs85e17f8tqekfrkdfmwmue\"\n      },\n      {\n        \"id\": \"kadtdiegyig9xbbq1dn3yj13yh\",\n        \"playbook_run_id\": \"qeyysa9hxfg4pemsjckd4k1cky\",\n        \"create_at\": 1722247904797,\n        \"delete_at\": 0,\n        \"event_at\": 1722247904797,\n        \"event_type\": \"run_finished\",\n        \"summary\": \"\",\n        \"details\": \"\",\n        \"post_id\": \"ri19qn43htyr3pk937ciysacgh\",\n        \"subject_user_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n        \"creator_user_id\": \"\"\n      }\n    ],\n    \"default_owner_id\": \"fj9cgad6p38n7gt9whjasktx3h\",\n    \"broadcast_channel_ids\": [],\n    \"webhook_on_creation_urls\": [],\n    \"webhook_on_status_update_urls\": [],\n    \"status_update_broadcast_channels_enabled\": false,\n    \"status_update_broadcast_webhooks_enabled\": false,\n    \"retrospective\": \"### Summary\\nThis should contain 2-3 sentences that give a reader an overview of what happened, what was the cause, and what was done. The briefer the better as this is what future teams will look at first for reference.\\n\\n### What was the impact?\\nThis section describes the impact of this playbook run as experienced by internal and external customers as well as stakeholders.\\n\\n### What were the contributing factors?\\nThis playbook may be a reactive protocol to a situation that is otherwise undesirable. If that's the case, this section explains the reasons that caused the situation in the first place. There may be multiple root causes - this helps stakeholders understand why.\\n\\n### What was done?\\nThis section tells the story of how the team collaborated throughout the event to achieve the outcome. This will help future teams learn from this experience on what they could try.\\n\\n### What did we learn?\\nThis section should include perspective from everyone that was involved to celebrate the victories and identify areas for improvement. For example: What went well? What didn't go well? What should be done differently next time?\\n\\n### Follow-up tasks\\nThis section lists the action items to turn learnings into changes that help the team become more proficient with iterations. It could include tweaking the playbook, publishing the retrospective, or other improvements. The best follow-ups will have a clear owner as well as due date.\\n\\n### Timeline highlights\\nThis section is a curated log that details the most important moments. It can contain key communications, screen shots, or other artifacts. Use the built-in timeline feature to help you retrace and replay the sequence of events.\",\n    \"retrospective_published_at\": 0,\n    \"retrospective_was_canceled\": false,\n    \"retrospective_reminder_interval_seconds\": 0,\n    \"retrospective_enabled\": true,\n    \"message_on_join\": \"\",\n    \"participant_ids\": [\n      \"1q7eiocmi7fqmcfpr759i8pg3w\"\n    ],\n    \"category_name\": \"\",\n    \"metrics_data\": [],\n    \"create_channel_member_on_new_participant\": true,\n    \"remove_channel_member_on_removed_participant\": true,\n    \"type\": \"playbook\"\n  }\n]"
+      },
+      "id": "60aff891-feea-4a31-9f8f-280edbd6b575",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "getById",
+        "userIds": "={{ $json.participant_ids }}",
+        "additionalFields": {}
+      },
+      "id": "f4cc70b8-200a-4577-b5a6-7beb707ed4ad",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        560
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "usernames",
+        "options": {}
+      },
+      "id": "06bc3b41-b815-4c8d-9d00-411a8b3e8d37",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1e2a3759-eb85-4f55-a4e1-63e1eefa093e",
+              "leftValue": "={{ $json.first_name }}",
+              "rightValue": "gamemaster",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "43f786e6-2efd-44cf-b91c-25a292b9f090",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9523242-2850-4b62-9175-750d6e5e463f",
+              "name": "username",
+              "value": "={{ $json.username }}",
+              "type": "string"
+            },
+            {
+              "id": "d135fc68-c164-4045-a96e-8c2be8a678bf",
+              "name": "uid",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e3ebd636-59be-4c66-a481-d94f22bc59e0",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will extract the users invited in a Mattermost Run and gather information for each individual user before compiling them in a full list"
+      },
+      "id": "d60d8dd8-e8bc-406a-957e-cb315be4505f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "d5c9300a-f958-409b-b503-9ce11bf2aae4",
+      "name": "Get Mattermost Run from run_id",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        560
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Get Mattermost Run from run_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mattermost": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Mattermost Run from run_id": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "081c6b1c-a3dc-4f89-bc11-7d41df6b787f",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    },
+    {
+      "createdAt": "2024-11-08T14:35:05.700Z",
+      "updatedAt": "2024-11-08T14:35:05.700Z",
+      "id": "83ajPjfi0X52Ik4Q",
+      "name": "user_profile"
+    }
+  ]
+}

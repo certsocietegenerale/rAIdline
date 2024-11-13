@@ -1,0 +1,1471 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:19.536Z",
+  "id": "Fm9s3HwqRHTL6Lsd",
+  "name": "DRILL_UPDATE_V2",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"q64n7k9cgt8zdg411s5m4jbuer\"}"
+      },
+      "id": "0ac11e9f-491b-433f-ba2e-606fde403e63",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        320
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "9a354234-5796-4052-9ee7-144ebef46761",
+      "name": "Retrieve Mattermost Run",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "4c6cee8f-e27c-4322-9040-179fbe243477",
+              "leftValue": "={{ $json.status_posts }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "bf598026-3c9c-415c-a0ab-5d0852c1ba3e",
+              "leftValue": "={{ $json.last_status_update_at.toDateTime('ms') }}",
+              "rightValue": "={{ $now.minus(1,'days').plus(5,'minutes') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "58dc0acc-1d0a-4edc-9398-3a6c6aaf22a4",
+      "name": "Check if there was an update",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "P0szW41KuCStUyLt",
+        "options": {}
+      },
+      "id": "0689b417-d114-4b52-a273-4195da5fc39e",
+      "name": "Negative_escalation_prompting",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Handling the update !",
+        "height": 735.1538299084297,
+        "width": 2714.1006196981434
+      },
+      "id": "78cd2a8c-9a63-45c2-995d-4d9c3e2797b7",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "fngevpJ6yb9nqYsB",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "0af8dcdd-0ca6-48f2-b4a0-4c7972a5b547",
+      "name": "Check if incident_questions have been answered",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        3640,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "qneK8VAJggjS8SA5",
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "2ef77bd5-b856-447d-8b74-b7a59a4e4590",
+      "name": "Choix Type d'escalade",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "fMDmU3UN0iwE3e5P",
+        "options": {}
+      },
+      "id": "97a3d863-c1aa-4305-ab16-48cfbdcce178",
+      "name": "Ecriture de l'update",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5720,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "zj7efqCwMNwY3i8F",
+        "options": {}
+      },
+      "id": "833e8b55-082e-45da-9999-ff863e50efa3",
+      "name": "Generation_Laius_Fin",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n## Ending zone\n",
+        "height": 284.32950521827536,
+        "width": 1464.6946467814134,
+        "color": 3
+      },
+      "id": "38211bf6-831f-4e2f-886a-129eeafa0744",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4940,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Escalation zone",
+        "height": 283.4842630402578,
+        "width": 1757.2882303285596,
+        "color": 4
+      },
+      "id": "7ba6c46c-7420-456f-859e-343b040496c8",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4980,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "gfqVKuQrPqrBSMzt",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "59f035a5-3147-493d-a051-d26dd6f85bbb",
+      "name": "Should run end ?",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4480,
+        120
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": "HAUnDrntDbvEagc7",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "9684d6ad-d336-49f3-8e9e-039310e7529c",
+      "name": "Retrieve Incident Summary",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "2df29b18-6c62-493a-a2de-359c92a8509a",
+              "leftValue": "={{ $json.output.should_end }}",
+              "rightValue": "NO_END",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "528c0226-3ef0-48c4-aabb-54442cae5389",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        4700,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8173bf5-2e9b-4c7a-88d7-bec2b36a0d9d",
+              "name": "run_id",
+              "value": "={{ $('run_id').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b0f9beaa-3d4d-460a-99a0-6a45baef7f6b",
+              "name": "queries_answered",
+              "value": "={{ $json.queries_answered }}",
+              "type": "string"
+            },
+            {
+              "id": "8aab9184-82f4-4a30-aa14-57126c962870",
+              "name": "initial_scenario",
+              "value": "={{ $('Incident Summary').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "516ec8d5-bf47-4049-b048-5c18a3576401",
+              "name": "update_summary",
+              "value": "={{ $('Incident Summary').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "4864c6cc-220d-4dbc-baa2-98faaa5f8349",
+              "name": "latest_player_message",
+              "value": "={{ $('Incident Summary').item.json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "cfcaac5b-64aa-42b9-a31d-23afcf62cc9b",
+              "name": "checklists",
+              "value": "={{ $('Mattermost_run').item.json.checklists }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e9a3560b-00c2-4d8f-a8bb-7039009255b6",
+      "name": "Queries_answered",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3900,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f43c531d-5556-4fbd-9eb0-c1fb7dd308d3",
+              "name": "ending_type",
+              "value": "={{ $json.output.ending_type }}",
+              "type": "string"
+            },
+            {
+              "id": "03904f3e-b4b3-4a1e-9f09-50a894faa7ee",
+              "name": "run_id",
+              "value": "={{ $('Incident Summary').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6d5afc7a-61ed-4f7f-9c7e-787e3599574b",
+              "name": "initial_scenario",
+              "value": "={{ $('Incident Summary').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "051d82be-3503-47bd-a5bf-69dc68dc2644",
+              "name": "update_summary",
+              "value": "={{ $('Incident Summary').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "2076fc00-9f08-4f9a-bce4-a92af2c28d33",
+              "name": "latest_player_message",
+              "value": "={{ $('Incident Summary').item.json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "9f837952-14cb-46f9-9e78-089dcf6ce9ef",
+              "name": "comments",
+              "value": "={{ $if($('Should run end ?').item.json.comments,$('Should run end ?').item.json.comments,[]) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "92c3fafc-1972-4abe-95e9-f87938d071a6",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5060,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c37d038-8f53-4464-85da-6a8581bf3347",
+              "name": "message",
+              "value": "={{ $json.output.ending }}",
+              "type": "string"
+            },
+            {
+              "id": "ece0f3c3-e314-4dd7-8346-e41e3a543941",
+              "name": "run_id",
+              "value": "={{ $('Retrieve Mattermost Run').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "de5daaf1-001a-4fde-9c0c-46b9c999e71e",
+              "name": "channel_id",
+              "value": "={{ $('Retrieve Mattermost Run').item.json.channel_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc803b9d-5f5d-4f92-adcd-f5314dfb5c61",
+      "name": "Mattermost_Object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "3AcNk4fP29Vv8LQz",
+        "options": {}
+      },
+      "id": "d9f1c37e-e1f0-4f3e-b713-f5bbe862d3d4",
+      "name": "Finishing the run",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1bb0e47d-ac73-480b-a74e-9826db38af7f",
+              "name": "run_id",
+              "value": "={{ $('Webhook').item.json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1fd3105f-5bbc-4789-8414-40c715fb7e19",
+      "name": "run_id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "287ce726-9d06-4f04-bc9c-219cb2eb2075",
+              "name": "queries_answered",
+              "value": "={{ $('Queries_answered').item.json[\"queries_answered\"] }}",
+              "type": "array"
+            },
+            {
+              "id": "0cbc3b9d-15c9-499c-a6db-0cfb6a42cc71",
+              "name": "update_summary",
+              "value": "={{ $('Incident Summary').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "31bc93fc-efb7-4f30-a8e8-30f5872f36d1",
+              "name": "initial_scenario",
+              "value": "={{ $('Incident Summary').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "a6846698-8bd0-4b67-9441-789cf785babf",
+              "name": "latest_player_message",
+              "value": "={{ $('Incident Summary').item.json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "e44e033e-1d8d-4255-a72f-0fb67e35ddc1",
+              "name": "run_id",
+              "value": "={{ $('Incident Summary').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "946723a4-64b3-434c-a270-3bc77334c350",
+              "name": "comments",
+              "value": "={{ $if($('Should run end ?').item.json.comments,$('Should run end ?').item.json.comments,[]) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "01cd1f11-9364-4bd7-9c3a-5d439c73c4cd",
+      "name": "Incident Summary1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5060,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "287ce726-9d06-4f04-bc9c-219cb2eb2075",
+              "name": "queries_answered",
+              "value": "={{ $('Queries_answered').item.json[\"queries_answered\"] }}",
+              "type": "array"
+            },
+            {
+              "id": "0cbc3b9d-15c9-499c-a6db-0cfb6a42cc71",
+              "name": "update_summary",
+              "value": "={{ $('Incident Summary').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "31bc93fc-efb7-4f30-a8e8-30f5872f36d1",
+              "name": "initial_scenario",
+              "value": "={{ $('Incident Summary').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "a6846698-8bd0-4b67-9441-789cf785babf",
+              "name": "latest_player_message",
+              "value": "={{ $('Incident Summary').item.json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "e44e033e-1d8d-4255-a72f-0fb67e35ddc1",
+              "name": "run_id",
+              "value": "={{ $('Incident Summary').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "c19d727c-879f-49b3-908f-0c820e203f8d",
+              "name": "update_type",
+              "value": "={{ $json.output.escalation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "cb1fc034-697e-4241-8a66-0ad18b138468",
+      "name": "Incident Summary2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5500,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{  $('run_id').item.json['run_id']}}/status  ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{  {\n  \"message\": $json.scenario_update,\n  \"reminder\": 60000\n} \n}}",
+        "options": {}
+      },
+      "id": "5a3809c7-6585-4849-a460-41ff56092584",
+      "name": "Publish new inject as Status Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        6140,
+        20
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e10e354b-4c0b-4da6-bbb8-a4d7fdc01251",
+              "name": "run_id",
+              "value": "={{ $('run_id').item.json[\"run_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "613954cf-92b8-4532-b03b-05ce0c5bc65c",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2140,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": []
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "f99aaa0a-b610-40f5-88a0-3e7838fa5f8b",
+      "name": "Incident Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2520,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "7Zo4pDpZOmv6GpbA",
+        "options": {}
+      },
+      "id": "86b8b349-5c21-454b-a460-485e36e86c13",
+      "name": "ensure player's update is coherent enough !",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2700,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23995e95-c13e-4867-83f9-1d5aedf65a54",
+              "name": "run_id",
+              "value": "={{ $('run_id').item.json['run_id'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "f1e1ea08-073d-4477-a3bc-219be608e206",
+      "name": "memory",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2920,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "133ae6d7-1c42-4ae1-a210-544912ae5a18",
+              "leftValue": "={{$json.first_update}}",
+              "rightValue": "={{$json.final_update}}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "db71b128-9c01-4e35-a1d2-94bef8a890bc",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3140,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "channelId": "={{ $('Retrieve Mattermost Run').item.channel_id }}",
+        "message": "=@here, the update provided had some inconsistencies according to the GLLM. Here is the modified update that will be used :\n\n{{ $json.final_update }}",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "id": "067f8fc5-7862-4ff5-98ad-8799dc3b9550",
+      "name": "Notify players",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        360
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n\n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - Admin </title>\n</head>\n\n<body>\n<main class=\"container\">\n<div class=\"grid\">\n<article>\n  <header class=\"pico-background-blue-500\"> <h1 class=\"pico-color-zinc-50\">Update started </h1></header>\n  <h3> A status update will soon be posted to MM. </h3>\n</article>\n</div>\n<div class=\"grid\"><div></div><a href=\"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\" role=button class=\"pico-background-purple-500\"> Return to dashboard </a><div></div>\n</div>\n</main>\n</body>\n\n</html>",
+        "options": {}
+      },
+      "id": "a0264870-0765-4313-973c-a441fe2822ee",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "1lSobkTptDL9CSiw",
+        "options": {}
+      },
+      "id": "23ea5949-2a2b-404a-b701-ac14502fffcd",
+      "name": "Ensure update is coherent",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5960,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "path": "c1c41b12-1eda-4238-99bb-64c0128bb29a",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "c30a988e-24a5-43d9-9409-80f67202d899",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        80,
+        320
+      ],
+      "webhookId": "c1c41b12-1eda-4238-99bb-64c0128bb29a"
+    },
+    {
+      "parameters": {
+        "workflowId": "uiysvJRnw1B0zlef",
+        "options": {}
+      },
+      "id": "f249fb53-7010-4f0b-a931-0809ffe946cc",
+      "name": "Notify players !",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        840,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8173bf5-2e9b-4c7a-88d7-bec2b36a0d9d",
+              "name": "run_id",
+              "value": "={{ $('Queries_answered').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b0f9beaa-3d4d-460a-99a0-6a45baef7f6b",
+              "name": "queries_answered",
+              "value": "={{ $('Queries_answered').item.json.queries_answered }}",
+              "type": "string"
+            },
+            {
+              "id": "8aab9184-82f4-4a30-aa14-57126c962870",
+              "name": "initial_scenario",
+              "value": "={{ $('Incident Summary').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "516ec8d5-bf47-4049-b048-5c18a3576401",
+              "name": "update_summary",
+              "value": "={{ $('Incident Summary').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "4864c6cc-220d-4dbc-baa2-98faaa5f8349",
+              "name": "latest_player_message",
+              "value": "={{ $('Incident Summary').item.json.latest_player_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "3757fe4c-a395-422b-ae0f-fc8450177806",
+      "name": "Queries_answered1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        4300,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "9nR5cT5dQjNnNih5",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "72523de4-7837-4b7e-9006-384870dbd94d",
+      "name": "Check if win/lose conditions have been triggered",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4120,
+        120
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "ad0f0eda-05cc-4539-9cc0-4581fdced7ff",
+      "name": "Mattermost_run",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1680,
+        280
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "7170132d-3ac6-4648-8b42-521a5e73f912",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        360,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23995e95-c13e-4867-83f9-1d5aedf65a54",
+              "name": "run_id",
+              "value": "={{ $('run_id').item.json['run_id'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d850f87a-1687-4b4f-9df8-c36071266c3c",
+      "name": "memory1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3480,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "HYqwyNEj12UqHHZn",
+        "options": {}
+      },
+      "id": "6f614bd5-ba8d-416d-81c3-abd9707ab68a",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        6500,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "HYqwyNEj12UqHHZn",
+        "options": {}
+      },
+      "id": "e921ef75-93ab-420e-9ec2-93910cae4c99",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        6140,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c26261e-d38f-4bbf-928a-2b33cee98e73",
+              "name": "status_update_id",
+              "value": "={{ $('Mattermost_run').item.json.timeline_events[$('Mattermost_run').item.json.timeline_events.length - 1].id }}",
+              "type": "string"
+            },
+            {
+              "id": "d559d0bb-b05e-46ef-917e-e3a9ac4db57a",
+              "name": "run_id",
+              "value": "={{ $('Mattermost_run').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbffd2a6-8ffd-46f3-bec8-12a2dc966957",
+              "name": "escalation_decision",
+              "value": "={{ $('Choix Type d\\'escalade').item.json.output.escalation }}",
+              "type": "string"
+            },
+            {
+              "id": "24f2916a-cafe-4d3f-8c2d-570ef457b5c6",
+              "name": "escalation_decision_reason",
+              "value": "={{ $('Choix Type d\\'escalade').item.json.output.reason }}",
+              "type": "string"
+            },
+            {
+              "id": "e9974114-c6dd-47d2-9af8-c48bcfcfb9e6",
+              "name": "ending_decision",
+              "value": "={{ $('Should run end ?').item.json.output.ending_type }}",
+              "type": "string"
+            },
+            {
+              "id": "b0b1f574-3e42-46cd-9798-d5f62f60b47a",
+              "name": "ending_decision_reason",
+              "value": "={{ $('Should run end ?').item.json.output.reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2eb24e5d-907b-457c-a0dc-528ca5c7f43f",
+      "name": "Edit Fields5",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6320,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c26261e-d38f-4bbf-928a-2b33cee98e73",
+              "name": "status_update_id",
+              "value": "={{ $('Mattermost_run').item.json.timeline_events[$('Mattermost_run').item.json.timeline_events.length - 1].id }}",
+              "type": "string"
+            },
+            {
+              "id": "d559d0bb-b05e-46ef-917e-e3a9ac4db57a",
+              "name": "run_id",
+              "value": "={{ $('Mattermost_run').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "e9974114-c6dd-47d2-9af8-c48bcfcfb9e6",
+              "name": "ending_decision",
+              "value": "={{ $('Should run end ?').item.json.output.ending_type }}",
+              "type": "string"
+            },
+            {
+              "id": "b0b1f574-3e42-46cd-9798-d5f62f60b47a",
+              "name": "ending_decision_reason",
+              "value": "={{ $('Should run end ?').item.json.output.reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e362c099-75d8-4e70-9c38-1020b87811dd",
+      "name": "Edit Fields6",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5940,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This meta workflow handles all the referee phase of Raidline.\n\nWith a given mattermost run id in input, the LLM will retrieve all information necessary to then summarize the latest updates, and will launch a workflow dedicated to verifying the coherency of the update. In case of modifications provided by the coherency checker, a message will be posted to Mattermost to indicate players that changes have been made. It will then call another workflow to determine if this game should end. If it does, then it calls a last workflow to generate an ending that it will then post as a last update on Mattermost.\nOtherwise it will call a workflow to determine which kind of update to provide the scenario then call a second workflow to write said update before posting it to Mattermost.",
+        "height": 232.1730577269617,
+        "width": 777.2883186340473
+      },
+      "id": "bdda5fc5-1d06-47a5-b833-5d59db489f20",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -500
+      ]
+    }
+  ],
+  "connections": {
+    "Retrieve Mattermost Run": {
+      "main": [
+        [
+          {
+            "node": "Mattermost_run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if there was an update": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Negative_escalation_prompting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if incident_questions have been answered": {
+      "main": [
+        [
+          {
+            "node": "Queries_answered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Summary": {
+      "main": [
+        [
+          {
+            "node": "Incident Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Choix Type d'escalade": {
+      "main": [
+        [
+          {
+            "node": "Incident Summary2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Incident Summary1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Generation_Laius_Fin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generation_Laius_Fin": {
+      "main": [
+        [
+          {
+            "node": "Mattermost_Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mattermost_Object": {
+      "main": [
+        [
+          {
+            "node": "Finishing the run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "run_id": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Mattermost Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Summary1": {
+      "main": [
+        [
+          {
+            "node": "Choix Type d'escalade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Summary2": {
+      "main": [
+        [
+          {
+            "node": "Ecriture de l'update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queries_answered": {
+      "main": [
+        [
+          {
+            "node": "Check if win/lose conditions have been triggered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Summary": {
+      "main": [
+        [
+          {
+            "node": "ensure player's update is coherent enough !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ensure player's update is coherent enough !": {
+      "main": [
+        [
+          {
+            "node": "memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Check if incident_questions have been answered",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify players",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify players": {
+      "main": [
+        [
+          {
+            "node": "memory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should run end ?": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ecriture de l'update": {
+      "main": [
+        [
+          {
+            "node": "Ensure update is coherent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify players !": {
+      "main": [
+        [
+          {
+            "node": "run_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensure update is coherent": {
+      "main": [
+        [
+          {
+            "node": "Publish new inject as Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Notify players !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Queries_answered1": {
+      "main": [
+        [
+          {
+            "node": "Should run end ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if win/lose conditions have been triggered": {
+      "main": [
+        [
+          {
+            "node": "Queries_answered1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mattermost_run": {
+      "main": [
+        [
+          {
+            "node": "Check if there was an update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory1": {
+      "main": [
+        [
+          {
+            "node": "Check if incident_questions have been answered",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish new inject as Status Update": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finishing the run": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "8e2ee372-1525-4d7d-a024-a1b881dac13b",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-07T14:59:57.307Z",
+      "updatedAt": "2024-11-07T14:59:57.307Z",
+      "id": "klD2jfmCgxMUKetU",
+      "name": "coherency_checks"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:25.464Z",
+      "updatedAt": "2024-11-07T15:00:25.464Z",
+      "id": "cGZf9gHq91cvl1fA",
+      "name": "notify_players"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:44.608Z",
+      "updatedAt": "2024-11-07T15:00:44.608Z",
+      "id": "IYLI0gUzWm2CHK7C",
+      "name": "status_update"
+    }
+  ]
+}

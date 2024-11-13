@@ -1,0 +1,373 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T11:35:08.767Z",
+  "id": "1lSobkTptDL9CSiw",
+  "name": "Force update coherency",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f0d01807-ba45-4369-a91b-f7a3eba176dc",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        1200,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"run_id\":\"tez6b1cqrbnzinhtoh934w9osa\",\n  \"update\":\"As you dive deeper into the investigation, you've uncovered some crucial leads that could shed more light on the unauthorized account creation. The temporary disablement of the subscription feature has halted the attackers' ability to create new accounts, giving you a brief window of opportunity to focus on finding the root cause.\\n\\nThe recent modification date on the 'user_data.log' file is particularly intriguing, hinting at a possible connection between the introduction of the new feature and the compromise. Your analysis suggests that the logging script's plaintext password storage could be exploited by an attacker seeking to create new accounts with ease. With this information in mind, you have three strategic choices to make: 1) Investigate the server hosting the subscription database for any signs of unusual activity or suspicious network traffic; 2) Review the code implementation of the new feature and look for potential security vulnerabilities; or 3) Analyze the access logs further to determine if there were any unusual login attempts or suspicious user behavior preceding the compromise. Which path will you take?\"\n}"
+      },
+      "id": "215fe84e-f801-43da-bd01-8f9198dc4990",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1420,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cedbaf22-026b-4dd1-ae4f-d3274eb609fd",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7f6f60e2-e904-418c-8844-0bea03e558a7",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Fixing loop\n",
+        "width": 479
+      },
+      "id": "27fddadd-689d-477f-8d6d-e535cbad60c9",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39f986a2-b034-4799-8bd2-95057313a7e4",
+              "name": "run_id",
+              "value": "={{$('run_id_item').item.json['run_id'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5f90208c-41d0-46f5-80fa-d33aebbae4d0",
+              "name": "scenario_update",
+              "value": "={{$('run_id_item').item.json['update']\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1dbfb40-2ed4-40c2-b7f6-5f4c4ec005d8",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2320,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "5c4d87d8-e185-4032-8ee7-2644bf356f91",
+      "name": "run_id_item",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1640,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "c91c7ddd-ff4e-4b84-9ae2-ae20a52a1eaf",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2580,
+        680
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"revised_update\":\"Here you write the revised player update\", \"changes_made\": \"Explain what kind of changes you made to the update\" }"
+      },
+      "id": "b497614c-732b-4b51-96c7-eea3dc1d1822",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2780,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Prompt Structure:**\n\n\"You are a narrative editor tasked with ensuring consistency within a story.\n\n**Initial Scenario:** \n\n**Latest Update:** {{ $('Code').item.json[\"update\"] }}\n\n**Inconsistency:** {{ $json[\"output\"][\"contradiction\"].map(x =>x) }}\n\nRewrite the Update to align with the facts presented in the Initial Scenario while preserving the core meaning and intent of the Player's actions. \n\nYour output is a JSON object with the following structure : \n{\"revised_update\":\"Here you write the revised player update\", \"changes_made\": \"Explain what kind of changes you made to the update\" }",
+        "hasOutputParser": true
+      },
+      "id": "7c4c3ef1-8d63-4a28-ab2a-cea9116735b9",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2540,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1a505365-3101-4150-b923-ee7901680dec",
+              "name": "update",
+              "value": "={{$json.output.revised_update}}",
+              "type": "string"
+            },
+            {
+              "id": "c8790ab2-e429-4699-9880-143294d61f13",
+              "name": "run_id",
+              "value": "={{ $('run_id_item').item.json[\"run_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7a5752f1-a201-4b99-8615-0a269d25cc44",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2980,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "7QjyfcPgu833K6vh",
+        "options": {}
+      },
+      "id": "18820c92-4ade-496a-8e38-8ac102ee075a",
+      "name": "Verify update coherency",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow ensures the update generated by the LLM is coherent with established facts. If it's not, a feedback loop is used to rewrite parts of the update until it is coherent."
+      },
+      "id": "6ecf78c2-9e30-4d25-9825-365d5af9801f",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        160
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "run_id_item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "run_id_item": {
+      "main": [
+        [
+          {
+            "node": "Verify update coherency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "run_id_item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify update coherency": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "bed9971a-c71a-429f-80b5-0990ea71743a",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-08T09:56:01.699Z",
+      "updatedAt": "2024-11-08T09:56:01.699Z",
+      "id": "hBollWdIEkBNcsIY",
+      "name": "validate_data"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:59:57.307Z",
+      "updatedAt": "2024-11-07T14:59:57.307Z",
+      "id": "klD2jfmCgxMUKetU",
+      "name": "coherency_checks"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

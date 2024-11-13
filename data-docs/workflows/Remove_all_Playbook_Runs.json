@@ -1,0 +1,272 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T10:55:22.602Z",
+  "id": "JQobW3izvRjmFaJY",
+  "name": "Remove all Playbook Runs",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "12039f96-0db9-44fa-9902-edac8091aed9",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        620,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "9f2cc947-be9d-4a8a-a9f5-be1095410838",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        800,
+        340
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "d49ca251-8848-4661-991e-bf6208ad7561",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "8dddefbd-96e6-43a8-9e3d-bc878839fc60",
+              "leftValue": "={{ $json.end_at }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "571bbae7-d224-45f2-931f-af7640c55d93",
+              "leftValue": "={{ $json.playbook_id }}",
+              "rightValue": "pccbq73z4pb53csucqdec44cxe",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "568da0da-7475-4843-b281-2e0b62696062",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $json.id }}/finish",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {
+          "allowUnauthorizedCerts": false
+        }
+      },
+      "id": "7a798e7d-ea41-4b71-8019-a7b85356e875",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1920,
+        340
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "49598ab5-7d3c-4da7-b127-6fb06c6968f0",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1480,
+        340
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "operation": "delete",
+        "channelId": "={{ $json.channel_id }}"
+      },
+      "id": "51d21cfc-0f6c-4c71-a78d-77dd98ccc881",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        580
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This workflow will close all Mattermost playbook runs and archive all channels related to these runs."
+      },
+      "id": "3896c617-af93-4b08-83f7-c6a6e1abb170",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        680,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "24c70f88-c5ab-4b45-9226-1b8d1fd437b6",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-08T10:55:21.732Z",
+      "updatedAt": "2024-11-08T10:55:21.732Z",
+      "id": "56KeRnAEgo3w9p2z",
+      "name": "debug"
+    }
+  ]
+}

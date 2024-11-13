@@ -1,0 +1,159 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:03:13.780Z",
+  "id": "HYqwyNEj12UqHHZn",
+  "name": "Logging decision",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4dd1625c-935d-4297-b69c-4991e3552fd3",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        340,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "decision_log",
+        "updateKey": "status_update_id",
+        "fields": "status_update_id, run_id, escalation_decision, escalation_decision_reason, ending_decision, ending_decision_reason",
+        "upsert": true,
+        "options": {}
+      },
+      "id": "1547df7d-1246-4ab6-b892-841a28a90055",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        320
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c26261e-d38f-4bbf-928a-2b33cee98e73",
+              "name": "status_update_id",
+              "value": "={{ $json.status_update_id }}",
+              "type": "string"
+            },
+            {
+              "id": "d559d0bb-b05e-46ef-917e-e3a9ac4db57a",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "dbffd2a6-8ffd-46f3-bec8-12a2dc966957",
+              "name": "escalation_decision",
+              "value": "={{ $json.escalation_decision }}",
+              "type": "string"
+            },
+            {
+              "id": "24f2916a-cafe-4d3f-8c2d-570ef457b5c6",
+              "name": "escalation_decision_reason",
+              "value": "={{ $json.escalation_decision_reason }}",
+              "type": "string"
+            },
+            {
+              "id": "e9974114-c6dd-47d2-9af8-c48bcfcfb9e6",
+              "name": "ending_decision",
+              "value": "={{ $json.ending_decision }}",
+              "type": "string"
+            },
+            {
+              "id": "b0b1f574-3e42-46cd-9798-d5f62f60b47a",
+              "name": "ending_decision_reason",
+              "value": "={{ $json.ending_decision_reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "440f1378-1bd7-49de-974f-da8a27d972ef",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow logs every decision from the LLM (type of escalation, type of ending) into the `decision_log` collection in MongoDB"
+      },
+      "id": "40b9fc61-2d40-4965-b6e7-d0aa31397032",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "ac6a10a5-ae07-42ff-be3f-d3f47f7f3672",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    }
+  ]
+}

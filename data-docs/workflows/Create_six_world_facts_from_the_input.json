@@ -1,0 +1,321 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T09:34:34.673Z",
+  "id": "kZ9zQgryV0dGOhkh",
+  "name": "Create six world facts from the input",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "051b61b8-4cc6-4b49-a054-5fdea7c958bb",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        460,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game-master that helps incident handler from a financial institution drill in their spare-time.\nYou will be given a scenario and access to the world facts of this game. The world facts are immutable truths that happen in this world.\n\nBased on the input scenario, generate six immutable truths to this scenario that will be uncovered by the player during the gameplay.\n\nHere's the input scenario :\n\n{{ $json.summary }}"
+      },
+      "id": "633fbe02-c830-4c19-b205-82c058919657",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1140,
+        280
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "workflowId": "SldK2SJnxZK6HZwL"
+      },
+      "id": "8a8adfcb-eb27-4c75-9a32-80efe35a52bc",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "6da337c2-d299-4a72-ad1e-d4a0e3197269",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        500
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"facts\":[\n  {\"fact\":\"The first truth of this incident.\"},\n  {\"fact\":\"The second truth of this incident.\"},\n  {\"fact\":\"The third truth of this incident.\"},\n  {\"fact\":\"The fourth truth of this incident.\"},\n  {\"fact\":\"The fifth truth of this incident.\"},\n  {\"fact\":\"The sixth truth of this incident.\"}\n    ]\n}"
+      },
+      "id": "3d8dcefc-8c16-412b-944e-8aef663a8ff8",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"run_id\":\"xcwy1x13ft8m8bgi6xf9sksjna\",\n    \"initial_scenario\":\"Unauthorized Logging Method\\n\\nA script has been logging exported variables containing full user registration objects. This logging method is full of plaintext passwords.\"\n  }\n]"
+      },
+      "id": "7aff36ca-984b-4ce3-9ab6-4774cc90f04b",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        180
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": "NLzPpQsgN9Acx1SJ",
+        "options": {}
+      },
+      "id": "bcf11d99-eacf-4613-a647-ceefad0dee13",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "cf629352-977d-4003-bb90-dfe5a4ac6d13",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2140,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.facts",
+        "options": {}
+      },
+      "id": "7a269f7c-fae8-4198-be73-d331d6318235",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Take the following input and format it as six truths : \n {{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "55f41964-4f8f-452f-9ae5-1c228617045c",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1540,
+        280
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflow will create 6 Incident Facts with an LLM, based on the scenario synopsis. Those facts are then stored in MongoDB."
+      },
+      "id": "e24cf9d3-aa69-4185-a3ad-9f0db889c18e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -60
+      ]
+    }
+  ],
+  "connections": {
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "ccd6df94-911c-448a-935a-cc81c7442536",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:43:32.696Z",
+      "updatedAt": "2024-11-07T14:43:32.696Z",
+      "id": "LqAzDUuS8yAhKqgj",
+      "name": "scenario_setup"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    }
+  ]
+}

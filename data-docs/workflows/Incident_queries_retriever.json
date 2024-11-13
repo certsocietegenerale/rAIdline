@@ -1,0 +1,275 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:29:25.175Z",
+  "id": "qgjAEFpEYwJ1uess",
+  "name": "Incident_queries retriever",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "collection": "incident_questions",
+        "options": {},
+        "query": "={{ JSON.stringify({\"run_id\": $json.run_id }) }}"
+      },
+      "id": "176295b2-85a2-4622-b4bb-981c49089fb4",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        520
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "43e9a933-6fd4-4e53-a8e4-786fb500b31d",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a5da43e5-e6ad-4992-ae29-2943326f088d",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "questions",
+        "options": {}
+      },
+      "id": "d773a295-e1fb-4dce-84a1-beabfdb7cd5c",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        440
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ef396594-c39d-4a3b-b347-e9681e38ff36",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        0,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8c5fd097-6db5-4b22-9a81-42f1d70cd78e",
+              "name": "questions",
+              "value": "[]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f842835-ea50-497a-b2ec-6c132bf046c4",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1260,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "2d9fQRgZBd8bLbQJ",
+        "options": {}
+      },
+      "id": "bc5cc6b4-72af-4c2b-b86f-0a6968ce5eed",
+      "name": "Get playbook run_id from channel_id",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        460,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "81fbb0d7-437f-4f2f-a626-b2ae87e1f732",
+              "leftValue": "={{$json.run_id}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d24f096e-1bc3-49dd-bbfa-ff04dfe068f6",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        220,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will retrieve incident queries from the database for a given mattermost run id"
+      },
+      "id": "892a607e-5806-4475-99bc-12fa5341f940",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get playbook run_id from channel_id": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get playbook run_id from channel_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "95a2f896-fd5c-43e3-9adf-c09d071f6107",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    }
+  ]
+}

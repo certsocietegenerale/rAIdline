@@ -1,0 +1,258 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T08:25:26.438Z",
+  "id": "qneK8VAJggjS8SA5",
+  "name": "CHOOSE_ESCALATION_V2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9c1e0bc8-8034-4788-a126-f1e1aeeca88f",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        840,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"oqa4ft17u3n6up4nj71bgub7ka\",\n\"initial_scenario \": \"## Firewall Rule Incident Request\\nFirewall rule left open after faulty change request implementation. Bruteforcing attempts registered on previously protected servers.\",\n\"update_summary\" :\"A critical security flaw in a recently implemented firewall rule change inadvertently left a server vulnerable. Unknown attackers exploited this weakness, breaching several systems and installing backdoors to maintain access and potentially spread further throughout the network. Investigations revealed the initial vulnerability stemmed from an unexpected software update interacting with a previously unknown hardware configuration. \\nFurther analysis indicated a previously unknown vulnerability in one of the affected servers was also exploited.  **However, recent developments show that this incident did not result in any data breaches or sensitive information being compromised.** This significantly reduces the risk of reputational damage and minimizes potential long-term consequences.\\nThe system's manufacturer has acknowledged the issue and provided an updated patch to mitigate the problem, expected to be rolled out within the next 48 hours, effectively neutralizing the threat.\\nThe team remains focused on implementing the patch as soon as it becomes available, securing compromised systems, and adjusting the incident response strategy based on this new information. Prioritizing communication with stakeholders is crucial to ensure transparency and minimize any remaining uncertainty.\",\n\"latest_player_message\" :\"We found the change that was not implemented correctly. We've roll backed the change !\"\n}"
+      },
+      "id": "691614b3-2f22-4f0f-94a2-f6d4083616be",
+      "name": "Debug node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1060,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Input**\n\nYou will be provided with the following to help you achieve your task : \n\n* Initial scenario description\n* Recent updates provided (key advances in the story)\n* Incident queries posed (critical questions related to the scenario)\n* Player's latest status update (a consolidated understanding of the incident and a summary of actions taken in the last day)\"\n\n**Task**\n\nUsing the input provided, decide how the run should escalate (Negative, Positive, or Status Quo) and provide a brief one-liner explanation for this decision. Consider the following : \n* Did the players introduce a positive element (e.g., resolving a critical issue, achieving a key goal)?\n* Did they introduce a negative element (e.g., exacerbating an existing problem, creating a new challenge)?\n* Or did their actions have a neutral impact (e.g., making progress without significant consequences)?\n\n\n**Output**\n\n\"Your response should be in JSON format with two fields: 'escalation' (one of Negative, Positive, or Neutral) and 'reason' (a brief one-liner explanation for this\ndecision).\"\n\n**Input:**\n\nInitial scenario : {{ $json[\"initial_scenario\"] }}\nSummary of the updates : {{ $json[\"update_summary\"] }}\nLatest player status : {{ $json[\"latest_player_message\"] }}\nIncident queries : Refer to the workflow retriever output.\n\n\n**Task:** \n\nUsing the input provided, assess the current state of the incident and determine its overall trend. Consider the following:\n\n* **Ongoing Investigation:** The investigation is still active with key analysis (e.g., email decryption, forensic examination) yet to be completed.  \n* **Potential for Positive Outcomes:**  The results of the analysis could reveal crucial information that changes the course of the investigation, potentially leading to a resolution and mitigating further damage. Examples include successfully decrypting malware or identifying the source of the phishing attack.\n\n* **Player Actions:** How actively are players managing the incident? Are they isolating affected systems, gathering evidence, communicating effectively with stakeholders, implementing preventative measures, or taking other proactive steps?  \n    * Conversely, are they making decisions that *hinder* the investigation, damaging evidence, escalating the situation, or acting in a way that could worsen the consequences of the incident?\n\n**Output:**\n\nProvide your assessment in JSON format with two fields:\n\n* **'escalation':** (one of \"Negative\", \"Positive\", or \"Neutral\") \n* **'reason':** (a brief explanation on why this decision)"
+      },
+      "id": "65e0be95-6426-416c-9c52-397c3287ab1f",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1660,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "model": "mistral-nemo:latest",
+        "options": {}
+      },
+      "id": "f9c55549-73e3-4014-b235-11485c55b9fa",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        820
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"escalation\": \"negative/positive/status_quo\",\n\t\"reason\":\"This is done !\"\n}"
+      },
+      "id": "f792d5a8-a089-4c0e-9c37-489a2c70a03e",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2300,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a18537a5-a788-45ca-a4ce-f52dc40edf92",
+      "name": "Run_id object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1280,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Parse the following output : \n{{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "c1d90755-8d05-43c3-91ac-6927ad68f7d3",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2100,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "qgjAEFpEYwJ1uess",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $('Run_id object').item.json[\"run_id\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "d9d133c7-3dee-4c99-a3dd-caee610fa516",
+      "name": "Incident Query Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will determine which kind of escalation (positive, negative, status quo) to write for the next scenario update."
+      },
+      "id": "3e5d1c96-cd65-47dd-a1d6-738dc6b4cfea",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        180
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Debug node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run_id object": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Query Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug node": {
+      "main": [
+        [
+          {
+            "node": "Run_id object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "64814b9e-fa1a-48ae-ac09-f56ae1a2ff5c",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    }
+  ]
+}

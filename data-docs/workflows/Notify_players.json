@@ -1,0 +1,189 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:04:50.170Z",
+  "id": "uiysvJRnw1B0zlef",
+  "name": "Notify players",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "fec2c18a-47b9-4bad-8c8b-fd5ea5605f54",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        1120,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"headers\": {\n      \"host\": \"localhost:5678\",\n      \"user-agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:127.0) Gecko/20100101 Firefox/127.0\",\n      \"accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\",\n      \"accept-language\": \"en-GB,en;q=0.5\",\n      \"accept-encoding\": \"gzip, deflate, br, zstd\",\n      \"connection\": \"keep-alive\",\n      \"referer\": \"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\",\n      \"cookie\": \"rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX1%2BqBqClrflPX32yYrYdmbqMH9bZtI6OkLc46ZUaVO9mcIooO%2BwgSsIoygEPBhVzG1qAenAI9h3c%2BA%3D%3D; rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2B%2FCRfUXZ%2FZHz4LVe3MVMortmref0gaVRM%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX1%2FH%2BkgCwBbfOUq6p2YmbNl9ryGUN9ngvOk%3D; MMUSERID=1q7eiocmi7fqmcfpr759i8pg3w; MMCSRF=bihyte5g6pb8xkunc6nioa6gnc; rl_session=RudderEncrypt%3AU2FsdGVkX19QX0wBnJb9bMajHjuAh4PdIOy2NQo3P5CelQDAt8inCn6Kiizz8%2BgXVYYproZ3do7nq%2FzVEtRGq7sihTQt3RTUIvKCn0wRke%2Fs2DPGyEdV4K5Zk62N9xK8wMVzE5VYXm0qYKZJG50t1Q%3D%3D; _ga=GA1.1.547174753.1718872790; username-localhost-8888=\\\"2|1:0|10:1721812758|23:username-localhost-8888|200:eyJ1c2VybmFtZSI6ICJmNThhNTc2ODU3MjA0NGQ3YWFhN2MyMDU0MDdhMGRiOCIsICJuYW1lIjogIkFub255bW91cyBBbWFsdGhlYSIsICJkaXNwbGF5X25hbWUiOiAiQW5vbnltb3VzIEFtYWx0aGVhIiwgImluaXRpYWxzIjogIkFBIiwgImNvbG9yIjogbnVsbH0=|c48031a3be90c398fff3e0313baa8cfd562f9e8946cc9f8c358f68c1cdd31619\\\"; _xsrf=2|1414e42c|fb485bfa9cd83df245646b50a4ad5fed|1721812758; n8n-auth=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiZDcxMTRiLWY5NjMtNGEwMy1hZjRlLWExMDBjNGNhN2FlYSIsImhhc2giOiJJUURkT3p0aXp6IiwiYnJvd3NlcklkIjoiajdUVkVRYmFMVWE2OGFWZkJOb1lySHpSaXYvTnpoWm5sRitndXNXa01ZMD0iLCJpYXQiOjE3MjI4NDQxMzgsImV4cCI6MTcyMzQ0ODkzOH0.NV5e-pacdj5SQAAPT82vCGgEKuMF0Ocj1rtFLHdFbRI; MMAUTHTOKEN=jkt1pxj8qpnr781xyia8yp6y4r; rl_user_id=RudderEncrypt%3AU2FsdGVkX19kypGcLcdFv6ndJ11QsETmqibJCK%2BzKUewAhZF84tK%2BqSA0mq77FLmakVJYUa3ySw5FRSTnd8AWMj%2FFGPfO78mR48KNOzxJ8jnKfMo7Kie1WQGZ92pc%2BpDJgL%2Fw5S1lnenRDphC7bWRXzfolhunCGZmKeCKMdxVsQ%3D; rl_trait=RudderEncrypt%3AU2FsdGVkX1%2FC5QyHYeik6Jr%2FAQpqyjOkFnXZa1HESLp%2FtTBUtU9FgE%2Fn9o4b30wUBUZ4VLnBzC2ssw2376xgYsTF1VSJK%2BwsIY9lsNm%2F5obrk2Lclas2RW89%2BxUvAd%2By7EsoiLL9ILNVmTiAGUe2Kg%3D%3D; ph_phc_4URIAm1uYfJO7j8kWSe0J8lc8IqnstRLS7Jx8NcakHo_posthog=%7B%22distinct_id%22%3A%2270fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7%23cbd7114b-f963-4a03-af4e-a100c4ca7aea%22%2C%22%24sesid%22%3A%5B1722863285032%2C%2201912243-6bc6-7b2c-8b30-0c2d0e406450%22%2C1722856729542%5D%2C%22%24epp%22%3Atrue%7D\",\n      \"upgrade-insecure-requests\": \"1\",\n      \"sec-fetch-dest\": \"document\",\n      \"sec-fetch-mode\": \"navigate\",\n      \"sec-fetch-site\": \"same-origin\",\n      \"sec-fetch-user\": \"?1\",\n      \"dnt\": \"1\",\n      \"sec-gpc\": \"1\",\n      \"if-none-match\": \"W/\\\"27-1e2cnSwyG/Xu7BiltgenIyuqfIM\\\"\",\n      \"priority\": \"u=1\"\n    },\n    \"params\": {},\n    \"query\": {\n      \"run_id\": \"tez6b1cqrbnzinhtoh934w9osa\"\n    },\n    \"body\": {},\n    \"webhookUrl\": \"http://localhost:5678/webhook/c1c41b12-1eda-4238-99bb-64c0128bb29a\",\n    \"executionMode\": \"production\"\n  }\n]"
+      },
+      "id": "75e6d97a-519b-4307-9869-9ced821557f6",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de205188-19ad-424a-a6d6-19e4abdbf607",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6bd8e712-2f93-419e-bbc6-44db4d6fa14a",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1560,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "channelId": "={{ $json.channel_id }}",
+        "message": "Attention @here, a review is currently on the way. Stay tuned for a new scenario update...",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "id": "52375de9-7e0a-4100-9f50-6faf61b10343",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        560
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This workflow sends a message to the players in a specific Mattermost channel (the one associated with the current raidline game)"
+      },
+      "id": "1f4d6682-d75d-4098-bd11-26948acc4fe7",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "7411398e-9114-429e-aa98-79f865434257",
+      "name": "Get Mattermost Run from run_id",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        560
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get Mattermost Run from run_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Mattermost Run from run_id": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "ae0dd3e8-220d-4e5b-9b5c-7d51f42de430",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:13.671Z",
+      "updatedAt": "2024-11-07T15:00:13.671Z",
+      "id": "pUwmj7QSUuMZfoRV",
+      "name": "communication"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:25.464Z",
+      "updatedAt": "2024-11-07T15:00:25.464Z",
+      "id": "cGZf9gHq91cvl1fA",
+      "name": "notify_players"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

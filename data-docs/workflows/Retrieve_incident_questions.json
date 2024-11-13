@@ -1,0 +1,294 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:09:07.783Z",
+  "id": "oGbQM3r4cb01VDQ7",
+  "name": "Retrieve incident questions",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"wdwyapsxminadxe5te1u6t7g8w\"}"
+      },
+      "id": "7b279eec-6838-4be6-8a96-97ae3b70293e",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        600
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "1c4f5102-dda0-4cc4-81f3-e56c857c15e2",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1440,
+        600
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "107c2a2d-0397-4ff6-83ab-8f806d79fedd",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "b8TrnwZagZTDbrUy",
+        "options": {}
+      },
+      "id": "3cdafd36-60c7-4d4c-9f2c-9b5318c3c3ec",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        600
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "f1b4393f-cbc3-48ff-b12d-f5c7940f071a",
+              "leftValue": "={{$json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6dd154af-e88a-4172-bcce-97636094cdc5",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bec9bd93-970a-4ccb-a628-a3d45dce0c7c",
+              "name": "response",
+              "value": "There are currently no questions that have been asked by the players.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9968bf21-d2ad-41d7-b0d5-8a7f56ac34e8",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2060,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "193b91f8-d211-4574-9f53-94914051be2a",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50ab57a8-310b-4e56-83e9-eb8779efbd83",
+              "name": "question",
+              "value": "={{ $json.user_query }}",
+              "type": "string"
+            },
+            {
+              "id": "ab800347-dedf-4282-ab4c-dc909c3aa35a",
+              "name": "answer",
+              "value": "={{ $json.bot_answer }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9d132cc1-94a9-46f2-adff-3269e5ba0112",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2340,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "response",
+        "options": {}
+      },
+      "id": "d7edf162-4b78-40bb-8f48-0fc0bf1ca0e4",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        620
+      ]
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "2660c48a-c648-45d5-9680-8c71a02dfb77",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-09-04T11:46:07.588Z",
+      "updatedAt": "2024-09-04T11:46:07.588Z",
+      "id": "BSLOe70dbHfWkB9Q",
+      "name": "ai_player"
+    },
+    {
+      "createdAt": "2024-09-04T11:47:12.901Z",
+      "updatedAt": "2024-09-04T11:47:12.901Z",
+      "id": "LPJPIJ0bjCWWzbE7",
+      "name": "tools"
+    },
+    {
+      "createdAt": "2024-11-08T14:40:58.120Z",
+      "updatedAt": "2024-11-08T14:40:58.120Z",
+      "id": "Dh18CsMn3Lm5Cx7K",
+      "name": "delete_me"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:22:21.994Z",
+  "id": "CRlIBCQ9FTalnKrP",
+  "name": "Generation fin de scenario",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "cea1b483-4f67-45dd-87c3-bbc1616d9a93",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        560,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "id": "bbbc8d56-15a6-4222-8b89-ed2ad9712dad",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        540
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You will receive a list of messages that were sent to handle an incident. \nHere's the base scenario : {{ $json.initial_context }}\nHere are the messages : {{ $json.msgs }}\nWrite a realistic ending that indicates the events that unfold in the upcoming days, weeks and months, now that the incident is over.\nDo not try to write a happy ending, if the team has made mistakes, they must see the consequences of their actions.\nDo not try to write a bad ending, good actions made by the team must be considered as well into the events that unfold. Do not invent what the team did. Use an external point of view."
+      },
+      "id": "8184113f-0822-48d1-b5fa-0c6641eafcb2",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1300,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "0eb090eb-96ed-41a1-ac63-194fb9537ee3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-06-17T09:22:49.032Z",
+      "updatedAt": "2024-06-17T09:22:49.032Z",
+      "id": "D0FT6GtK38NdAtuM",
+      "name": "drill"
+    },
+    {
+      "createdAt": "2024-06-18T11:14:35.511Z",
+      "updatedAt": "2024-06-18T11:14:35.511Z",
+      "id": "A15j2z8tvVDTX2Cy",
+      "name": "content_writing"
+    },
+    {
+      "createdAt": "2024-11-08T14:40:58.120Z",
+      "updatedAt": "2024-11-08T14:40:58.120Z",
+      "id": "Dh18CsMn3Lm5Cx7K",
+      "name": "delete_me"
+    }
+  ]
+}

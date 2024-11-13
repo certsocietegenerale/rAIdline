@@ -1,0 +1,192 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-07T16:48:38.871Z",
+  "id": "1FzoT3wFxB2diofM",
+  "name": "Ask question in World_facts",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "0fc1719a-aeee-43b6-8c3b-40965af2051c",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        520,
+        260
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're an objective assistant that helps gamemasters run a serious to drill incident handlers.\n\nYou have access to a knowledge base called the \"world_facts\" which are immutable truths related to the current incident that players are trying to handle.\n\nBased on those facts, please generate an answer to the following question : {{ $json.query }}\n\nIf the information does not allow you to answer the question, indicate that the world facts do not answer its question. You are NOT allowed to generate or invent an answer."
+      },
+      "id": "08b4e2f1-aa72-4fde-844d-ee81b2a4671d",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        700,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3-chatqa:8b",
+        "options": {}
+      },
+      "id": "66a77a2f-5e45-433f-a300-49196264a407",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        700,
+        480
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "SldK2SJnxZK6HZwL"
+      },
+      "id": "80982a2d-6724-4c8a-80df-226eef3e4082",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83ffaf65-b0e9-4ac9-85da-50ce7c12f820",
+              "name": "answer",
+              "value": "={{$json.response.text}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6c9e3219-491d-4dd9-9cc5-a9ccc0050e87",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow answers a question from the player based on the World Facts knowledge base.\n"
+      },
+      "id": "ecfb112b-4e33-40bb-be80-8246f944a341",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        260,
+        240
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "2af8ba5d-7143-4a97-a291-eb7bcc86ea3b",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T16:47:19.918Z",
+      "updatedAt": "2024-11-07T16:47:19.918Z",
+      "id": "nQPVZcZ9LHIRAmfK",
+      "name": "player_question"
+    },
+    {
+      "createdAt": "2024-11-07T16:48:31.105Z",
+      "updatedAt": "2024-11-07T16:48:31.105Z",
+      "id": "c9Iw6mfrEvojy4kq",
+      "name": "access_world_facts"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    }
+  ]
+}

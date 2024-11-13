@@ -1,0 +1,1704 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:15.465Z",
+  "id": "RUdnumnXGmHLmOXS",
+  "name": "Setup a new scenario run of Raidline",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8938cb67-3aac-4505-8fa2-3cf57d6b4e24",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/data-docs/scenarios.tsv"
+      },
+      "id": "cc7a7145-1605-48e7-bcd3-6d482d8a1d3f",
+      "name": "Read Binary Files",
+      "type": "n8n-nodes-base.readBinaryFiles",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        801
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n//items[0].json.RandomNumber = Math.floor(Math.random() * 7);\nvar item = Object()\nlet index=Math.floor(Math.random() * $input.all().length)\nitem = $input.all()[index].json;\nconsole.log(item)\nreturn [item];"
+      },
+      "id": "e22735b5-6d32-4203-a777-68b548b099fe",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Setup\nThis part of the workflow gathers elements to generate our scenario\nBased on  https://sre.google/sre-book/accelerating-sre-on-call/#xref_training_disaster-rpg and https://github.com/Karneades/Defensomania",
+        "height": 611.7086268377195,
+        "width": 1303.8926868941019
+      },
+      "id": "1e8153a5-ce3c-4436-8c93-53858d87b4d9",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        700,
+        581
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Mattermost Setup\nThis part of the workflow will find who's the Incident Responder. It will then run the Incident Playbook and invite the IH before telling him what's happening\nHandling of the game will be made in another workflow\n",
+        "height": 1489.5455686714758,
+        "width": 3490.709717084683,
+        "color": 5
+      },
+      "id": "4402aca8-26b8-4b46-a85d-b7a12cc8f547",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3060,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## LLM Zone\nThe LLM will take the scenario picked as an input and generate win conditions\n",
+        "height": 1247.3025985266984,
+        "width": 830.7220223413206,
+        "color": 3
+      },
+      "id": "e372f361-296e-447d-8b20-76fc4358c632",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "462d52d3-49b6-44cc-ae28-29002ade1775",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2520,
+        1320
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "14d39eff-0708-4b8f-b711-6db891c93b69",
+      "name": "Ollama Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        880
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "b288bb5d-df16-4039-90e3-65d1fc32ff8d",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        4220,
+        961
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "text",
+              "newKey": "conditions"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "458f28d4-1905-4f62-bc7e-bdd8a18ebf4f",
+      "name": "Rename Keys",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        3500,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "channelId": "={{ $json.channel_id }}",
+        "message": "={{ $json.initial_scenario }}",
+        "attachments": [
+          {}
+        ],
+        "otherOptions": {}
+      },
+      "id": "a1b33fd2-e65a-4723-884f-f801f2104972",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        5800,
+        1100
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $('Ultimate Merge').item.json[\"id\"] }}/checklists/0/add  ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=Win_condition {{ $runIndex }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.win_conditions }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fa3dd4a4-9fe1-4224-bbf0-eb42636600e8",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        7340,
+        940
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $('Ultimate Merge').item.json[\"id\"] }}/checklists/1/add  ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "=Lose condition {{ $runIndex }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.lose_conditions }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "04f4ce5b-ba0a-4466-a1e7-d2c59067b229",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        7780,
+        1500
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "7077f657-cb55-4130-98eb-e3031a61d5e9",
+              "leftValue": "={{ $input.item.json.output.win_conditions }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2cefd9d1-c3d9-4ce0-8ed6-a968aa2089e7",
+              "leftValue": "={{ $input.item.json.output.lose_conditions }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7b39645d-a363-41fb-bf03-78491ec7a90b",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        3200,
+        680
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "758fc7dd-64f4-4bd5-817d-ad6408f18499",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        6600,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "input2"
+      },
+      "id": "44aa42de-3632-42b4-a456-55c6f40dd5f5",
+      "name": "Merge4",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        6900,
+        1181
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3c4b6537-12b8-47c0-9471-447a1e06fa4c",
+      "name": "Loop Over Items1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        7040,
+        1461
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.title_run }}"
+            },
+            {
+              "name": "owner_user_id",
+              "value": "={{ $json.user_id }}"
+            },
+            {
+              "name": "team_id",
+              "value": "={{ $json.team_id }}"
+            },
+            {
+              "name": "playbook_id",
+              "value": "={{ $json.playbook_id }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.initial_scenario }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "42aec543-21e1-4ad3-91de-6d6cee71b819",
+      "name": "Create Playbook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        5440,
+        640
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "8b182fa2-9057-414a-ab0a-19f1beb47401",
+      "name": "Ultimate Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        5380,
+        940
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "439f11f9-7d74-4622-85a8-9b44e3faffd0",
+      "name": "Merge2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        4640,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://raidline_mattermost:8065/api/v4/users/me",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "f2da1898-4709-4422-b139-ec29f975c788",
+      "name": "retrieve User ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3740,
+        460
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://raidline_mattermost:8065/plugins/playbooks/api/v0/playbooks",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "2874d230-0cfa-4a9b-887f-aa408b4cfe59",
+      "name": "Retrieve Playbook IDs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        5000,
+        380
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "b351ce64-d608-48fc-8fc3-838318c7fd05",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        5240,
+        381
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "f3dd0ee5-c5cf-47da-8f52-6ea52c448077",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "Redline Response - PLAYER",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "a9e11725-3731-4dc9-911f-adfc993b88e7",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "edf01c34-4f41-4cbe-94f3-0abfdb0ade80",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        5460,
+        381
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "d3e9ae44-8069-4750-8675-66179bdef719",
+      "name": "Merge3",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        4960,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "id",
+              "newKey": "playbook_id"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "437d511d-5572-45e4-9658-6f6e22e1e51a",
+      "name": "Rename ID into Playbook ID",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        5680,
+        381
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "id",
+              "newKey": "user_id"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "13de6c66-8533-4ca7-bf8b-fe52ad996be9",
+      "name": "Rename Keys2",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        3940,
+        461
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "be9512ba-6ef4-4113-95c7-eb5411ac1390",
+      "name": "Limit",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        5900,
+        381
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "id": "d5edaecf-1fb4-4687-b3cd-84bfcc18a625",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        1880
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "response.text",
+              "newKey": "title_run"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "de512c93-bb95-4a30-a7c8-e8feac182b89",
+      "name": "Rename Keys4",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        4040,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "e2ae74c4-5354-4f27-a19c-61c098faee7f",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        4800,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "db44b4d5-4bc9-4620-ab55-1d096bd569c7",
+      "name": "Merge5",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        5180,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"win_conditions\": [\n    \"Identify and isolate affected systems\",\n    \"Successfully decrypt encrypted files\",\n    \"Implement measures to prevent future infections\"\n  ],\n  \"lose_conditions\": [\n    \"Notifying the public or media about the incident too early\",\n    \"Negotiating with cybercriminals without proper authorization\"\n  ]\n}"
+      },
+      "id": "7115d15a-7d68-4c3c-965f-ebaab9ab78ad",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3280,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"initial_scenario\" : \"a formal incident assistance request sent by an employee of the affected organization. The request should be in the form of a paragraph of around 3-5 sentences, written as if it was an e-mail sent by the employee. ~~This employee may not have technical background.~~\", \"form_title\": \"The title of the incident ticket. Start with FID-Number\" }"
+      },
+      "id": "07a5d62c-9b1c-44f4-9dd6-a8e420c9405a",
+      "name": "Structured Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2860,
+        1480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3986f8f9-1da6-41c6-81ad-04d67e286696",
+              "name": "initial_scenario",
+              "value": "=## {{ $json.output.form_title }}\n\n{{ $json.output.initial_scenario }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "13301217-da3e-402a-b7ad-2a69e718f17b",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3640,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a3a7e8e-18f7-4829-bccd-54e1a16332f1",
+              "name": "win_conditions",
+              "value": "={{ $json.output.win_conditions }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "461abdcd-c1ab-4c63-9500-fd089147059a",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5980,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6ec43ee5-5d13-4f16-991d-1c90bbe9cb24",
+              "name": "lose_conditions",
+              "value": "={{ $json.output.lose_conditions }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "62495b1e-ad24-4154-aa96-593415cac69c",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        6500,
+        1440
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "win_conditions",
+        "options": {}
+      },
+      "id": "9df0c294-ee45-47e8-9f22-e3fd770beeed",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        6200,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "lose_conditions",
+        "options": {}
+      },
+      "id": "68279778-bd37-4137-ad42-cd0664037f1e",
+      "name": "Split Out2",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        6720,
+        1440
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "mQQPEfxnAeWxsUC6",
+        "options": {}
+      },
+      "id": "094310e6-8ca8-427f-a0ae-f045625cec92",
+      "name": "Initialize incident_queries",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        6180,
+        1620
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "321a75a3-97b2-4f55-9bfe-e50176b7a839",
+              "name": "run_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "9e7d1426-2140-4b1b-95a9-4d25eb8af8b8",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        5640,
+        1400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "kZ9zQgryV0dGOhkh",
+        "options": {}
+      },
+      "id": "d25bf00f-e63d-4f78-a696-ac64b0118dd4",
+      "name": "Create the six truths of this scenario",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        5760,
+        1700
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "id": "593e92ab-c2c0-473c-bcea-e5ebdc708756",
+      "name": "Merge6",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        5960,
+        1580
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "SldK2SJnxZK6HZwL"
+      },
+      "id": "c84c3522-1fa5-48e2-8427-ac54b7ede0f8",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        3420,
+        1920
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game-master that helps incident handler drill in their spare-time.\nYou will be given a scenario.\n\nGenerate a title that summarizes the situation. Do not use any greetings, use a maximum of 60 characters and do not put quotation marks. \n {{ $json.output.form_title }}\n\n {{ $json.output.initial_scenario }}\n\nEnsure your title is coherent with the world_facts."
+      },
+      "id": "7ac62ca6-8edb-44ba-bbd0-ec124dd11605",
+      "name": "Generate Title",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        3340,
+        1460
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Game Master tasked with creating dynamic and challenging incident response scenarios for your players, who are cybersecurity incident handlers looking to train in their spare time. Your goal is to create engaging, plausible, and educational scenarios based on a short synopsis that test their skills and prepare them for real-world incidents.\n\nScenario Generation Guidelines:\n\n   1.  Incident: You will be given a security incident synopsis that outlines the core event happening during the scenario. This should serve as the main challenge or problem for your players to address and solve.\n\n   2. World Facts: You are provided with a set of world_facts that establish the context for your scenario. Do not include these facts in your generated scenario, but ensure they are coherent with the scenario you create.\n\n   3. User Request: Your task is to generate a formal incident assistance request sent by an employee of the affected organization. The request should be in the form of a paragraph of around 3-5 sentences, written as if it was an e-mail sent by the employee. ~~This employee may not have technical background.~~ \n\n   4. Scenario Elements:\n           * Incorporate relevant technical details and terminology related to the given incident.\n\n           * Include unique aspects or challenges that make this scenario distinct from others.\n\n           * Consider including red herrings, distractions, or misinformation to increase realism and test players' investigative skills.\n\n   6. Coherence: Ensure the generated scenario is coherent with the given world facts, even though they are not explicitly mentioned in the scenario.\n\nTry to output a JSON document of the following form : \n{\n\t\"initial_scenario\" : \"A paragraph from the point of view of the user that explains what problem he has observed. Do not start with FID-Number\", \"form_title\": \"The title of the incident ticket. Start with FID-Number\" }\n\nHere is the incident synopsis: {{ $json.Activity }}"
+      },
+      "id": "7a2500bf-e15f-41bf-9c04-652cb7acf519",
+      "name": "Generate Synopsis",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        2280,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "sJU8sgD5uSlj4HZ5",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "0eb5456c-a375-4d0d-a1ba-130a4dbab77c",
+      "name": "Generate incident_facts from incident_queries",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        6580,
+        1620
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "46604d1a-2235-4467-8216-e8c65eec8d17",
+              "name": "run_id",
+              "value": "={{ $json.queries_created.first().run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "51082745-8612-4e32-948b-87756ecbcd86",
+      "name": "Retrieve Run_id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        6400,
+        1620
+      ]
+    },
+    {
+      "parameters": {
+        "path": "7e16eb84-a09f-45dc-b468-40c5f2306b65",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "5c3e4c86-c732-4508-91ff-5fc34fe394de",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        760,
+        800
+      ],
+      "webhookId": "7e16eb84-a09f-45dc-b468-40c5f2306b65"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "=<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n\n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - Admin </title>\n</head>\n\n<body>\n<main class=\"container\">\n<div class=\"grid\">\n<article>\n  <header class=\"pico-background-purple-500\"> <h1 class=\"pico-color-zinc-50\">Generation started </h1></header>\n  <h3> A channel will be created in Mattermost soon </h3>\n</article>\n</div>\n<div class=\"grid\"><div></div><a href=\"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\" role=button class=\"pico-background-purple-500\"> Return to dashboard </a><div></div>\n</div>\n</main>\n</body>\n\n</html>",
+        "options": {}
+      },
+      "id": "5ca993d7-3337-41c9-b833-3ff1a554f47b",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        800
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "19e578c7-0274-46bf-91a6-11baf20e5150",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        1240
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "87d52c05-b42e-4b9a-a264-acad995a54e7",
+      "name": "Auto-fixing Output Parser1",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "prompt": "=You're acting as the Game Master (GM) in our text-based tabletop RPG, where players will take on roles as incident handlers at a fictional financial institution. The game is designed to provide realistic incident response training and engage players with a consistent type of incident throughout each scenario.\n\nYou will be given a short scenario of  security incident. Here's in fact the scenario the players will have to play :\n {{ $json.Activity }}\n\n\nAs the GM, your task is to create:\n\n1. **Three broad and hint-like win conditions**, relevant to the chosen incident type, that players must achieve to successfully resolve the situation. These hints should guide players without spoon-feeding them the solutions.\n2. **Two lose conditions** related to the chosen incident type, representing actions or decisions made by players that could realistically escalate the situation negatively.\n\nBased on the incident type, please generate the win and lose conditions in the following format, with no additional text:\n\n```json\n{\n  \"incident_type\": \"<Type of Incident>\",\n  \"win_conditions\": [\n    \"<Win Condition 1>\",\n    \"<Win Condition 2>\",\n    \"<Win Condition 3>\"\n  ],\n  \"lose_conditions\": [\n    \"<Lose Condition 1>\",\n    \"<Lose Condition 2>\"\n  ]\n}\n```\nPlayers will have to play the following scenario :\n {{ $json.Activity }}\n\nFor example, if the incident type is a 'ransomware attack', here's what is should look like:\n\n```json\n{\n  \"incident_type\": \"ransomware attack\",\n  \"win_conditions\": [\n    \"Identify and isolate affected systems\",\n    \"Successfully decrypt encrypted files\",\n    \"Implement measures to prevent future infections\"\n  ],\n  \"lose_conditions\": [\n    \"Notifying the public or media about the incident too early\",\n    \"Negotiating with cybercriminals without proper authorization\"\n  ]\n}\n```\nAnother example, if the incident type is a DDoS targeting the online banking platform :\n\n```json\n\n{\n  \"incident_type\": \"DDoS attack targeting online banking platform\",\n  \"win_conditions\": [\n    \"Identify and block malicious traffic sources\",\n    \"Increase bandwidth to temporarily accommodate legitimate users\",\n    \"Implement rate-limiting measures to protect against future DDoS attacks\"\n  ],\n  \"lose_conditions\": [\n    \"Delaying in informing relevant stakeholders about the incident\",\n    \"Implementing measures that inadvertently cause service disruptions for legitimate users\"\n  ]\n}\n```",
+        "hasOutputParser": true
+      },
+      "id": "ffffcfe6-6080-4db7-8b62-b3a563887308",
+      "name": "Generate Win & Lose Conditions",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        680
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "prompt": "=Reformulate the input to conform to the JSON Scheme.\n\n{{ $json.response.text }}\n\nEnsure the initial_scenario contains all the relevant information so that the incident handler can start working on the case. You may append new information to the initial_scenario field. You may not rewrite it from an external point of view. The initial_scenario is a formal incident assistance request sent by an employee of the affected organization. The request should be in the form of a paragraph of around 3-5 sentences, written as if it was an e-mail sent by the employee. ~~This employee may not have technical background.~~ \n\n",
+        "hasOutputParser": true
+      },
+      "id": "78d7b270-fcce-4a16-ac88-ae076045ce73",
+      "name": "Generate Base Scenario",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.2,
+      "position": [
+        2680,
+        1020
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflows setup a game of Raidline Response. This workflow does the following : \n- Take a random one-liner from a list of potential cybersecurity incident synopsis\n- Generate an incident scenario synopsis that will introduce the game to the players\n- Setup a Mattermost run to represent this game\n- Generate a list of six incident facts which are providing context related to the incident.\n- Generate three incident queries that the players should answer to successfully handle the incident\n- Generate three more incident facts which are answers to the incident queries.\n\nGeneration is being done through LLMs.",
+        "height": 255.72811332207556,
+        "width": 529.0613617960713
+      },
+      "id": "267076fa-b617-4d58-b049-1fadaf681b7f",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        260
+      ]
+    }
+  ],
+  "connections": {
+    "Read Binary Files": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Base Scenario",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Generate Synopsis",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Generate Win & Lose Conditions",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Synopsis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Win & Lose Conditions",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "retrieve User ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Playbook": {
+      "main": [
+        [
+          {
+            "node": "Ultimate Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ultimate Merge": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Playbook IDs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "retrieve User ID": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Playbook IDs": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Rename ID into Playbook ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename ID into Playbook ID": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Title",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Ultimate Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Create Playbook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Create the six truths of this scenario",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create the six truths of this scenario": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Initialize incident_queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Generate Title",
+            "type": "ai_retriever",
+            "index": 0
+          },
+          {
+            "node": "Generate Synopsis",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Title": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Synopsis": {
+      "main": [
+        [
+          {
+            "node": "Generate Base Scenario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize incident_queries": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Run_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Run_id": {
+      "main": [
+        [
+          {
+            "node": "Generate incident_facts from incident_queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Read Binary Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Base Scenario",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Win & Lose Conditions",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Win & Lose Conditions": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Base Scenario": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "k15CDePm46ZcWAKF"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "598559e3-ac97-4ae1-bb4f-3c46cb28e735",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:43:32.696Z",
+      "updatedAt": "2024-11-07T14:43:32.696Z",
+      "id": "LqAzDUuS8yAhKqgj",
+      "name": "scenario_setup"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

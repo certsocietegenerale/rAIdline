@@ -1,0 +1,225 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T13:40:08.955Z",
+  "id": "3AcNk4fP29Vv8LQz",
+  "name": "Publish Ending",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5fefca35-fb56-4c23-9252-17bd43befc5a",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        680,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{  $json.run_id}}/status  ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{  {\n  \"message\": $json.message,\n  \"reminder\": 60000\n} \n}}",
+        "options": {}
+      },
+      "id": "2e088466-e290-4119-a283-6e465ac109d5",
+      "name": "Publish new inject as Status Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1060,
+        320
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $('MM_Object').item.json.run_id }}/finish",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "e47947d2-4665-4a18-a097-de788e2a6fde",
+      "name": "End run",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1240,
+        320
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://raidline_mattermost:8065/api/v4/channels/{{ $('MM_Object').item.json.channel_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "326b376c-3d0f-4c30-9a3b-e688a4973eda",
+      "name": "Archive Channel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1420,
+        320
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "098df13e-53f6-4241-a5ac-fb6f874b2ca3",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "6108ac25-bb0e-429f-8dbd-4255767097db",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "84bfd215-5a21-4618-aca5-b9dfab2c2ea1",
+              "name": "channel_id",
+              "value": "={{ $json.channel_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "ab54a866-3b63-4306-8bcd-9edda6c3ca80",
+      "name": "MM_Object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        860,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will end a Raidline Game on Mattermost. This will be done by publishing the last update and finishing the playbook run."
+      },
+      "id": "d6b18a65-5db9-48cb-8222-8b593aefec0b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        120
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MM_Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish new inject as Status Update": {
+      "main": [
+        [
+          {
+            "node": "End run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End run": {
+      "main": [
+        [
+          {
+            "node": "Archive Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MM_Object": {
+      "main": [
+        [
+          {
+            "node": "Publish new inject as Status Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "3ab04004-b377-4c1e-91c5-f2e575c38841",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:44.608Z",
+      "updatedAt": "2024-11-07T15:00:44.608Z",
+      "id": "IYLI0gUzWm2CHK7C",
+      "name": "status_update"
+    }
+  ]
+}

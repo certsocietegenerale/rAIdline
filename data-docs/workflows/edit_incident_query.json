@@ -1,0 +1,258 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:22.783Z",
+  "id": "DP0Z87X09IwPK62L",
+  "name": "edit_incident_query",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "incident_questions",
+        "updateKey": "_id",
+        "fields": "run_id,query",
+        "options": {}
+      },
+      "id": "57b37cf6-6072-43a5-89fd-9216e2f71388",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        460
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "eb3610c7-6078-441c-825b-1eb1dea7b9c5",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        860,
+        460
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "ddfc9390-d310-4c6c-bd4b-c5907a690861",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "534461da-e33e-4798-9868-fb98e3a4130e",
+              "leftValue": "={{$json.body.run_id}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f324bb38-03f9-4379-976a-5ea886b7d68c",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        160,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab76965f-dd18-40d4-9842-f54deac23e67",
+              "name": "run_id",
+              "value": "={{ $json.body.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "706b9dd5-97d7-47b3-bde0-b9e6cff7a25f",
+              "name": "_id",
+              "value": "={{ $json.body.query_id }}",
+              "type": "string"
+            },
+            {
+              "id": "a0afe104-b8d7-41e0-8b73-8f2bc18e56a7",
+              "name": "query",
+              "value": "={{ $json.body.updated_content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "70eea6b1-00b7-4163-92e5-e90ffdaabed2",
+      "name": "Flatten body",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7dabd781-e446-4825-87fa-83acd8154fd5",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "6ebb0297-5221-4046-869c-26c000d79d32",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        360
+      ],
+      "webhookId": "7dabd781-e446-4825-87fa-83acd8154fd5"
+    },
+    {
+      "parameters": {
+        "content": "Based on a given structure submitted by webhook or workflow, will update the mongoDB collection incident query. (An incident query is a query that should be answered in order to remediate or understand an incident in Raidline)"
+      },
+      "id": "3617558b-8dd4-49eb-a658-2868ef635c30",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        20,
+        160
+      ]
+    }
+  ],
+  "connections": {
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Flatten body",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten body": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "190fcb1a-e802-4e3b-9486-9670ed4d05f7",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:45:35.512Z",
+      "updatedAt": "2024-11-07T14:45:35.512Z",
+      "id": "5IWTlyeuIjrdZRQR",
+      "name": "update_resource"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    }
+  ]
+}

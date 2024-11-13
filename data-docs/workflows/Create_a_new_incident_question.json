@@ -1,0 +1,93 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T09:15:00.620Z",
+  "id": "5A4qpd12WflNkgyy",
+  "name": "Create a new_incident_question",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "incident_questions",
+        "fields": "run_id,query,player_answer",
+        "options": {}
+      },
+      "id": "0176d581-f8da-4111-baee-bbae90e6477e",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        280
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "98c2c5c0-d86f-4a79-b84a-62871f92672d",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        600,
+        280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "This workflow inserts an incident query in the `incident_questions` collection of MongoDB"
+      },
+      "id": "952380a7-9718-4eb6-8702-9075fa4ad7fb",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        420,
+        60
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "d52f870a-9ed9-4ee6-a3a8-74e0af301780",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    }
+  ]
+}

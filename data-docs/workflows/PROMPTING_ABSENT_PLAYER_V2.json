@@ -1,0 +1,354 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:28:47.313Z",
+  "id": "peT6vab8HBqMAZ9m",
+  "name": "PROMPTING_ABSENT_PLAYER_V2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "dc911dfe-7af2-4b4a-88d8-1d91fba6874e",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2dc967e7-1b18-4486-ae8c-ae955e827349",
+              "name": "last_status_update_at",
+              "value": "={{$json.last_status_update_at}}",
+              "type": "string"
+            },
+            {
+              "id": "e206e704-3db1-4da3-ba6c-0ce719d4ab53",
+              "name": "summary",
+              "value": "We are experiencing an urgent security issue as our web application has been compromised by a bug allowing unrestricted access to all records via URL enumeration and IDOR vulnerabilities. Our users' sensitive data is at risk of being exposed, and we need immediate assistance to contain and remediate this situation before any further damage can be done.",
+              "type": "string"
+            },
+            {
+              "id": "317d9e71-4df4-49bf-b638-8d1609058f82",
+              "name": "run_id",
+              "value": "abuarns4w7gz7md6pnis19jnbh",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8f08d890-ab3d-4ec5-ba80-d55012b56c25",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        80,
+        720
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "43451687-a0c1-4781-bdb6-b60cbab9b04a",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        480,
+        900
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $('If').item.json.id }}/status  ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{  {\n  \"message\": $('Generate negative escalade').item.json.output.update,\n  \"reminder\": 600\n} \n}} ",
+        "options": {}
+      },
+      "id": "5ac7660e-562d-43a3-9181-893266c4c7b9",
+      "name": "Publish new inject as Status Update1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1580,
+        700
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"scenario_chosen\": \"media_attention\",\n\t\"update\": \"One paragraph with the update to the scenario.\"\n}"
+      },
+      "id": "bb378203-8737-4a5c-b727-5a77f8c4805a",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c9105255-3611-4276-ad19-4f9151112a1c",
+              "name": "update",
+              "value": "={{ $json.output.update }}",
+              "type": "string"
+            },
+            {
+              "id": "ef22ddd4-b99b-4f25-8e6b-7d68c9b1b2fe",
+              "name": "run_id",
+              "value": "={{ $('Edit Fields').item.json.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3852b2a5-c462-46d6-b2f2-ae6fc4207223",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        880,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "95a4dcde-cbfb-4438-b807-b4f4c868d558",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5b1f1626-2a8e-4594-bd7e-9ca3298f66fb",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are writing a continuation of a previously established scenario, set in a modern world context.\nThe scenario has been unfolding for some time now, and it is essential to introduce new developments that increase tension and stakes.\n\n**Objective:**\n\nYour task is to write an update (at least one paragraph) that raises the stakes by introducing complications or consequences that make the situation more dire, but without reaching a state of jeopardy or irrecoverable damage. \n\nThe update should involve only one of the following scenarios:\n\n* **Escalation**: The issue has escalated to higher management levels within the organization, putting key individuals under increased scrutiny and pressure.\n* **Media Attention**: The matter has gained significant attention in the media, with reporters and journalists seeking information and interviews from key stakeholders.\n* **Private Sphere Impact**: The situation is having a direct impact on clients or other cybersecurity professionals, causing concern and potential repercussions.\n\n**Specific Requirements:**\n\n* Focus on one main subject: You will be writing about only one of the above scenarios. Ensure that your update remains focused and does not deviate from this chosen scenario.\n* Write as an external observer: You are not participating in the game, but rather observing it from outside. Describe the situation as if you were a journalist, analyst, or someone who is keeping track of events.\n* Maintain a neutral tone: Write from an objective and impartial perspective, avoiding any bias or emotional language.\n* Exclude the security team's actions: Your update should not include any information about what the security team is doing to address the issue.\n* Avoid reaching a state of jeopardy: The situation should still be manageable and recoverable at this point.\n\n**Guidelines:**\n\n1. **Build upon existing context**: Make sure your update takes into account the previous developments in the scenario.\n2. **Introduce complications**: Think of ways to complicate the situation for key individuals or groups involved, without making it irrecoverable.\n3. **Show heightened stress and tension**: Make sure your update conveys a sense of urgency and raises the stakes for the protagonist, while still being within manageable limits.\n4. **Limit to one chosen scenario**. \n\n**Assessment Criteria:**\n\n* Clear understanding of the scenario's context\n* Effective introduction of complications or consequences that raise the stakes\n* Well-written paragraphs with proper grammar, spelling, and sentence structure\n* Neutral external tone \n* Ability to convey heightened stress and tension through descriptive language\n\n**Word Count:**\n\nYour update should consist of at least one paragraph, totaling approximately 250-300 words.  \n**Scenario:**\n\n{{ $json[\"summary\"] }}",
+        "hasOutputParser": true
+      },
+      "id": "4f6aa30e-1516-4e67-81cf-34410191738d",
+      "name": "Generate negative escalade",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        500,
+        720
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This run generates a negative escalation with an LLM because the player was unable to submit a status update in due time."
+      },
+      "id": "d3f64c69-c154-440c-b6be-6e4124941fd6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "7QjyfcPgu833K6vh",
+        "options": {}
+      },
+      "id": "6e99c4c2-599d-4aa6-b1c0-5ef7a5f7ac5b",
+      "name": "Ensure Update Coherency",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        720
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Generate negative escalade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate negative escalade",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate negative escalade",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Ensure Update Coherency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Publish new inject as Status Update1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate negative escalade": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensure Update Coherency": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "eef9ea98-3ac2-4f75-9123-461e1324db72",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    },
+    {
+      "createdAt": "2024-11-08T08:34:45.238Z",
+      "updatedAt": "2024-11-08T08:34:45.238Z",
+      "id": "dk8gyCmnSNmU7M4F",
+      "name": "mattermost_run"
+    }
+  ]
+}

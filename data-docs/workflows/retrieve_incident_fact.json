@@ -1,0 +1,98 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T10:40:31.657Z",
+  "id": "xP2HH4CCj5IBfBsJ",
+  "name": "retrieve_incident_fact",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "0e3343da-3731-4292-8888-5133178d7379",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        620,
+        280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "collection": "incident_facts",
+        "options": {},
+        "query": "={{ JSON.stringify({\"run_id\":$json.run_id, \"_id\":$json._id }) }}"
+      },
+      "id": "9ecd2912-d1ba-40dd-bd15-c50ebc6c122c",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        280
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "This subworkflow retrieves a singular fact based on the fact id and the run id associated."
+      },
+      "id": "4fa25b56-7c05-4add-b8f6-79405f940817",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "789ea1a0-6b7f-4153-b32a-29d50274e992",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:00.819Z",
+      "updatedAt": "2024-11-07T14:30:00.819Z",
+      "id": "0cZGcKUfkpgg1Vgb",
+      "name": "access_incident_facts"
+    }
+  ]
+}

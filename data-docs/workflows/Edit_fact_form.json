@@ -1,0 +1,622 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:20.593Z",
+  "id": "eWEYNeZmT5pA8kEA",
+  "name": "Edit_fact_form",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "c54fbd5b-7419-4a81-bc4d-5979a8c937d4",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2840,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Redline Reponse - Edit</title>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n</head>\n<body>\n<div>\n  <h1>Change your incident {{ $if($json.fact.isEmpty(),\"query\",\"fact\") }}</h1>\n  {{ $if($json.fact.isEmpty(),'<main class=\"container-fluid pico-background-orange-250 secondary\"> Regenerating a query will also regenerate all facts associated with it ! </main>',\"\") }}\n  <form action=\"/webhook/dc8d50f7-0f84-4d30-b389-5523eca17fde\" method=\"post\">\n  <fieldset>\n    {{ $if($json.fact.isNotEmpty() && $json.query.isNotEmpty(),\"<h3> Query associated : </h3><i>\" + $json.query + \"</i>\",\"\") }}\n    <h3>Current {{ $if($json.fact.isEmpty(),\"query\",\"fact\") }} to modify</h3>     \n    <p>\n    {{ $if($json.fact.isEmpty(),$json.query,$json.fact) }}</p>\n    <h3>New {{ $if($json.fact.isEmpty(),\"query\",\"fact\") }}</h3>\n    <textarea\n  name=\"updated_content\"\n  placeholder=\"Write the new element...\"\n  aria-label=\"Professional short bio\"\n>\n</textarea>\n  </fieldset>\n  <input type=\"hidden\" id=\"run_id\" name=\"run_id\" value={{ $('Webhook').item.json.query.run_id }} />\n  <input type=\"hidden\" id=\"fact_id\" name=\"fact_id\" value={{ $('Webhook').item.json.query.fact_id }} />\n  <input\n    type=\"submit\"\n    value=\"Update\"\n  />\n\n    <a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $('Webhook').item.json.query.run_id }}\" role='button''>No</a>\n</form></div>\n</body>\n</html>\n"
+      },
+      "id": "b19b37e6-4b1f-4efb-a332-78955d03aaf0",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2260,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "path": "3743d094-b746-423c-a63f-a41c1b2e068e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "12145e1c-e87b-45e4-82b8-eae326018218",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        220
+      ],
+      "webhookId": "3743d094-b746-423c-a63f-a41c1b2e068e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "9d1e863f-13ae-4a8e-aab0-34c953c035e7",
+              "leftValue": "={{ $json.query.fact_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ce444aa4-f84b-4084-8c1f-978c0b326ad4",
+              "leftValue": "={{ $json.query.query_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "8b79c8d3-2b6e-4370-bfbe-570e6c85f7ce",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>My HTML document</title>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n</head>\n<body>\n  <div>\n      <h1>Looking for something ?</h1>\n  </div>\n</body>\n</html>\n"
+      },
+      "id": "80fb53b2-170c-4a69-b2cf-f383a8db3f37",
+      "name": "HTML1",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1260,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "18ae5acc-4436-4ab7-8f37-479ed836da9a",
+              "leftValue": "={{ $json.query.fact_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "694475a6-d021-4cf9-a4c3-a713124e9380",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        760,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "xP2HH4CCj5IBfBsJ",
+        "options": {}
+      },
+      "id": "4c5081bd-53bd-45e3-b322-b510bc210f28",
+      "name": "Retrieve Incident Fact",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Yt83LQvhN8nLtcEz",
+        "options": {}
+      },
+      "id": "b2a39044-2293-4ee8-8686-5308cca78884",
+      "name": "Retrieve Incident Query",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb01c2e6-a0af-4ac9-9733-67e2d17b128b",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id  }}",
+              "type": "string"
+            },
+            {
+              "id": "110ee410-5347-4c11-b595-98b7f7cd20cc",
+              "name": "_id",
+              "value": "={{ $json.query.fact_id  }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b56d6800-213f-46d9-be69-afb915f0eaec",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fb01c2e6-a0af-4ac9-9733-67e2d17b128b",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id  }}",
+              "type": "string"
+            },
+            {
+              "id": "110ee410-5347-4c11-b595-98b7f7cd20cc",
+              "name": "_id",
+              "value": "={{ $json.query.query_id  }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "028908b2-436c-4cce-8561-9de64dda9d3c",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        980,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d8679d57-c9a8-4b2a-b8b2-013e0b17ae6d",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1420,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "907a80c4-c7cd-4de0-b4a7-1af313ddbad4",
+              "name": "_id",
+              "value": "={{$json._id}}",
+              "type": "string"
+            },
+            {
+              "id": "50c85a22-9c0c-4e65-803b-a63666312bca",
+              "name": "run_id",
+              "value": "={{$json.run_id}}",
+              "type": "string"
+            },
+            {
+              "id": "72cac599-aa09-4b6b-a2c0-2d52d83e769e",
+              "name": "fact",
+              "value": "={{ $('Retrieve Incident Fact').item.json.fact }}",
+              "type": "string"
+            },
+            {
+              "id": "d188e059-dcb9-4043-9aa6-6a187b227370",
+              "name": "query",
+              "value": "={{$json.query}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "013fad2d-b87b-4724-b267-d9b6f150374f",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "567f61ce-76eb-4323-b809-c0f06f590129",
+              "leftValue": "={{ $json.query_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "4af82b48-e157-4e1b-bf84-28b259700707",
+              "leftValue": "={{ $json.query_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ec8123f9-4e83-4449-88a7-db2423dd47e1",
+      "name": "If2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        1420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "1fde0f7f-7a6c-453c-8c66-5984a9f68238",
+      "name": "Edit Fields4",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1880,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Yt83LQvhN8nLtcEz",
+        "options": {}
+      },
+      "id": "90846b41-ea0c-4a27-a2a6-71141665ec37",
+      "name": "Retrieve Incident Query1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dd70ed9f-a2ec-4743-bb61-fe686d6dbe84",
+              "name": "_id",
+              "value": "={{ $json.query_id.replaceAll(\"\\\"\",\"\") }}",
+              "type": "string"
+            },
+            {
+              "id": "93067b2a-4eb0-451b-97e9-6c93e2fbb14d",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "698f5bb0-3435-4cb5-bf9d-fe5bb617de8a",
+      "name": "Edit Fields5",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1640,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow retrieves an incident fact (passed in argument by the webhook through a GET request) and shows a form to the admin so he can provide a new custom incident fact."
+      },
+      "id": "c2c75b66-c47b-4e83-917b-abf23861c76b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -340
+      ]
+    }
+  ],
+  "connections": {
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Fact": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Query": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Fact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Incident Query1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Incident Query1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "2af4891f-4dfb-4fbd-8461-cee436634ede",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

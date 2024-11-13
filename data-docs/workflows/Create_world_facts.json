@@ -1,0 +1,140 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:18.497Z",
+  "id": "EtnIiEhtTCYxpzuT",
+  "name": "Create world facts",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "world_facts",
+        "fields": "fact,tags",
+        "options": {}
+      },
+      "id": "c18af631-bbbc-48d5-89ee-c5293f4446d7",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        420
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "71e9b08b-da05-42e6-b771-89a42753dab4",
+        "formTitle": "Create new world facts",
+        "formDescription": "This form will help you build new facts",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "fact",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "tags",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "service_provider"
+                  },
+                  {
+                    "option": "software"
+                  },
+                  {
+                    "option": "architecture"
+                  },
+                  {
+                    "option": "incident_response"
+                  },
+                  {
+                    "option": "threat_intelligence"
+                  },
+                  {
+                    "option": "player_side"
+                  },
+                  {
+                    "option": "adversaries"
+                  },
+                  {
+                    "option": "thirdparty"
+                  }
+                ]
+              },
+              "multiselect": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "28ca6cef-4732-490d-b278-ef055c8c988d",
+      "name": "n8n Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        420
+      ],
+      "webhookId": "71e9b08b-da05-42e6-b771-89a42753dab4"
+    }
+  ],
+  "connections": {
+    "n8n Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "283b5e82-55af-4a66-a422-bdc6d84d0bb9",
+  "triggerCount": 2,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    }
+  ]
+}

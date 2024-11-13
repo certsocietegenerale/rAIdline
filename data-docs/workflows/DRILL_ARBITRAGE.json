@@ -1,0 +1,203 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T14:40:58.909Z",
+  "id": "emxu9rbMHYj37ADo",
+  "name": "DRILL_ARBITRAGE",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1701ec7-d711-492c-af43-be0c3b9308bf",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "id": "abbbd21b-b671-48f3-9e15-7efdc1411a97",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        700
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "746bf472-1013-43f7-b31d-0006df43dd55",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1080,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3dfbfe-23be-497e-bde4-592c0d07206d",
+              "name": "msgs",
+              "value": "={{json.msgs}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2e3dd1a7-2cf8-49d1-be06-9d30269f83a3",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c1e0d081-b9c9-443d-b265-6970a5c5678f",
+      "name": "Summarization Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        700,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Our players are doing a tabletop incident handling.\nHere is the initial context : {{ $json.initial_context }}\n\nHere is a summary of the updates since the beginning : {{ $json.response.text }}\nHere is the last update : \n{{ $json.last_msg}}\nDecide how the incident should evolve.\nReply by ONLY outputting one of the three following choices. You are not expected to explain your choice. Only the result matters. : \n* POSITIVE_ESCALATION, meaning players have sent a satisfactory status update in the expected timerange\n* NEGATIVE_ESCALATION, meaning players have sent an unsatisfactory status update in the expected timerange\n* STATUS_QUO, meaning the status update is neither satisfactory nor unsatisfactory"
+      },
+      "id": "12f45797-bcf7-4325-ba7f-a7d3d2332522",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1280,
+        240
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Summarization Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarization Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "a9362048-d203-4760-8ad3-63afce00bfa3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-06-17T09:22:49.032Z",
+      "updatedAt": "2024-06-17T09:22:49.032Z",
+      "id": "D0FT6GtK38NdAtuM",
+      "name": "drill"
+    },
+    {
+      "createdAt": "2024-06-18T11:19:23.331Z",
+      "updatedAt": "2024-06-18T11:19:23.331Z",
+      "id": "lj78CvKQ2JoJpbKP",
+      "name": "decision_making"
+    },
+    {
+      "createdAt": "2024-11-08T14:40:58.120Z",
+      "updatedAt": "2024-11-08T14:40:58.120Z",
+      "id": "Dh18CsMn3Lm5Cx7K",
+      "name": "delete_me"
+    }
+  ]
+}

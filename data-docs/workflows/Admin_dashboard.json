@@ -1,0 +1,583 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:16.463Z",
+  "id": "tLVrZfdaHkqhbbwI",
+  "name": "Admin dashboard",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowId": "VAXjEICncWfGOqju",
+        "options": {}
+      },
+      "id": "0d417b5e-68a3-41e6-8b09-3672d62c15c6",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5b06fbc4-2d86-4fdc-b71c-366cb2021602",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "bfe38f7a-e235-4e9d-bd47-68c66f623053",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n\n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - Admin </title>\n</head>\n<body>\n  <div class=\"container\">\n    <article class=\"pico-background-blue grid\"><h1 class=\"pico-color-zinc-50\">Control Panel</h1>  <div></div>   <a href=\"http://localhost:5678/webhook/7e16eb84-a09f-45dc-b468-40c5f2306b65\" class=\"pico-background-fuchsia-450\" role=\"button\">Start a new Run </a></article>\n\n\n    <h2> Ongoing runs </h2>\n    <div class=\"overflow-auto\">\n    <table width=\"100%\">\n      <thead>\n        <th scope=\"col\">Title</th>\n  <th scope=\"col\">Creation Date</th>\n  <th scope=\"col\">Last Update Date</th>\n  <th scope=\"col\">Steps</th>\n  <th scope=\"col\">Players</th>\n  <th scope=\"col\">Status</th>\n  <th scope=\"col\">See more</th>\n  <th scope=\"col\">Send Update</th>\n\n      </thead>\n    {{ $json.data.map(x => x.item).join(\"\\n\")}}\n    </table>\n    </div>\n\n    <h2> Finished Runs </h2>\n    <table>\n    <thead><th>Title</th><th>Creation date</th><th>Finished Date</th><th>Number of updates published</th><th>Number of players</th><th>See more</th></thead>\n      {{ $('finished_runs').first().json.finished_runs_table.map(x => x.html).join(\"\\n\")}}\n    </table>\n  <div>\n</body>\n\n<script>\n  const isOpenClass = \"modal-is-open\";\nconst openingClass = \"modal-is-opening\";\nconst closingClass = \"modal-is-closing\";\nconst scrollbarWidthCssVar = \"--pico-scrollbar-width\";\nconst animationDuration = 400; // ms\nlet visibleModal = null;\n\n// Toggle modal\nconst toggleModal = (event) => {\n  event.preventDefault();\n  const modal = document.getElementById(event.currentTarget.dataset.target);\n  if (!modal) return;\n  modal && (modal.open ? closeModal(modal) : openModal(modal));\n};\n\n// Open modal\nconst openModal = (modal) => {\n  const { documentElement: html } = document;\n  const scrollbarWidth = getScrollbarWidth();\n  if (scrollbarWidth) {\n    html.style.setProperty(scrollbarWidthCssVar, `${scrollbarWidth}px`);\n  }\n  html.classList.add(isOpenClass, openingClass);\n  setTimeout(() => {\n    visibleModal = modal;\n    html.classList.remove(openingClass);\n  }, animationDuration);\n  modal.showModal();\n};\n\n// Close modal\nconst closeModal = (modal) => {\n  visibleModal = null;\n  const { documentElement: html } = document;\n  html.classList.add(closingClass);\n  setTimeout(() => {\n    html.classList.remove(closingClass, isOpenClass);\n    html.style.removeProperty(scrollbarWidthCssVar);\n    modal.close();\n  }, animationDuration);\n};\n\n// Close with a click outside\ndocument.addEventListener(\"click\", (event) => {\n  if (visibleModal === null) return;\n  const modalContent = visibleModal.querySelector(\"article\");\n  const isClickInside = modalContent.contains(event.target);\n  !isClickInside && closeModal(visibleModal);\n});\n\n// Close with Esc key\ndocument.addEventListener(\"keydown\", (event) => {\n  if (event.key === \"Escape\" && visibleModal) {\n    closeModal(visibleModal);\n  }\n});\n\n// Get scrollbar width\nconst getScrollbarWidth = () => {\n  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;\n  return scrollbarWidth;\n};\n\n// Is scrollbar visible\nconst isScrollbarVisible = () => {\n  return document.body.scrollHeight > screen.height;\n};\n\n</script>\n</html>\n"
+      },
+      "id": "1543026b-94e3-44fe-b83f-c395a6303659",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        3460,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.html}}",
+        "options": {}
+      },
+      "id": "350e62ac-0290-4485-bb51-63cd1a6cdfab",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3940,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "df445c5e-00ed-4f25-8c66-358eca2eead7",
+              "name": "props",
+              "value": "={\"authorUsername\":\"gamemaster\" }",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "083af94e-2429-43c2-8073-2b4680dfbc1d",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2920,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ef224ed5-0fd0-4fb2-a7a4-55aa354cd8fa",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2140,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "88d980d7-2b8b-4359-b5f9-ad69748d8ca8",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Admsaw3h8DsbEyZC",
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "8f3ba0f8-ad4b-4859-9b5d-57615fba7bce",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        60
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "98d24706-e528-48cb-b33b-867f466c70dc",
+              "name": "title",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "2cc2cdef-c90d-4de9-9543-0bdbaf0ef03a",
+              "name": "run_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "7e2bfdcd-b954-4a16-a1b1-824eb6c6aacb",
+              "name": "is_active",
+              "value": "={{ $json.end_at == 0 }}",
+              "type": "boolean"
+            },
+            {
+              "id": "e9ce544e-d843-4dc5-b654-24c8b02a3b0b",
+              "name": "number_of_updates",
+              "value": "={{ $json.status_posts.length}}",
+              "type": "number"
+            },
+            {
+              "id": "d04ff76a-f3b9-42db-a172-9135a081d4d2",
+              "name": "number_of_participants",
+              "value": "={{ $json.invited_user_ids.length - 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "4ee6547e-2d18-4988-9ed4-d121767b9bf3",
+              "name": "id",
+              "value": "={{$if($json.status_posts.isEmpty(),\"\",$json.status_posts.last().id) }}",
+              "type": "string"
+            },
+            {
+              "id": "e0d182ab-73f1-45e3-92f8-cadd1a54ac7a",
+              "name": "creation_date",
+              "value": "={{ $json.create_at }}",
+              "type": "number"
+            },
+            {
+              "id": "eb2c7b0d-03fd-4110-92ed-914e245bcb4a",
+              "name": "last_update",
+              "value": "={{ $json.last_status_update_at }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ec27517e-8d9b-4a40-ab40-6aed652e8009",
+      "name": "run_item1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2520,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6386b3e-4740-458f-b21e-f21c26a8ada7",
+              "name": "item",
+              "value": "=<tr>\n<td width=\"40%\">{{ $('run_item1').item.json[\"title\"] }}</td>\n<td width=\"10%\">{{  DateTime.fromMillis($('run_item1').item.json[\"creation_date\"]).toUTC().toFormat('yyyy-MM-dd\\nHH:mm:ss')}}</td>\n<td width=\"10%\">{{ DateTime.fromMillis($('run_item1').item.json[\"last_update\"]).toUTC().toFormat('yyyy-MM-dd\\nHH:mm:ss')}}</td>\n<td width=\"5%\">{{ $('run_item1').item.json[\"number_of_updates\"] }}/10</td>\n<td width=\"5%\">{{ $('run_item1').item.json[\"number_of_participants\"] }}</td>\n<td width=\"10%\">{{ $if($json.props.authorUsername != \"gamemaster\", \"<kbd class='pico-background-pink-450'>GM turn</kbd>\",\"<kbd>Player turn</kbd>\") }}</td>\n<td width=\"10%\"><a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $('run_item1').item.json[\"run_id\"] }}\" role='button'>Details</a></td>\n<td width=\"10%\"><a href=\"http://localhost:5678/webhook/c1c41b12-1eda-4238-99bb-64c0128bb29a?run_id={{ $('run_item1').item.json[\"run_id\"] }}\" role='button' class='contrast'>Run</a></td>\n</td></tr>\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7594ab10-1f3a-4718-83c3-d58c194f95a2",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3040,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "p2b2VlovvhAkFAkc",
+        "options": {}
+      },
+      "id": "6865c7ff-3a14-4669-b83a-6922698ab880",
+      "name": "Execute Workflow2",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        400,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "8a601c84-be10-48c4-9d1a-feed71e4faa4",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        620,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "634205a1-a527-4976-8c8e-ffdd6608fe73",
+              "name": "html",
+              "value": "=<tr>\n<td width=\"40%\">{{ $json[\"name\"] }}</td>\n<td width=\"10%\">{{  DateTime.fromMillis($json[\"create_at\"]).toUTC().toFormat('yyyy-MM-dd\\nHH:mm:ss')}}</td>\n<td width=\"10%\">{{ DateTime.fromMillis($json[\"last_status_update_at\"]).toUTC().toFormat('yyyy-MM-dd\\nHH:mm:ss')}}</td>\n<td width=\"5%\">{{ $json.status_posts.length }}</td>\n<td width=\"5%\">{{ $json.invited_user_ids.length }}</td>\n<td width=\"10%\"><a href=\"http://localhost:5678/webhook/cc817b21-eccc-4805-a46a-c648328361db?run_id={{ $json[\"id\"] }}\" role='button'>Details</a></td>\n</td></tr>\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1955df54-79c3-49dc-b6e6-374be8547aae",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        840,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "finished_runs_table",
+        "options": {}
+      },
+      "id": "26c20f11-f64a-4e94-8c3f-80f59aa004db",
+      "name": "finished_runs",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "2421ea8e-5e8c-414e-a15a-625c261eab30",
+              "leftValue": "={{ $json.total_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f32533d2-ee91-49f9-87b1-3271c0d02b12",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "path": "dba9d340-6994-417b-8cff-7c7abae42a5e",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "45b3b8c6-1e26-407d-a41d-9945cc5e6d72",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        140
+      ],
+      "webhookId": "dba9d340-6994-417b-8cff-7c7abae42a5e"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "run_item1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "run_item1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow2": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "finished_runs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "finished_runs": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "6ecbaa5a-52d9-43f7-9215-3f929ddb8618",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:01:54.629Z",
+  "id": "mQQPEfxnAeWxsUC6",
+  "name": "Initialize 3 questions from the six truths",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7414c047-6684-4b1f-9118-f45e47e3e0a1",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1140,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're a game-master that helps incident handler from a financial institution drill in their spare-time.\nYou will be given the following : \n- The initial scenario\n- The world facts of this game : The world facts are immutable truths that happen in this world.\n- The incident facts : Immutable truths linked to the scenario currently being played by the players.\n\nBased on the input, generate three key questions for this scenario that the players will need to answer in order to unravel the immutable truths from the scenario.\n\nEach question must be written in a neutral tone, as if providing factual information. Each question should also hint the players on what they should investigate.\n\nHere's the input scenario :\n {{ $json.initial_scenario }}"
+      },
+      "id": "033ec3b7-b3d3-4a55-9868-f466c1105819",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        -540,
+        580
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "mistral-nemo:latest",
+        "options": {}
+      },
+      "id": "608ed844-8dbd-43b8-998a-1eb07b04f103",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        800
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"document\":[\n  {\"query\":\"The first truth of this incident.\"},\n  {\"query\":\"The second truth of this incident.\"},\n  {\"query\":\"The third truth of this incident.\"}\n    ]\n}"
+      },
+      "id": "f523a68f-1270-46c7-9e36-f96100651680",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "9b6db715-e92e-41d7-9fcb-db4426830829",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.document",
+        "options": {}
+      },
+      "id": "5c0b60dd-4270-4ee0-98a1-0407643d4e5f",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        240,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id"
+            }
+          ]
+        }
+      },
+      "id": "d3737d9c-ad85-4b78-82fa-b0a15bbcdcaf",
+      "name": "Workflow Retriever1",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Take the following input and format it as three questions : \n {{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "30654a93-97d1-4e63-8e70-c5650d6f3998",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        -140,
+        580
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3694d06c-9e99-4f34-b72b-68291d8ad292",
+              "name": "player_answer",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "initial_scenario",
+        "options": {}
+      },
+      "id": "39e248d0-1946-4c92-944d-781e75a53d14",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        680,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "5A4qpd12WflNkgyy",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "52a28699-ab70-4a11-a0ee-434f62ef2940",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "queries_created",
+        "options": {}
+      },
+      "id": "b5c1f06c-3de5-408e-a462-321072e619bb",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will generate three queries that the player should answer in order to win the game."
+      },
+      "id": "663e90f3-b41f-4370-9fda-2233a7b957cc",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        140
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever1": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "825944f5-462c-4019-a605-3375f0a3a2f6",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T15:01:43.679Z",
+      "updatedAt": "2024-11-07T15:01:43.679Z",
+      "id": "NhWOp7dRcRljHlyR",
+      "name": "create_resource"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:00.819Z",
+      "updatedAt": "2024-11-07T14:30:00.819Z",
+      "id": "0cZGcKUfkpgg1Vgb",
+      "name": "access_incident_facts"
+    }
+  ]
+}

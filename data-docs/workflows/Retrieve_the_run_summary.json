@@ -1,0 +1,607 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T09:40:48.904Z",
+  "id": "HAUnDrntDbvEagc7",
+  "name": "Retrieve the run summary",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "55a18b42-93dd-4e6a-b3ec-90be8cdcad01",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1680,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "481fc15b-503b-4341-8b25-0fd3be746038",
+      "name": "Retrieve run",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"oqa4ft17u3n6up4nj71bgub7ka\"}"
+      },
+      "id": "8ce2481c-3e49-471f-b642-d0bbe2901313",
+      "name": "Debug node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        520
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "87ad9539-09d9-4946-a2d0-ada4f2c11b0f",
+              "leftValue": "={{ $json.status_posts }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b8df4c90-0d9a-4dbc-a5d5-c5169fd0702f",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -680,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "cb1d4810-8d95-483a-b9c8-62fcf5fee434",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        380
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "status_posts",
+        "options": {}
+      },
+      "id": "87b6f5cb-8b69-4184-ac85-7b4024543e6b",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "status_updates",
+        "options": {}
+      },
+      "id": "b3984f18-70a7-40af-92c2-077fd2072f35",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        200,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "94efba69-8333-408f-8111-37462dbfd63b",
+              "name": "status_summary",
+              "value": "[\"There was no status update yet. This means this is the player's first update.\"]",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8a23ac44-7bc8-48cc-8e7d-0adfd911513b",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -140,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5d83e564-9437-41e3-bbcc-a988ae5c812c",
+              "name": "text",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "ce967c35-1ad6-42e1-9709-b609d28fa6d1",
+              "name": "author",
+              "value": "={{ $json.props.authorUsername }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bed5c391-4d6f-4e11-a610-97255d8ed23e",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -60,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "902002c5-30df-4295-bd7a-4ca6c9b6ea86",
+              "name": "run_id",
+              "value": "={{$json.run_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9d4779c9-eaca-4bcd-becd-ebeb2d5278d7",
+      "name": "Run_id object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1240,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Admsaw3h8DsbEyZC",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "9509c9df-e4a8-496d-8326-71a7fdde1c14",
+      "name": "Retrieve message",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": " {{\n   return {\n  \"player_updates\": $input.first().json.status_updates.filter(x => x.author != \"gamemaster\") ,\n  \"gamemaster_updates\":$input.first().json.status_updates.filter(x => x.author == \"gamemaster\")\n}\n   }}"
+      },
+      "id": "03593724-328e-4b9a-bc98-c1a802f534fd",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27a1ad3c-ceb3-4b8f-a503-e95f4e687518",
+              "name": "gamemaster_updates",
+              "value": "={{ $json.gamemaster_updates.map(x => x.text) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e036bc9-9701-4bbd-a8a5-0b1d497aa07d",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        640,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "051025f3-f0fa-4402-806c-bf55342dd354",
+              "name": "update_summary",
+              "value": "={{ $json.response.output_text }}",
+              "type": "string"
+            },
+            {
+              "id": "382e137f-4e28-42a8-9301-37939cc49351",
+              "name": "initial_scenario",
+              "value": "={{ $('Retrieve run').first().json[\"summary\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "14e197c6-3c33-4a60-9e3c-5ea754c8bb71",
+              "name": "latest_player_message",
+              "value": "={{ $('Code').first().json.player_updates.last().text }}",
+              "type": "string"
+            },
+            {
+              "id": "56176406-35a0-45c3-94d2-e4f081710323",
+              "name": "run_id",
+              "value": "={{ $('Run_id object').item.json[\"run_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c5cff1b9-31ff-4f13-a5d2-10e37de41f87",
+      "name": "Prepare output object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1560,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "469cc03c-0faf-4288-88f9-8b6dfe14875a",
+              "leftValue": "={{ $json.gamemaster_updates }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a49b4c4f-4fdf-471b-bd64-8dba8506090f",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        860,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "94efba69-8333-408f-8111-37462dbfd63b",
+              "name": "update_summary",
+              "value": "[\"There was no status update yet. This means the first scenario update has yet to be written.\"]",
+              "type": "array"
+            },
+            {
+              "id": "6232d469-9bb9-403c-b401-884241e5edf4",
+              "name": "initial_scenario",
+              "value": "={{ $('Retrieve run').first().json[\"summary\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "7ce3c7dd-c358-4561-ac4c-7e4536e4c6db",
+              "name": "latest_player_message",
+              "value": "={{ $('Code').first().json.player_updates.last().text }}",
+              "type": "string"
+            },
+            {
+              "id": "a7d3e70e-00f7-4664-838e-a8babc9ccf68",
+              "name": "run_id",
+              "value": "={{ $('Run_id object').item.json[\"run_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bea995ca-f240-4b2d-8321-65b945b16b8b",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1160,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "summarizationMethod": "refine",
+              "refinePrompt": "=Your job is to produce a final summary\nWe have provided an existing summary up to a certain point: \"{existing_answer}\"\nWe have the opportunity to refine the existing summary\n(only if needed) with some more context below.\n------------\n\"{text}\"\n------------\n\nGiven the new context, refine the original summary\nIf the context isn't useful, return the original summary.\n\nREFINED SUMMARY:",
+              "refineQuestionPrompt": "=SUMMARIZE THIS TO PROVIDE A CONCISE CONTEXTUAL BACKGROUND FOR A TABLETOP SCENARIO (Focusing on setting the scene and understanding the evolution of the situation):\n\n\n\"{text}\"\n\n\nCONCISE SUMMARY:"
+            }
+          }
+        }
+      },
+      "id": "cba3318a-5e0f-4e24-b09d-395748e1a629",
+      "name": "Summarization Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workfllow will retrieve the scenario and scenario updates from a given Raidline game and will compile a summary of the scenario with an LLM."
+      },
+      "id": "223ab26a-6dac-49e8-a8da-c34644542c44",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1180,
+        -60
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Debug node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve run": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Retrieve message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run_id object": {
+      "main": [
+        [
+          {
+            "node": "Retrieve run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug node": {
+      "main": [
+        [
+          {
+            "node": "Run_id object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarization Chain": {
+      "main": [
+        [
+          {
+            "node": "Prepare output object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "b13cd8e7-fac2-4e8a-b3e8-565d66216404",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

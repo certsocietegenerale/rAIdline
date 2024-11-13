@@ -1,0 +1,545 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:17.475Z",
+  "id": "xL6W3CGZIabbscky",
+  "name": "answer_player_questions",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d3a13d83-6b57-415c-b3a1-1c3f7d25f9c4",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        240,
+        200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "c01d8044-8138-4937-8328-95caac4ac9cf",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        460
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"answer\": \"In this section, you are expected to write the answer in the point of view of the character that replies to the incident handler. You can write it as Character_Surname: Here is my full answer in-character\"\n}"
+      },
+      "id": "09d9b807-68ae-47f2-a603-de4b814a3fbf",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "name": "incident_facts",
+        "description": "Call this tool to query your assistant if the user's question can be answered by the incident facts of this game. The incident facts are elements specific to the current incident that set additional context. \n\nIf there's an answer provided by this tool, use it to answer the user's question. There's no need to gather additional context if this tool gives you an answer.",
+        "workflowId": "OrWDf0Mc6OL9791f",
+        "responsePropertyName": "answer",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $json.id }}"
+            },
+            {
+              "name": "query",
+              "stringValue": "={{ $json.body.text }}"
+            }
+          ]
+        }
+      },
+      "id": "ad31cd01-d3ed-4836-be7e-4bdef806188c",
+      "name": "Gather Incident Facts",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1220,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "name": "access_world_facts",
+        "description": "Call this tool to interrogate the world facts of this game. \nThe world facts are immutable truths that set the basic rules of this game. They will give world-building information such as the actors in the world, the entity in which the players are working.  They will not contain specific details such as a filesystem's structure, a domain ip, etc.. \n\nYour assistant will answer you with the corresponding world fact if it exists. Else, it will tell you that it's unable to access the information.",
+        "workflowId": "1FzoT3wFxB2diofM",
+        "responsePropertyName": "answer"
+      },
+      "id": "2516f0c6-e91c-4642-b1ac-d7312d17181e",
+      "name": "Gather World Facts",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        1380,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "02093e58-6a6d-4042-b9b4-329aa3981b25",
+              "name": "body",
+              "value": "={{ $json.body }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6136ddc4-c399-4cb5-8ad2-2fa1f4e632d6",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        320,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/channel/{{ $json.body.channel_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "29101a79-f4a3-469e-95a7-e62e27f85bfa",
+      "name": "Retrieve playbook run from ID",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        640
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"body\": {\n      \"channel_id\": \"enr1yuyt1t899mwiupz5o5kj8c\",\n      \"channel_name\": \"unauthorized-access-via-unsecured-iot-device\",\n      \"command\": \"/ask\",\n      \"response_url\": \"http://localhost:8065/hooks/commands/eb3t88js5ifhugss691qtioa6w\",\n      \"team_domain\": \"sven\",\n      \"team_id\": \"xeodjcb8pjy8xr1mcpat4h84qh\",\n      \"text\": \"hi there\",\n      \"token\": \"t764zzuyibrkpebsdeaws853ea\",\n      \"trigger_id\": \"ZmQ2emVwdXV4NzhiamM3aDk1OW1rOXQ4MW86aWRnZnpuOXFnN2ZocGc1NGozMXpqZjh6aWE6MTcyMTk3OTAyMTcyMDpNRVVDSUNTM3ZBVWgyak9STE1kNlAvREtLTHdtQ25MajlyajVQVzNBc0RVUzJZb3BBaUVBdytLQkxkSHc4VURPTUMyelB5aVBqL1dZU2ROdlFDRjhPYVByc2I5RmZsMD0=\",\n      \"user_id\": \"idgfzn9qg7fhpg54j31zjf8zia\",\n      \"user_name\": \"ade\"\n    }\n  }\n]"
+      },
+      "id": "c762a456-d695-4a4e-a54b-45f9e7036136",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "a375a8bf-12c3-4792-ac41-4897bf605de3",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "channelId": "={{ $('Webhook').item.json.body.channel_id }}",
+        "message": "=@{{ $('Webhook').item.json.body.user_name }} asked the following : \n> {{ $('Webhook').item.json.body.text }}\n\nHere's the answer : \n{{ $json.output.answer }}",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "id": "7a77f83e-4256-455f-ba2d-a4861512ec78",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        300
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fbdd7e34-7bf5-49dd-96e9-43dce83f6964",
+              "name": "run_id",
+              "value": "={{ $('Merge').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "cec65522-65bf-46b4-a7c5-697bdcc519cb",
+              "name": "user_id",
+              "value": "={{ $('Merge').item.json.body.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "72df1f84-d5d0-4486-9d6f-1d9d725463d4",
+              "name": "user_query",
+              "value": "={{ $('Merge').item.json.body.text }}",
+              "type": "string"
+            },
+            {
+              "id": "2b47d65b-ac59-4e30-8e83-5eabf322285f",
+              "name": "bot_answer",
+              "value": "={{$json.output.answer}}",
+              "type": "string"
+            },
+            {
+              "id": "7cfd5789-8252-42fb-8cca-ec841f896130",
+              "name": "created_at",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cfccd5c5-f304-4f8f-bb36-5b543f24fb2c",
+      "name": "prepare Query Document",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1720,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "user_queries",
+        "fields": "run_id,user_id,user_query,bot_answer,created_at",
+        "options": {
+          "dateFields": "created_at"
+        }
+      },
+      "id": "07806a06-7b60-45e7-b551-a52e9bbd5d34",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1920,
+        -20
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the input, try to reformulate to the expected JSON document.\n\n{{$json.toJsonString()}}",
+        "hasOutputParser": true
+      },
+      "id": "d6e4640a-7e4a-441d-b018-2d7e52f8f48b",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1480,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"text\": \"We've got your query ! You'll see the answer in this channel in about a minute !\",\n  \"username\":\"gamemaster\"\n}",
+        "options": {}
+      },
+      "id": "7a8bbdd6-253f-48e2-926d-adf82596833e",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9c2844d2-1664-43b5-bed5-5b95b953dad9",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ba5268c9-29ff-4670-893e-a942a75013f6",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        600
+      ],
+      "webhookId": "9c2844d2-1664-43b5-bed5-5b95b953dad9"
+    },
+    {
+      "parameters": {
+        "agent": "planAndExecuteAgent",
+        "promptType": "define",
+        "text": "=You're a game master for an incident response game. \n\nYou are here to provide interaction with the players. You have access to different tools that will allow you to gather information about the world and about the incident. If the question is irrelevant to the incident, you will directly answer that you won't answer irrelevant questions.\n\nIf there is not enough information for you to formulate an answer, you must reply that you are unable to answer.\n\nIf there is, you MUST answer with the information provided by the tools.\n\nYour output will contain the answer in the point of view of the character who's answering.\n\nThe players are playing the following incident (this is the summary they were given initially) :  {{ $json.summary }}\n\nHere's what the player is asking :  {{ $json.body.text }}\n\nTry to keep your answer short and to not give more information than what was asked. Begin by retrieving the world facts.",
+        "options": {
+          "humanMessageTemplate": "Previous steps: {previous_steps}\n\nCurrent objective: {current_step}\n\n{agent_scratchpad}\n\nYou may extract and combine relevant data from your previous steps when responding to me.\nIf you have a piece of data that allows you to answer, do not call any additional tool."
+        }
+      },
+      "id": "919a0598-5e6b-4446-be27-5938390faa24",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1100,
+        280
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflow receives questions asked by players on Mattermost through the `/ask` slash command. An AI agent is then tasked with retrieving appropriate context and generating an answer that will be then posted to the Mattermost channel."
+      },
+      "id": "65ad9318-08ab-4ad6-81c1-b120b2e01946",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -100
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gather Incident Facts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gather World Facts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Retrieve playbook run from ID",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve playbook run from ID": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "prepare Query Document": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "prepare Query Document",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "k15CDePm46ZcWAKF",
+    "executionTimeout": 480
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "de32c6bb-c017-4c83-8d47-f5c952a08333",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T15:28:52.539Z",
+      "updatedAt": "2024-11-07T15:28:52.539Z",
+      "id": "JYN6ATf8VoInoElD",
+      "name": "player_interaction"
+    },
+    {
+      "createdAt": "2024-11-07T15:00:13.671Z",
+      "updatedAt": "2024-11-07T15:00:13.671Z",
+      "id": "pUwmj7QSUuMZfoRV",
+      "name": "communication"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    }
+  ]
+}

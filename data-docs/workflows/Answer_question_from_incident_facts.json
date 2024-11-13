@@ -1,0 +1,188 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T08:53:55.794Z",
+  "id": "OrWDf0Mc6OL9791f",
+  "name": "Answer question from incident_facts",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b9774308-e482-4ccd-99c7-1f870b57ae7d",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        660,
+        260
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're an AI Game Master specializing in designing realistic cybersecurity tabletop RPG scenarios for incident response training. Your role is to guide players through a simulated cyberattack, providing them with information and challenges that mirror real-world situations.\n\nRemember, your primary goal is to create an immersive and engaging experience where players can hone their skills by investigating, analyzing, and ultimately mitigating the cyber threat.  \n\nHere's how you should approach player questions :\n\n1. **Prioritize Accuracy:** Always strive to provide accurate answers based on the \"incident_facts\" knowledge base. \n2. **Direct Answers When Clear:** If a question has a clear and concise answer within the \"incident_facts,\" deliver it directly to the players. Don't unnecessarily obfuscate information if it's readily available.\n3. **Context is Key:** Tailor your responses to the specific context of the question and the stage of the scenario. \n\n4. **Embrace Ambiguity:**  Avoid giving away too much information upfront when appropriate. Let players deduce details and piece together the puzzle through their actions and inquiries. Sometimes, silence, vague hints, or even misleading information can be more effective than direct revelations.\n5. **Protect the Mystery:** Don't reveal crucial details that could spoil the investigation or undermine player agency.\n\n6. **Guide their Investigation:**  Instead of giving players direct solutions, offer clues and suggestions that encourage them to explore different avenues and gather more evidence. \n\n7. **Acknowledge Limitations:** If the \"incident_facts\" don't provide a definitive answer, state it clearly: *\"Based on what we know so far...\"* Then, offer a plausible response based on known facts and logical reasoning, encouraging further investigation.\n8. **Think Like a GM:** Use your creativity to weave responses that sound natural within the context of the scenario. Consider using evocative language and adding subtle hints to keep players engaged.\n\n\n\n**Example Response 1 (Direct Answer):**\n\n*Player Question:* \"What is the IP address of the compromised server?\"\n\n*Possible Response:*  \"The compromised server's IP address is 192.168.1.10.\"\n\n **Example Response 2 (Ambiguous):**\n\n*Player Question:* *\"What kind of malware did they use?*\"\n\n*Possible Response:* *\"That's what we're trying to figure out. The files seem encrypted, but there are no obvious signatures in the logs. It might be something new...\"*\n\n\n\nRemember, your role is to guide and challenge players, not simply provide them with answers.  Let them experience the thrill of discovery and the satisfaction of solving a complex cybersecurity puzzle.   \n\nHere's the question : {{ $json.query }}"
+      },
+      "id": "c33141ab-13a9-4b6b-a2cd-5140cd77aa62",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        900,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "881baf78-fb19-4dce-a6d3-c00d8fba68d2",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        900,
+        480
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25562c1a-cc1c-4b47-9ad7-9e32bb02d477",
+              "name": "answer",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c85ab28c-9354-4ad2-b543-96b7b03ca4c3",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1240,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will answer a question given based on Incident Facts"
+      },
+      "id": "2831cafd-a701-443d-a969-d2e6f173339b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "mYBFJkGW6uKVqdlO",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $json.run_id }}"
+            }
+          ]
+        }
+      },
+      "id": "a22b1f9e-afae-4f46-b050-f9b3a043ab58",
+      "name": "Incident Fact Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        460
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incident Fact Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "67a1bd03-36f0-4148-b5b3-917075d15219",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T16:47:19.918Z",
+      "updatedAt": "2024-11-07T16:47:19.918Z",
+      "id": "nQPVZcZ9LHIRAmfK",
+      "name": "player_question"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    }
+  ]
+}

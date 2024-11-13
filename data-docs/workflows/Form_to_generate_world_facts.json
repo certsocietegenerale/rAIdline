@@ -1,0 +1,92 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:23.862Z",
+  "id": "RlQBk8rlcxkwJ08A",
+  "name": "Form to generate world facts",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "f9cc31d9-9328-40b1-a295-d244a043b13d",
+        "formTitle": "Generate the initial context for rAIdline Response",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "What kind of industry are your players working in ?",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "ignoreBots": true
+        }
+      },
+      "id": "8a797ca9-5267-47ed-a0ea-c19ccc0a1552",
+      "name": "n8n Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        320
+      ],
+      "webhookId": "f9cc31d9-9328-40b1-a295-d244a043b13d"
+    },
+    {
+      "parameters": {
+        "content": "This workflow should be executed once after Raidline is installed. This form will ask the admin about specific questions regarding the setting of this game (what kind of team, what kind of software, etc...) \nIt will then generate world facts based on this context."
+      },
+      "id": "155202ef-b3c1-4a95-9ee1-446da89e3746",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        120
+      ]
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "ba8f797b-409c-440d-a609-ad14b2a729e2",
+  "triggerCount": 2,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:43:32.696Z",
+      "updatedAt": "2024-11-07T14:43:32.696Z",
+      "id": "LqAzDUuS8yAhKqgj",
+      "name": "scenario_setup"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

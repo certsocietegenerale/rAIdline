@@ -1,0 +1,556 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T09:09:05.488Z",
+  "id": "fngevpJ6yb9nqYsB",
+  "name": "Check if incident_queries have been answered by the player's answer",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You're an assistant that helps gamemasters run a serious to drill incident handlers.\n\nYou have access to a knowledge base called the \"incident_facts\" which are truths related to the current incident that players are trying to handle.\n\nHere's the player's last status update : {{ $('Execute Workflow Trigger').first().json.latest_player_message}} \n\nBased on those facts, indicate if the player has managed to formulate a correct answer to the following question : {{ $json.query }}\n\nIf the information does not allow you to answer the question, consider that the question was unsuccessfully answered. \n\n**Output**\nYou're expected to output a JSON object in the following form : \n{\n\t\"successfully_answer\": false,\n\t\"player_answer\": \"The player has not answered this question\"\n}"
+      },
+      "id": "5b506de9-2832-42ed-859b-b6500838700c",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1840,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $json.run_id }}"
+            }
+          ]
+        }
+      },
+      "id": "ac25b2a7-7a47-4054-a3b9-46d72c80c0ec",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "questions",
+        "options": {}
+      },
+      "id": "2f51a592-a785-4533-a771-0c1322116d85",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"successfully_answer\": false,\n\t\"player_answer\": \"The player has not answered this question\"\n}"
+      },
+      "id": "71218863-5f44-4173-a69d-d87515ed892b",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2300,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1f2571f4-8a34-42b4-af1f-2b78e3b2e0b2",
+              "leftValue": "={{ $json.output.successfully_answer }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8572bd6e-108d-44ad-838c-694f3d5db53c",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71823e61-f591-4c08-aa00-61acc1311587",
+              "name": "player_answer",
+              "value": "={{ $json.output.player_answer }}",
+              "type": "string"
+            },
+            {
+              "id": "e38c07e1-b19e-460a-918e-203f00ed3f82",
+              "name": "_id",
+              "value": "={{ $('If1').item.json._id.replace(\"\\\"\",\"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "output",
+        "options": {}
+      },
+      "id": "8ebbdc81-f2e6-414e-ac12-e7bef5287d1b",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2900,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "incident_questions",
+        "updateKey": "={{ $json._id }}",
+        "fields": "player_answer",
+        "options": {}
+      },
+      "id": "8be5c9d9-e1f1-4f9c-bcb1-946709b7525c",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        3140,
+        20
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "d9bacff5-a793-4d86-b8b6-f70991045786",
+              "leftValue": "={{ $json.player_answer }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b4b298b7-c8ff-4aa3-ac9b-673ca825d24c",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        240
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "c5bcd8e9-cd16-46b7-b0d6-fb4dc078b763",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        500,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "qgjAEFpEYwJ1uess",
+        "options": {}
+      },
+      "id": "ef38f990-f597-4d2c-9c4d-78889c08690c",
+      "name": "Retrieve incident questions",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        920,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "ffeb23a2-b54f-4481-a724-a16bd6bee374",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        580
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ec090e0-668a-4c6d-87fd-db2d58511c2f",
+              "name": "empty_answer",
+              "value": "a",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "febb479f-e550-4983-a631-0a072779a693",
+      "name": "Returning an empty array",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3100,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71823e61-f591-4c08-aa00-61acc1311587",
+              "name": "player_answer",
+              "value": "={{ $('Split Out').all()[$itemIndex].json.output.player_answer }}",
+              "type": "string"
+            },
+            {
+              "id": "a040198a-681c-4b62-b1fd-9d7adb3132fc",
+              "name": "query",
+              "value": "={{ $('Split Out').all()[$itemIndex].json.output.query}}",
+              "type": "string"
+            },
+            {
+              "id": "12d12f74-1b2a-4e20-ba4a-af1d0b056c38",
+              "name": "run_id",
+              "value": "={{ $('Split Out').all()[$itemIndex].json.output.run_id}}",
+              "type": "string"
+            },
+            {
+              "id": "d639b179-d305-4ef9-95c4-c2d4a9a6aab4",
+              "name": "_id",
+              "value": "={{ $('Split Out').all()[$itemIndex].json.output._id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "31b5a8f0-92f2-4db4-ab09-22b0d829f581",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3360,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "queries_answered",
+        "include": "allFieldsExcept",
+        "fieldsToExclude": "empty_answer",
+        "options": {}
+      },
+      "id": "ffa665e1-34d0-4104-94b1-a02f88b0bd08",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3740,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You will be given an answer regarding if the player has successfully managed to answer the question.\n{{ $json.response.text }}\n\nIf he did, reformulate the answer in an analytical and synthetic manner as it was expected to be included in a status report.\n\nYou're only expected to output the JSON document without any other input.",
+        "hasOutputParser": true
+      },
+      "id": "87de59df-4bdb-400c-967a-9c0604e6d590",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2180,
+        40
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflow retrieves every incident query. Then for each incident query an LLM will determine if the players have managed to successfully answer the  query. "
+      },
+      "id": "0affd53c-5ecd-4bd7-b67b-74b5f11588a2",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        860,
+        -220
+      ]
+    }
+  ],
+  "connections": {
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Returning an empty array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Returning an empty array",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Retrieve incident questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve incident questions": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Returning an empty array": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "k15CDePm46ZcWAKF"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "31cad707-4dec-40b6-abfd-54b82ee3fe0e",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    }
+  ]
+}

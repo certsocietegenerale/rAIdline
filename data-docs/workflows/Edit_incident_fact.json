@@ -1,0 +1,312 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:21.668Z",
+  "id": "9aevxeg2voJv4H4H",
+  "name": "Edit_incident_fact",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "findOneAndUpdate",
+        "collection": "incident_facts",
+        "updateKey": "=_id",
+        "fields": "fact, run_id",
+        "options": {}
+      },
+      "id": "897eafe3-3ed5-4183-8a28-bbdcc3d38c6a",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        380
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ba38c130-730f-4a36-8dcc-59cb877ff13a",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1300,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dc8d50f7-0f84-4d30-b389-5523eca17fde",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f96836a4-14c1-4fb6-81f3-4b35c3ab204a",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        200
+      ],
+      "webhookId": "dc8d50f7-0f84-4d30-b389-5523eca17fde"
+    },
+    {
+      "parameters": {},
+      "id": "664a1da4-ccb2-496a-8a45-99e6eaa4b8e3",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "534461da-e33e-4798-9868-fb98e3a4130e",
+              "leftValue": "={{$json.body.run_id}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "6b1e547e-644d-4786-86d6-eea753e53651",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab76965f-dd18-40d4-9842-f54deac23e67",
+              "name": "run_id",
+              "value": "={{ $json.body.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "706b9dd5-97d7-47b3-bde0-b9e6cff7a25f",
+              "name": "_id",
+              "value": "={{ \"\" + $json.body.fact_id }}",
+              "type": "string"
+            },
+            {
+              "id": "9190b8b4-4553-4e16-92ab-9d91115b4cc4",
+              "name": "fact",
+              "value": "={{ \"\" + $json.body.updated_content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "58e46352-76cc-4898-a7d1-e84bf0377fdd",
+      "name": "Flatten body",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        700,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab76965f-dd18-40d4-9842-f54deac23e67",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "706b9dd5-97d7-47b3-bde0-b9e6cff7a25f",
+              "name": "_id",
+              "value": "={{ \"\" + $json._id }}",
+              "type": "string"
+            },
+            {
+              "id": "17796b30-eda0-440a-862b-fd30e3dbf8be",
+              "name": "query_id",
+              "value": "={{ \"\" + $json.query_id }}",
+              "type": "string"
+            },
+            {
+              "id": "4abd6397-4a8b-49d7-833c-d144ef0dd6ac",
+              "name": "fact",
+              "value": "={{ \"\" + $json.fact }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "ffdcff41-c8c7-49d7-aa74-9837836a2683",
+      "name": "Flatten body1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        680,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "content": "Based on a given structure submitted by webhook or workflow, will update the mongoDB collection incident fact. (An incident fact is an objective statement regarding why, how or what consequences regarding to an incident)"
+      },
+      "id": "fd392b36-226c-4017-ad3d-a4c3ba283b6b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -20
+      ]
+    }
+  ],
+  "connections": {
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Flatten body",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flatten body1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten body": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flatten body1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "572e6f26-ef5c-4877-b860-b2890ed5de5b",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:45:35.512Z",
+      "updatedAt": "2024-11-07T14:45:35.512Z",
+      "id": "5IWTlyeuIjrdZRQR",
+      "name": "update_resource"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

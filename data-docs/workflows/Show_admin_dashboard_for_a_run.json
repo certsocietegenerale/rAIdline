@@ -1,0 +1,938 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:30.189Z",
+  "id": "U5yFfphfOoE0LBql",
+  "name": "Show admin dashboard for a run",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n<link href=\"https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css\" rel=\"stylesheet\"/>  \n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - {{ $json.run_id }} </title>\n</head>\n<body>\n  <div class=\"container\">\n    <article class={{ $json.status_color }}><h1 class=\"pico-color-zinc-50\">Run status - {{ $json.run_id }}   -  {{ $json.status }}</h1> </article>\n\n    <h2> Players </h2>\n    <table>\n      <thead><tr><th>Username</th><th>UserID</th></tr></thead>\n    {{ $json.usernames.map(x => \"<tr><td>\" + x.username + \"</td><td>\" + x.uid + \"</td></tr>\" ).join(\"\\n\") }}\n      </table>\n    <h2> Initial scenario </h2>\n    {{ $json.summary}}\n    \n    <h1> Updates from the incident </h1>\n    {{ $if($json.messages,$json.messages.map(x => \"<article><h2 class=\\\"pico-color-violet-600\\\">\"+ x.props.authorUsername +\" - \" + DateTime.fromMillis(x.create_at).toUTC().toFormat('yyyy-MM-dd\\nHH:mm:ss') + \"</h2>\" + x.msg_md + \"</p></article>\\n\").join(\"\"),\"No update to the incident has been yet posted.\")}}\n    \n    <h2> Incident facts </h2>\n    {{ $if($json.incident_facts,$json.incident_facts,\"The incident facts are currently unavailable. If you've just started the run, the system may still be generating them.\") }}\n    <h2> Incident Queries</h2>\n    {{ $json.incident_queries }}\n    <h2> User Queries</h2>\n    {{ $if($json.user_queries, $json.user_queries, \"No user query has been yet submitted.\")  }}\n\n    <h2> Win conditions </h2>\n     {{ $json.win_conditions }}\n\n    <h2> Lose conditions </h2>\n     {{ $json.lose_conditions }}\n\n  </div>\n  <br/>\n  <div class=\"grid\"><div></div><div></div><a href=\"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\" role=button class={{ $json.status_color }}> Return to dashboard </a><div></div><div></div>\n</body>\n</html>\n"
+      },
+      "id": "8ada1b2e-a90a-43e4-b09d-bff4d7abf597",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        4460,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "54e48aed-859d-44fe-b55d-c213baf430fb",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        4620,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0999196c-c41a-42a5-b9dc-ea78409d0ff0",
+              "name": "run_id",
+              "value": "={{ $json.query.run_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b28bd3b4-339b-41cd-89ad-5f1f3d401ecf",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1360,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "398f98d8-cc9f-46be-bded-cfa940fd6101",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "options": {}
+      },
+      "id": "3fb566de-f613-40ee-810c-d383580ac94c",
+      "name": "Get incident facts",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "qgjAEFpEYwJ1uess",
+        "options": {}
+      },
+      "id": "70eda457-d94d-4c71-90d7-385581a0a3db",
+      "name": "Get incident questions",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        820
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": "b8TrnwZagZTDbrUy",
+        "options": {}
+      },
+      "id": "d6b875fa-7ed7-4d98-8e04-06cb6c6f0728",
+      "name": "Get user questions",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        1020
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a19b8d3-a3cf-4c3b-97b6-e1eafcfe440d",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "80e79f28-4f10-47ea-bf5c-8cea85bcc07a",
+              "name": "summary",
+              "value": "={{ $json.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "90984666-bf29-458d-ae47-f5b7a40cc1e9",
+              "name": "win_conditions",
+              "value": "={{ $json.checklists[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "c9563293-7e0c-4753-9c29-be701acbf415",
+              "name": "lose_conditions",
+              "value": "={{ $json.checklists[1] }}",
+              "type": "string"
+            },
+            {
+              "id": "925cf481-bf37-4c0d-b8ad-fe7891b326f8",
+              "name": "status_color",
+              "value": "={{ $if($json.end_at == 0, \"\\\"pico-background-pink-500\\\"\", \"\\\"pico-background-cyan-550\\\"\") }}",
+              "type": "string"
+            },
+            {
+              "id": "28c23ca9-2740-4943-a011-9bb2b9e458bd",
+              "name": "status",
+              "value": "={{ $if($json.end_at == 0, \"Ongoing\", \"Done\") }}",
+              "type": "string"
+            },
+            {
+              "id": "dbc7e605-1517-42d8-aadd-c8bd3dfe26a7",
+              "name": "run_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f07c2bf4-7789-4939-b129-bd013a450190",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2020,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.facts.map(x => \"\\n* \"+ x.fact).join(\"\") }}",
+        "destinationKey": "incident_facts",
+        "options": {}
+      },
+      "id": "50d297d5-7f01-4b8a-9f33-3e6862a3d157",
+      "name": "Markdown",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ \"|Timestamp|User_id|Query|Answer|\\n|--|--|--|--|\\n\"+ $json.data.map(x => \"|\"+x.created_at+\"|\"+ x.user_id + \"|\"+x.user_query+\"|\"+x.bot_answer.split('\\n').join('')+\"|\\n\").join(\"\") }}",
+        "destinationKey": "user_queries",
+        "options": {
+          "tables": true
+        }
+      },
+      "id": "712603fc-88aa-44d7-804e-ad156b24c0be",
+      "name": "Markdown1",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        1020
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ \"|Query|Answer|Regenerate||\\n|--|--|--|--|\\n\"+ \n    $json.questions.map(x => \"|\" + x.query + \"|\" + x.player_answer+ \"|\" +\n$if(x.player_answer.isEmpty(),\"<a href=\\\"http://localhost:5678/webhook/3743d094-b746-423c-a63f-a41c1b2e068e?run_id=\"+x.run_id+\"&query_id=\"+x._id+\"\\\" role='button'> <i class='fa fa-rotate-left' title='Edit'></i></a>|<a href role='button'><i class='fa fa-pencil' title='Edit'></i> Edit </a>|\" ,\"\") + \"\\n\").join(\"\") }}",
+        "destinationKey": "incident_queries",
+        "options": {
+          "tables": true
+        }
+      },
+      "id": "a2ca8e9c-2b90-44e6-bf43-07644944da5e",
+      "name": "Markdown2",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "a70b86ee-203e-4fa3-ad64-2a22d617007f",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2200,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "238a1f3d-3fec-41e6-9772-275336d4d5ce",
+      "name": "Merge2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3740,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "status_posts",
+        "options": {}
+      },
+      "id": "41667bf0-c3f1-4d42-8745-df0c43edb708",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "Admsaw3h8DsbEyZC",
+        "mode": "each",
+        "options": {}
+      },
+      "id": "918fb5ea-fd5b-4bb7-859c-ecc1d2c23f7c",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "messages",
+        "include": "specifiedFields",
+        "fieldsToInclude": "props, message,create_at,msg_md",
+        "options": {}
+      },
+      "id": "fe49ccdb-2d0e-47aa-a9f1-e04ab9418108",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2980,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "a0522bcb-e486-4843-8805-c6ab2b6a172d",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3180,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "02152ebc-f8b5-4f6e-9791-970dfbc4eb34",
+      "name": "Merge3",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3500,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.summary }}",
+        "destinationKey": "summary",
+        "options": {}
+      },
+      "id": "d81164dd-7dfc-4ce4-a3e7-aed9e139eaa8",
+      "name": "Markdown3",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "path": "cc817b21-eccc-4805-a46a-c648328361db",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "da98574a-3f7f-4023-9a71-2e9ac8639920",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        600
+      ],
+      "webhookId": "cc817b21-eccc-4805-a46a-c648328361db"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ \"|Condition|Status|\\n|--|--|\\n\" + $json.win_conditions.parseJson().items.map(x => (\"|\"+ x.description + \"|\" + $if(x.state == \"\"|| x.state == null, \"Not Checked\",\"Checked\") +  \"|\\n\" )).join(\"\") }}",
+        "destinationKey": "win_conditions",
+        "options": {
+          "tables": true
+        }
+      },
+      "id": "70b4134e-c4c3-45ae-9642-ef46e11d89a7",
+      "name": "Markdown4",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ \"|Condition|Status|\\n|--|--|\\n\" + $json.lose_conditions.parseJson().items.map(x => (\"|\"+ x.description + \"|\" + $if(x.state == \"\"|| x.state == null, \"Not Checked\",\"Checked\") +  \"|\\n\" )).join(\"\") }}",
+        "destinationKey": "lose_conditions",
+        "options": {
+          "tables": true
+        }
+      },
+      "id": "029add0a-c6da-46bc-a590-9db724c70c29",
+      "name": "Markdown5",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "a0b97957-668a-4327-a5c4-4908cc27e97d",
+              "leftValue": "={{$json.delete_at}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2a103e35-4b15-4884-afd6-53f50ffeee52",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "alg4dvzzfkvZtEu3",
+        "options": {}
+      },
+      "id": "431cacca-ea64-4c01-8107-5aff30566acc",
+      "name": "Get users",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        4020,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c321f54-b92a-4586-8f51-427ccb3b0dd2",
+              "name": "run_id",
+              "value": "={{ $('Merge2').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ad5bba69-9b3b-4de8-9d87-df75c22e3d50",
+              "name": "questions",
+              "value": "={{ $('Merge2').item.json['questions'] }}",
+              "type": "string"
+            },
+            {
+              "id": "408a8037-3d0a-4817-b9a7-b93f39331810",
+              "name": "summary",
+              "value": "={{ $('Merge2').item.json['summary'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0b160ead-412d-4077-b8e8-f7dbc8fe6377",
+              "name": "incident_queries",
+              "value": "={{ $('Merge2').item.json['incident_queries'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9ec0ba63-14d7-469e-bcb7-cce4d9fe7909",
+              "name": "win_conditions",
+              "value": "={{ $('Merge2').item.json['win_conditions'] }}",
+              "type": "string"
+            },
+            {
+              "id": "590cef03-715e-4710-84c7-2bc474d551e1",
+              "name": "lose_conditions",
+              "value": "={{ $('Merge2').item.json['lose_conditions'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ced60d69-c01a-40a9-af5c-464022df697d",
+              "name": "name",
+              "value": "={{ $('Merge2').item.json['name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8ef0f313-3960-4a51-84c4-0dc94a605cf4",
+              "name": "status_color",
+              "value": "={{ $('Merge2').item.json['status_color'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d8e6dc82-39fc-4090-9ae0-511074dabf17",
+              "name": "status",
+              "value": "={{ $('Merge2').item.json['status'] }}",
+              "type": "string"
+            },
+            {
+              "id": "cba784d8-3e13-4fda-a8f5-960ecc8564ea",
+              "name": "incident_facts",
+              "value": "={{ $('Merge2').item.json['incident_facts'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8c1c123b-406b-464f-bb32-16a82e6bb8a9",
+              "name": "user_queries",
+              "value": "={{ $('Merge2').item.json['user_queries'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8f4d6a84-8d86-4160-98ab-15af674f506d",
+              "name": "messages",
+              "value": "={{ $('Merge2').item.json['messages'] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "bef7d359-c484-4479-ace5-f062e8019979",
+      "name": "Users",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        4240,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "ac5b306d-8c9c-4204-b965-ac421d59409e",
+              "leftValue": "={{ $json.status_posts }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7497337a-55a0-408f-b865-8b683b8bcb7d",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{$json.message}}",
+        "destinationKey": "msg_md",
+        "options": {
+          "tables": true
+        }
+      },
+      "id": "5f7a3d5e-0329-4ebe-a6de-add8c19bde79",
+      "name": "Markdown6",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        -100
+      ]
+    }
+  ],
+  "connections": {
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get incident facts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get incident questions",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get user questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get incident facts": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Markdown3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user questions": {
+      "main": [
+        [
+          {
+            "node": "Markdown1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get incident questions": {
+      "main": [
+        [
+          {
+            "node": "Markdown2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Markdown2": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Get users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Markdown6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown3": {
+      "main": [
+        [
+          {
+            "node": "Markdown4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown4": {
+      "main": [
+        [
+          {
+            "node": "Markdown5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get users": {
+      "main": [
+        [
+          {
+            "node": "Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Users": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown6": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "63d36b5a-2171-4d02-b4ca-5fa323a9034e",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:25:26.715Z",
+      "updatedAt": "2024-11-07T14:25:26.715Z",
+      "id": "bEfk9NVaBJXMqlT1",
+      "name": "admin_role"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T09:53:20.250Z",
+  "id": "fMDmU3UN0iwE3e5P",
+  "name": "UPDATE_WRITER_V2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "346d3aec-473d-4f2b-8097-8d46a3f84c82",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        460,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "083a0bcd-22b5-4e05-949e-3a4eb70738da",
+              "name": "run_id",
+              "value": "={{$json.run_id}}",
+              "type": "string"
+            },
+            {
+              "id": "e306410d-3a88-4ef5-a8be-201d8479692c",
+              "name": "initial_scenario",
+              "value": "={{$json.initial_scenario}}",
+              "type": "string"
+            },
+            {
+              "id": "98e31214-2688-416e-8c93-c0ae8ee1b6ca",
+              "name": "update_summary",
+              "value": "={{$json.update_summary}}",
+              "type": "string"
+            },
+            {
+              "id": "627d08ba-a6ea-420e-8d9a-4a7f42336b24",
+              "name": "latest_player_message",
+              "value": "={{$json.latest_player_message}}",
+              "type": "string"
+            },
+            {
+              "id": "361d064a-32ff-4d5b-aaa3-68050c6d6cca",
+              "name": "update_type",
+              "value": "={{$json.update_type}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "f7373de7-0da3-4cff-85e8-37fb2a9afc1f",
+      "name": "Initial_Object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        840,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"oqa4ft17u3n6up4nj71bgub7ka\",\n\"initial_scenario \": \"## Firewall Rule Incident Request\\nFirewall rule left open after faulty change request implementation. Bruteforcing attempts registered on previously protected servers.\",\n\"update_summary\" :\"A critical security flaw in a recently implemented firewall rule change inadvertently left a server vulnerable. Unknown attackers exploited this weakness, breaching several systems and installing backdoors to maintain access and potentially spread further throughout the network. Investigations revealed the initial vulnerability stemmed from an unexpected software update interacting with a previously unknown hardware configuration. \\nFurther analysis indicated a previously unknown vulnerability in one of the affected servers was also exploited.  **However, recent developments show that this incident did not result in any data breaches or sensitive information being compromised.** This significantly reduces the risk of reputational damage and minimizes potential long-term consequences.\\nThe system's manufacturer has acknowledged the issue and provided an updated patch to mitigate the problem, expected to be rolled out within the next 48 hours, effectively neutralizing the threat.\\nThe team remains focused on implementing the patch as soon as it becomes available, securing compromised systems, and adjusting the incident response strategy based on this new information. Prioritizing communication with stakeholders is crucial to ensure transparency and minimize any remaining uncertainty.\",\n\"latest_player_message\" :\"We found the change that was not implemented correctly. We've roll backed the change !\",\n\"queries_answered\":[],\n\"update_type\":\"negative\"\n}"
+      },
+      "id": "a7972446-dc09-4511-b3af-d071db43fe92",
+      "name": "Debug node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        560
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "llama3:latest",
+        "options": {}
+      },
+      "id": "d09fed3b-9e50-4839-9157-569986722151",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        780
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "Gn4H1BrOSz4De0wv",
+        "options": {}
+      },
+      "id": "aeb66252-3b1c-40e5-b4a3-5fcc2e61f44d",
+      "name": "retrieve outstanding queries",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"scenario_update\": \"The paragraph that will be used for the next update\"\n}"
+      },
+      "id": "34fa4ae4-08cf-4f43-98e7-c21325e8a665",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1560,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:latest",
+        "options": {}
+      },
+      "id": "39ab3606-cbb2-4d5b-ac5b-01fb7a9b88d9",
+      "name": "Ollama Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        780
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "a71bd5fd-a3ac-46a6-89c4-4737bfc26f8c",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1280,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "options": {}
+      },
+      "id": "ff4228ae-902e-4836-84cb-5f1cff3f833c",
+      "name": "facts_db",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "6954038b-9fca-49f1-be27-e68a4c40614a",
+              "leftValue": "={{$json.output.scenario_update}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "0249f762-c420-4946-ad5a-d9d6580544f2",
+              "leftValue": "={{$json.output.scenario_update}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "29402b25-0c77-41cf-bfd0-4257b90449de",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "083a0bcd-22b5-4e05-949e-3a4eb70738da",
+              "name": "run_id",
+              "value": "={{$('Initial_Object').item.json.run_id}}",
+              "type": "string"
+            },
+            {
+              "id": "e306410d-3a88-4ef5-a8be-201d8479692c",
+              "name": "initial_scenario",
+              "value": "={{$('Initial_Object').item.json.initial_scenario}}",
+              "type": "string"
+            },
+            {
+              "id": "98e31214-2688-416e-8c93-c0ae8ee1b6ca",
+              "name": "update_summary",
+              "value": "={{$('Initial_Object').item.json.update_summary}}",
+              "type": "string"
+            },
+            {
+              "id": "627d08ba-a6ea-420e-8d9a-4a7f42336b24",
+              "name": "latest_player_message",
+              "value": "={{$('Initial_Object').item.json.latest_player_message}}",
+              "type": "string"
+            },
+            {
+              "id": "361d064a-32ff-4d5b-aaa3-68050c6d6cca",
+              "name": "update_type",
+              "value": "={{$('Initial_Object').item.json.update_type}}",
+              "type": "string"
+            },
+            {
+              "id": "7c5d9dd5-a60b-4ba0-96ca-9f2d83f3c732",
+              "name": "update",
+              "value": "={{$json.output.scenario_update}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "074a4865-ba5e-481d-9853-a0c82e2bb020",
+      "name": "final_object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2480,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Input**\n\n* Initial Scenario Description: A brief summary of the initial situation, including any relevant context or background information.\n* Summary of Scenario Updates: A concise overview of how the scenario has evolved so far, highlighting key events and developments.\n* Incident Queries Answered: A list of questions that the player has successfully answered, along with their corresponding answers.\n* Incident Queries Outstanding: A list of questions that the player still needs to answer, along with any relevant context or hints.\n* Database of Facts: A set of established truths that must be maintained throughout the scenario update.\n* Player actions: What the players have done in their last turn (e.g., analyzed logs, interviewed witnesses, implemented security controls).\n\n**Variable Input**\n\n* Update Type: The tone of the update to generate. This can be one of three options:\n    * **Positive:** The team has made significant progress, turning the tide in their favor.\n    * **Neutral:**  The situation remains tense, with both sides making strategic moves.\n    * **Negative:** The attackers gain ground, posing new and serious threats.\n\n**Task:**\n\nGenerate a narrative update that describes how the cybersecurity incident has progressed based on player actions and the chosen parameters. The update should:\n\n* Present new challenges and obstacles for the team to overcome (e.g. new pivot points to investigate, time constraints).\n* Offer strategic choices for players in their next turn, considering both technical solutions and ethical implications.\n* Do not address directly the players, keep an immersive tone throughout the update.\n* **Focus on Narrative:**  The update should feel like a natural progression of the story. Build upon previous events and introduce new elements that create intrigue or\ntension.\n* **Show, Don't Tell:** Instead of stating facts directly, use descriptive language to immerse the reader in the scenario. For example, instead of saying \"A\nvulnerability was discovered,\" describe the specific technical details and the potential consequences.\n\nGenerate a JSON object with the following structure:\n```json\n{\n    \"scenario_update\": \"Generate narrative update here of two paragraphs\",\n}\n```\n**Additional Tips:**\n\n*  Use realistic cybersecurity terminology and scenarios to maintain authenticity.\n*  Encourage players to think critically about the consequences of their actions on systems, data, and individuals.\n*  Incorporate elements of suspense, uncertainty, and moral ambiguity to create a challenging and engaging experience.\n\n**Input**\nUpdate Type : {{ $('Initial_Object').item.json[\"update_type\"] }}\nInitial Scenario : {{ $('Initial_Object').item.json[\"initial_scenario\"] }}\nSummary : {{ $('Initial_Object').item.json[\"update_summary\"] }}\nIncident Queries Answered : {{ $('Initial_Object').item.json[\"queries_answered\"].toJsonString() }}\nIncident Queries Outstanding :  {{ $('Merge').item.json.questions_pending.toJsonString() }}\nPlayer actions : {{ $('Initial_Object').item.json[\"latest_player_message\"] }}\nDatabase of facts : {{ $('facts_db').item.json[\"facts\"] .map(x => x.fact).join('\\n')}}"
+      },
+      "id": "8dee3c30-fffb-4202-837c-50c5ee492646",
+      "name": "Basic LLM Chain1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Take the output and format it in a JSON object with a key named \"scenario_update\" which will contain the status update.\n\nAnswer solely with the JSON object.\nHere's the output :\n\n{{ $json.text }}",
+        "hasOutputParser": true
+      },
+      "id": "6d75d4bb-5de3-4762-b14b-dfe0c765bdcd",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1780,
+        460
+      ],
+      "retryOnFail": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "This workflow will gather incident facts and outstanding queries to write a scenario update for a Raidline Game. The outstanding queries will be used to gently nudge the player toward elements to investigate. The tone of the update is provided in input of the workflow.",
+        "height": 213.9875604699378
+      },
+      "id": "25887391-7bf5-4fd3-9876-3feca94c9f81",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Debug node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initial_Object": {
+      "main": [
+        [
+          {
+            "node": "retrieve outstanding queries",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "facts_db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "retrieve outstanding queries": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "facts_db": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "final_object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug node": {
+      "main": [
+        [
+          {
+            "node": "Initial_Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "213be2f8-24a2-468c-b8ff-0e148d97253b",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:00.819Z",
+      "updatedAt": "2024-11-07T14:30:00.819Z",
+      "id": "0cZGcKUfkpgg1Vgb",
+      "name": "access_incident_facts"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    }
+  ]
+}

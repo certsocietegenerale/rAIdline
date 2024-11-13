@@ -1,0 +1,198 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T15:05:26.352Z",
+  "id": "Q1h4SAb3sG9mDVnR",
+  "name": "Post_comment",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "de1eb9d4-336e-484a-8c8c-c6bbcf7cf161",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": []
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "153363b6-7f65-4ffa-891e-00c53a42e842",
+      "name": "item",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1500,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "channelId": "={{ $json.channel_id }}",
+        "message": "={{ $('item').item.json.message }}",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "id": "062f8ee2-6acb-4a52-b93b-d699c15c0c66",
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        600
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "re4EdxEe31QXAiBj",
+          "name": "Mattermost account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "791cc2e4-505c-4921-9544-63fc2398578a",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"cjqhi5hpyiyqdqzt3tfhu87e1r\", \"message\":\"This is a test of the tool.\"}"
+      },
+      "id": "3c786e00-34a7-4202-9dc1-a2f9b86e5376",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        600
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "64d71f48-5001-4cee-8e6c-85e96bfe01ef",
+              "name": "response",
+              "value": "The message has successfully been posted.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "15a3ed24-0e95-446a-8e5d-3beff153f1b7",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2160,
+        620
+      ]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "item": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mattermost": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "5b1b12be-7362-4eaf-8f83-57db6f3c22e3",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-09-04T11:46:07.588Z",
+      "updatedAt": "2024-09-04T11:46:07.588Z",
+      "id": "BSLOe70dbHfWkB9Q",
+      "name": "ai_player"
+    },
+    {
+      "createdAt": "2024-09-04T11:47:12.901Z",
+      "updatedAt": "2024-09-04T11:47:12.901Z",
+      "id": "LPJPIJ0bjCWWzbE7",
+      "name": "tools"
+    },
+    {
+      "createdAt": "2024-11-08T14:40:58.120Z",
+      "updatedAt": "2024-11-08T14:40:58.120Z",
+      "id": "Dh18CsMn3Lm5Cx7K",
+      "name": "delete_me"
+    }
+  ]
+}

@@ -1,0 +1,479 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T13:16:41.467Z",
+  "id": "zj7efqCwMNwY3i8F",
+  "name": "ENDING_WRITER_V2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "26d264f4-8ceb-4ca8-b278-c036869bee1d",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        960,
+        580
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\"run_id\":\"oqa4ft17u3n6up4nj71bgub7ka\",\n\"initial_scenario \": \"## Firewall Rule Incident Request\\nFirewall rule left open after faulty change request implementation. Bruteforcing attempts registered on previously protected servers.\",\n\"update_summary\" :\"A critical security flaw in a recently implemented firewall rule change inadvertently left a server vulnerable. Unknown attackers exploited this weakness, breaching several systems and installing backdoors to maintain access and potentially spread further throughout the network. Investigations revealed the initial vulnerability stemmed from an unexpected software update interacting with a previously unknown hardware configuration. \\nFurther analysis indicated a previously unknown vulnerability in one of the affected servers was also exploited.  **However, recent developments show that this incident did not result in any data breaches or sensitive information being compromised.** This significantly reduces the risk of reputational damage and minimizes potential long-term consequences.\\nThe system's manufacturer has acknowledged the issue and provided an updated patch to mitigate the problem, expected to be rolled out within the next 48 hours, effectively neutralizing the threat.\\nThe team remains focused on implementing the patch as soon as it becomes available, securing compromised systems, and adjusting the incident response strategy based on this new information. Prioritizing communication with stakeholders is crucial to ensure transparency and minimize any remaining uncertainty.\",\n\"latest_player_message\" :\"We found the change that was not implemented correctly. We've roll backed the change !\",\n\"queries_answered\":[],\n\"ending_type\":\"negative\"\n}"
+      },
+      "id": "bb417747-df78-48b5-a58f-d047196d6e17",
+      "name": "Debug node",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        580
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": "Gn4H1BrOSz4De0wv",
+        "options": {}
+      },
+      "id": "13b227ef-f835-4a36-a582-5fbc3a7c0323",
+      "name": "retrieve outstanding queries",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "pcUbMXVe8cuSsviN",
+        "fields": {
+          "values": [
+            {
+              "name": "run_id",
+              "stringValue": "={{ $('Initial_Object').item.json[\"run_id\"] }}"
+            }
+          ]
+        }
+      },
+      "id": "4ca03d07-7753-4f5d-aa9a-3294fc382f6c",
+      "name": "Workflow Retriever",
+      "type": "@n8n/n8n-nodes-langchain.retrieverWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "8ec1077f-93c1-437b-9a8d-7fb2433281e3",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        840
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"ending\": \"The paragraph that will be used for the ending\"\n}"
+      },
+      "id": "a6365917-3b6f-4f4b-9b1c-b9526cade375",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2640,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "95c6c807-8d44-4259-96df-585427f55ea4",
+      "name": "Ollama Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        800
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "024c302d-4974-4e75-a8b8-98a6d011ca55",
+              "name": "run_id",
+              "value": "={{ $json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "0f01b295-016b-41d6-9c1e-6058dc24175b",
+              "name": "initial_scenario",
+              "value": "={{ $json['initial_scenario '] }}",
+              "type": "string"
+            },
+            {
+              "id": "501473dd-9cc1-470b-ace1-c7eeea1c6236",
+              "name": "update_summary",
+              "value": "={{ $json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "8216fb1f-80e8-40b3-8307-5d679baa430b",
+              "name": "latest_player_message",
+              "value": "={{ $json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "6d3b6873-65b2-4de6-8012-10e1ceb61ec5",
+              "name": "ending_type",
+              "value": "={{ $json.ending_type }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b07a24f1-11bd-4927-b0ae-cc84df17d073",
+      "name": "Initial_Object",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1440,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Input**\n\n* Initial Scenario Description: A brief summary of the initial situation, including any relevant context or background information.\n* Summary of Scenario Updates: A concise overview of how the scenario has evolved so far, highlighting key events and developments.\n* Last Player Update: The final update made by the player that led to the current state of the scenario.\n* Incident Queries Answered: A list of questions that the player has successfully answered, along with their corresponding answers.\n* Incident Queries Outstanding: A list of questions that the player still needs to answer, along with any relevant context or hints.\n* Database of Incident Facts: A set of established truths that must be maintained throughout the scenario.\n\n**Variable Input**\n\n* End Type: The type of conclusion you want to generate. This can be one of two options:\n\t+ Good End: A conclusion where the situation is successfully resolved thanks to the player's actions.\n\t+ Bad End: A conclusion where things go south because of the player's actions.\n\n**Task**\n\nGenerate a cinematic ending for the scenario, taking into account the player's actions and the established facts. Describe what happens next in the scenario. Include details about how the situation unfolds, who is involved, and any consequences that arise.\n\n**Output**\n\nA narrative description of the conclusion to the scenario, including:\n\n* A detailed account of what happens next in the scenario.\n* The outcome of the player's actions, whether good or bad.\n* Any additional facts or information that are revealed as a result of the conclusion.\n\nThis must be included in the writing and must not break immersion. \nThe scenario written must not give out additional tasks for the players.\n\nThe ending must be enclosed in a JSON object. {\"ending\": \"Your ending written.\" }\n**Input**\nEnd Type : {{ $('Initial_Object').item.json[\"ending_type\"] }}\n* Initial Scenario Description: {{ $('Initial_Object').item.json[\"initial_scenario \"] }}\n* Summary of Scenario Updates: {{ $('Initial_Object').item.json[\"update_summary\"] }}\n* Last Player Update: {{ $('Initial_Object').item.json[\"latest_player_message\"] }}\n* Incident Queries Answered: {{ $if($json[\"questions_answered\"]&& $json[\"questions_answered\"].isNotEmpty(),$json[\"questions_answered\"].map(x => \"Q:\" + x.query + \"\\nA:\" + x.player_answer).join('\\n\\n'),\"The players did not manage to answer any Incident Query.\") }}\n* Incident Queries Outstanding: {{ $if($json[\"questions_pending\"] && $json[\"questions_pending\"].isNotEmpty(),$json[\"questions_pending\"].map(x => x.query).join(\"\\n\"),\"There are no queries outstanding left\") }}"
+      },
+      "id": "a3920256-b190-4802-91f3-82aaf82d934c",
+      "name": "Question and Answer Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.3,
+      "position": [
+        1840,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc325eee-7d41-44f4-a97f-39fc4074842b",
+              "name": "run_id",
+              "value": "={{ $('Initial_Object').item.json.run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e4d27446-b22b-4f45-90d8-3f59cd73a04b",
+              "name": "initial_scenario",
+              "value": "={{ $('Initial_Object').item.json.initial_scenario }}",
+              "type": "string"
+            },
+            {
+              "id": "d0560f16-5917-4110-b198-a0e5f2e599bb",
+              "name": "update_summary",
+              "value": "={{ $('Initial_Object').item.json.update_summary }}",
+              "type": "string"
+            },
+            {
+              "id": "ac258190-9491-405b-9d06-9f52b532997e",
+              "name": "latest_player_message",
+              "value": "={{ $('Initial_Object').item.json.latest_player_message }}",
+              "type": "string"
+            },
+            {
+              "id": "fc8336e9-a1c6-4a92-8e68-ac2d3689e590",
+              "name": "ending_type",
+              "value": "={{ $('Initial_Object').item.json.ending_type }}",
+              "type": "string"
+            },
+            {
+              "id": "04dcd348-f1dc-4366-9092-f594fe0d094e",
+              "name": "questions_answered",
+              "value": "={{ $('retrieve outstanding queries').item.json.questions_answered }}",
+              "type": "string"
+            },
+            {
+              "id": "f4d651ee-961f-4378-babe-aa0b7260032f",
+              "name": "questions_pending",
+              "value": "={{ $('retrieve outstanding queries').item.json.questions_pending }}",
+              "type": "string"
+            },
+            {
+              "id": "139e0075-6515-4ab4-96c8-c4dda2564c1b",
+              "name": "response",
+              "value": "={{ $json.response }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d6e470d7-7f9d-4bae-9c8a-b8bcac9af231",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2640,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Take the previous output and format it to be compliant with the expected format. \n {{ $json.response.text }}",
+        "hasOutputParser": true
+      },
+      "id": "02a9e897-39fb-43bf-bcff-6b3370c4f526",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2200,
+        580
+      ],
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "id": "a54ce856-24a9-41b9-a564-72c7494876e9",
+      "name": "Auto-fixing Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow will write an ending based on the latest scenario and on the tone asked (good or bad ending)"
+      },
+      "id": "da3fcdba-6aa7-4e56-9845-5d0202fd7179",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Debug node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "retrieve outstanding queries": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initial_Object": {
+      "main": [
+        [
+          {
+            "node": "retrieve outstanding queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Debug node": {
+      "main": [
+        [
+          {
+            "node": "Initial_Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "1c7e3ab4-5e80-485f-b65a-6d382582deb8",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:27:44.043Z",
+      "updatedAt": "2024-11-07T14:27:44.043Z",
+      "id": "NBLfL397in5lVM6d",
+      "name": "generate_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    },
+    {
+      "createdAt": "2024-06-18T11:14:35.511Z",
+      "updatedAt": "2024-06-18T11:14:35.511Z",
+      "id": "A15j2z8tvVDTX2Cy",
+      "name": "content_writing"
+    }
+  ]
+}

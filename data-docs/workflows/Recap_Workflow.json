@@ -1,0 +1,923 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-12T12:27:26.075Z",
+  "id": "6Nth1FoRhbT9VBcf",
+  "name": "Recap Workflow",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $json.playbook_id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "939e7b11-a339-4c73-b42c-98293b6f5665",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1080,
+        120
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"ipqioopx9frepj39cquydy51eo\";\n}\n\nreturn $input.all();"
+      },
+      "id": "5f400dfa-297c-407e-a8c0-e56ceaae935b",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "status_posts",
+        "options": {}
+      },
+      "id": "0f7386c6-9770-49e9-a380-3213de7462e2",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/api/v4/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "9bd558bc-666e-432c-9bb6-f48ea9952269",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1600,
+        460
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "<!-- {{ $json.create_at_formatted }}  -->\n<article class=\"uk-comment uk-comment-primary uk-margin-bottom\" role=\"comment\">\n    <header class=\"uk-comment-header\">\n        <div class=\"uk-grid-medium uk-flex-middle\" uk-grid>\n            <div class=\"uk-width-auto\">\n                <img class=\"uk-comment-avatar\" src=\"http://localhost:5678/webhook/280160e3-4658-4ec2-8f66-8738a262583b?image=bot\" width=\"80\" height=\"80\" alt=\"\">\n            </div>\n            <div class=\"uk-width-expand\">\n                <h4 class=\"uk-comment-title uk-margin-remove\"><a class=\"uk-link-reset\" href=\"#\">{{ $json.props.authorUsername }}</a></h4>\n                <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                    <li><a href=\"#\"> {{ $json.create_at_formatted }}</a></li>\n                </ul>\n            </div>\n        </div>\n    </header>\n    <div class=\"uk-comment-body\">\n        <p>{{ $json.data }}</p>\n    </div>\n</article>\n"
+      },
+      "id": "900b5870-700e-487d-9154-51320313e775",
+      "name": "HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2480,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.create_at }}",
+        "format": "custom",
+        "customFormat": "yyyy-MM-dd HH:mm:ss",
+        "outputFieldName": "create_at_formatted",
+        "options": {
+          "includeInputFields": true
+        }
+      },
+      "id": "a5a6748d-fc4b-4822-81a1-50c08f006e2a",
+      "name": "Date & Time",
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        1820,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "116c2f7c-05c1-4ee4-976f-b2fb518dd539",
+              "leftValue": "={{ $json.props.authorUsername }}",
+              "rightValue": "gamemaster",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "dc0ba597-83b7-4340-a30a-623a1516f93a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2040,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!-- {{ $json.create_at_formatted }}  -->\n<article class=\"uk-comment  uk-margin-bottom\" role=\"comment\">\n    <header class=\"uk-comment-header\">\n        <div class=\"uk-grid-medium uk-flex-middle\" uk-grid>\n            <div class=\"uk-width-auto\">\n                <img class=\"uk-comment-avatar\" src=\"https://i.redd.it/some-bocchi-pfps-enjoy-v0-9lajolbefivb1.jpg?width=720&format=pjpg&auto=webp&s=53726683193f33358dedf8e274425be28468d796\" width=\"80\" height=\"80\" alt=\"\">\n            </div>\n            <div class=\"uk-width-expand\">\n                <h4 class=\"uk-comment-title uk-margin-remove\"><a class=\"uk-link-reset\" href=\"#\">{{ $json.props.authorUsername }}</a></h4>\n                <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                    <li><a href=\"#\"> {{ $json.create_at_formatted }}</a></li>\n                </ul>\n            </div>\n        </div>\n    </header>\n    <div class=\"uk-comment-body\">\n        <p>{{ $json.data }}</p>\n    </div>\n</article>\n"
+      },
+      "id": "2fd8ee5c-b3a6-4d7d-a157-c0dbc32b6622",
+      "name": "HTML1",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2480,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d02e4d13-106d-4abd-990f-7aadc20ec5aa",
+      "name": "Sort",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "9e7fd1ed-8e18-4a1d-82bb-f521945a25cb",
+      "name": "Aggregate1",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "9eb86b07-a941-485c-b094-0b87b0b81126",
+      "name": "Aggregate2",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        540
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "a7e7355a-57dc-4e1b-9882-44cb769f5cb6",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2920,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "8256413c-3ec7-48f8-82a2-fd8cf1d8897c",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Transcript of updates</title>\n  <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/css/uikit.min.css\" />\n\n<!-- UIkit JS -->\n<script src=\"https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit.min.js\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/uikit@3.21.5/dist/js/uikit-icons.min.js\"></script>  <title>My HTML document</title>\n</head>\n<body>\n  <h1 class=\"uk-heading-line uk-text-center\"><span> {{ $('HTTP Request1').first().json.props.runName}}</span></h1>\n    <div class=\"uk-container\">\n      {{ $json.initial_html }}\n  </div>\n  \n  <div class=\"uk-container\">\n      {{ $json.html.map( (e, i) => (e) ).join(' '); }}\n  </div>\n    <div class=\"uk-container\">\n      {{ $json.final_html }}\n  </div>\n    <div class=\"uk-alert-primary\" uk-alert>You're done !</div>\n</body>\n</html>\n"
+      },
+      "id": "3b42a390-cf25-45b7-a62e-ed840332f7aa",
+      "name": "HTML2",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        4120,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3a44111-9e33-454a-9ed7-ea97032dab49",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3520,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.html }}",
+        "options": {}
+      },
+      "id": "5d53f743-462b-4e16-97ed-82fecf0d850c",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        4360,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.message }}",
+        "options": {}
+      },
+      "id": "d09380fd-788d-4847-8a73-0a6d0dfa1ee0",
+      "name": "Markdown",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.message }}",
+        "options": {}
+      },
+      "id": "e21981d1-0838-4d22-a10a-24e366371cb4",
+      "name": "Markdown1",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!-- {{ $json.create_at_formatted }}  -->\n<div class=\"uk-card uk-card-primary uk-margin-bottom\">\n  <div class=\"uk-card-header\">\n      <h3 class=\"uk-card-title\"> Initial Context </h3>\n  </div>\n  <div class=\"uk-card-body\">{{ $json.summary }}</div>\n  <div class=\"uk-card-footer\"></div>\n</div>\n"
+      },
+      "id": "4cfd56c1-8642-4cf0-b021-d6cf27c572e5",
+      "name": "HTML3",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<!-- {{ $json.create_at_formatted }}  -->\n<div class=\"uk-card uk-card-secondary\">\n  <div class=\"uk-card-header\">\n      <h2 class=\"uk-card-title\"> Final Context </h2>\n  </div>\n  <div class=\"uk-card-body\">{{ $json.message }}</div>\n  <div class=\"uk-card-footer\"></div>\n</div>\n"
+      },
+      "id": "8cbc7412-b3e4-488b-9fe4-3d5f2889bc4d",
+      "name": "HTML4",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2920,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://raidline_mattermost:8065/api/v4/channels/{{ $json.channel_id }}/posts ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "options": {}
+      },
+      "id": "1a5bf0a8-4dcc-4978-9b43-310d86d62a51",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        120
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "TNzZYIwqrkSkHVU8",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "posts",
+        "options": {}
+      },
+      "id": "1d4fa87d-e501-47db-bf81-d83eba8ad382",
+      "name": "Split Out2",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        120
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "8b70f76f-7698-4344-8321-47c14a08c7ab",
+      "name": "Limit",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        2680,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "73235289-6218-408e-9a38-05a4e5e92905",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3520,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "html",
+              "newKey": "final_html"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "8d1c4a8f-b47c-489e-b50c-2b3ef193db48",
+      "name": "Rename Keys",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "html",
+              "newKey": "initial_html"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "557fddd2-bd64-4693-ba74-1ce520e79034",
+      "name": "Rename Keys1",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        -220
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "2c9dc7ac-c5f1-4eb1-9156-32671bacc29f",
+      "name": "Merge2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3880,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "create_at",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "62ecd2d7-fa20-4376-ae6c-b9db9df21997",
+      "name": "Sort1",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        2480,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1f66e776-a45d-45fa-b849-4e9ff5187be0",
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e7c94eaa-ebbe-44b0-a79f-6bc3cc469467",
+              "leftValue": "={{ $json.props.from_plugin }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "21477c8c-cbf2-4392-8d83-7d347357f64e",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        2260,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "This workflow provides to the admin an overview of a given game of Raidline.\n\nIt will display the player list, the initial context, the list of incident facts, the questions asked by the player."
+      },
+      "id": "06ce951d-a69c-487f-865e-7774dd00ae3c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        -720
+      ]
+    },
+    {
+      "parameters": {
+        "path": "13b59ea2-676c-4cf1-bcc2-9a158685aea6",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0875f5f3-14e8-46f3-906e-b9000d308cff",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        560,
+        120
+      ],
+      "webhookId": "13b59ea2-676c-4cf1-bcc2-9a158685aea6"
+    }
+  ],
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTML3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Markdown1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTML2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown1": {
+      "main": [
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "HTML4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML4": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTML3": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "HTML2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Sort1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "448b77af-c5ea-40dc-97e9-b8466538969e",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:39:30.169Z",
+      "updatedAt": "2024-11-07T14:39:30.169Z",
+      "id": "t4D649cgB2RwOwmD",
+      "name": "scenario_management"
+    }
+  ]
+}

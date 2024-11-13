@@ -1,0 +1,132 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T13:37:25.759Z",
+  "id": "Gn4H1BrOSz4De0wv",
+  "name": "Get Incident Queries Pending and Incident Queries Answered",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ff8da56e-a6eb-46a4-9fba-2a66bdeeae9d",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        500,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "workflowId": "qgjAEFpEYwJ1uess",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "25f9734d-50a7-4254-b382-029c1e27ca4f",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let questions_answered =  $input.first().json.questions.filter(x => x.player_answer)\n\nlet questions_pending =  $input.first().json.questions.filter(x => !x.player_answer)\n\nreturn {\n  \"questions_answered\":questions_answered,\n  \"questions_pending\":questions_pending\n  \n}"
+      },
+      "id": "1477119c-5f7f-4e3b-98d3-97e8c40a5066",
+      "name": "Sorting questions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"questions\": [\n      {\n        \"_id\": \"66a76b1e8dae4a76e1eec264\",\n        \"run_id\": \"oqa4ft17u3n6up4nj71bgub7ka\",\n        \"query\": \"What was the intended change in the firewall rule that was not implemented correctly?\",\n        \"player_answer\": \"\"\n      },\n      {\n        \"_id\": \"66a76b1e8dae4a76e1eec265\",\n        \"run_id\": \"oqa4ft17u3n6up4nj71bgub7ka\",\n        \"query\": \"Which servers were previously protected by this firewall rule and are now being targeted for bruteforcing attempts?\",\n        \"player_answer\": null\n      },\n      {\n        \"_id\": \"66a76b1e8dae4a76e1eec266\",\n        \"run_id\": \"oqa4ft17u3n6up4nj71bgub7ka\",\n        \"query\": \"What specific logs or evidence indicate that bruteforcing attempts have been registered on these servers?\",\n        \"player_answer\": \"The answer to the question.\"\n      }\n    ]\n  }\n]"
+      },
+      "id": "301e1def-54ee-46eb-995b-1546639321cf",
+      "name": "Testing Node For Filter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        20
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"run_id\":\"oqa4ft17u3n6up4nj71bgub7ka\"\n}"
+      },
+      "id": "7dbe914d-bebd-49a5-a76c-14944fe541bc",
+      "name": "Debug",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        40
+      ],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Sorting questions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "8a86b7ba-3918-4a54-886f-47dfea150a22",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
+    },
+    {
+      "createdAt": "2024-11-07T14:38:58.895Z",
+      "updatedAt": "2024-11-07T14:38:58.895Z",
+      "id": "Ow3sh0ktkxlCmc3B",
+      "name": "access_incident_queries"
+    }
+  ]
+}

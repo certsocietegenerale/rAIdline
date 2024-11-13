@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"d7fc70e485eb4b1e9c1562ce974fb986","collectionName":"world_facts","type":"collection"}

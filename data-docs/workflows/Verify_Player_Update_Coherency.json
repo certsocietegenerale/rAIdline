@@ -1,0 +1,377 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T10:19:41.003Z",
+  "id": "7Zo4pDpZOmv6GpbA",
+  "name": "Verify Player Update Coherency",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "0385098e-71a4-42c7-a55d-baa8e749f342",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        520,
+        280
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "41266ec4-2127-4818-9764-3ed280b2d7ad",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        120
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"revised_update\":\"Here you write the revised player update\", \"changes_made\": \"Explain what kind of changes you made to the update\" }"
+      },
+      "id": "670fafaa-8a90-4043-a257-2e7d39c3643b",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "de8496ee-721c-4f5f-b95f-8ff914420278",
+              "leftValue": "={{ $json.output.coherence }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d35ff0c7-22d0-40e8-8cfb-8c5faa81e170",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ebc970f4-8188-4319-819c-82b327144eb3",
+              "name": "latest_player_message",
+              "value": "={{$json.output.revised_update}}",
+              "type": "string"
+            },
+            {
+              "id": "ee55af01-eb98-45f0-8d69-af4b498af2c5",
+              "name": "run_id",
+              "value": "={{ $('update_item').item.json[\"run_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dc454cca-c878-478b-a269-3bc5458c4f36",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        2280,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73f88572-953f-4db3-8cc2-bad14d576925",
+              "name": "final_update",
+              "value": "={{ $('update_item').item.json.update }}",
+              "type": "string"
+            },
+            {
+              "id": "763fc05d-94f6-49a0-b31b-6d3d4a96d159",
+              "name": "first_update",
+              "value": "={{ $('update_item').first().json[\"update\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e7cda99d-2ee8-4aed-8d60-5592853e97a6",
+      "name": "coherent_update",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1780,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ab4bfd8-7345-4eec-93f6-ce96121584f7",
+              "name": "update",
+              "value": "={{ $json.latest_player_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "1cb3bd03-c3ea-4245-92d9-f5aeed172305",
+      "name": "update_item",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        960,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"run_id\":\"tez6b1cqrbnzinhtoh934w9osa\",\n  \"update\":\"After first analysis we noticed that many of the new accounts shared similar email addresses and IP addresses. We've deleted the accounts that shared those similar features.\\n\\nWe believe for now that the attack was due to a new feature in the registration process.\\n\\nWe're investigating the server that's hosting the subscription database. In the mean time we've disabled temporarily the subscription feature to avoid the creation of new accounts. We've also asked developers to look at the latest feature implement to look for eventual security issues in the code.\",\n  \"initial_scenario\":'## Subscription Database Compromised: Unauthorized Account Creation\\n\\n{\"We have discovered that our subscription database has been compromised, resulting in thousands of new accounts being added without our authorization. The new accounts are difficult to distinguish from our existing legitimate user base, making it challenging for us to identify and respond to the issue effectively. We need assistance in investigating this incident, identifying the root cause, and developing a plan to rectify the situation and prevent future occurrences.\"}'\n}"
+      },
+      "id": "157ad8b0-951f-4943-b8c7-d0f340e7a86e",
+      "name": "debug",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        740,
+        280
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Prompt Structure:**\n\n\"You are a narrative editor tasked with ensuring consistency within a story.\n\n**Initial Scenario:** \n\n**Player Update:** {{ $('update_item').item.json[\"update\"] }}\n\n**Inconsistency:** {{ $json[\"output\"][\"contradiction\"].map(x =>x) }}\n\nRewrite the Player Update to align with the facts presented in the Initial Scenario while preserving the core meaning and intent of the Player's actions. \n\nYour output is a JSON object with the following structure : \n{\"revised_update\":\"Here you write the revised player update\", \"changes_made\": \"Explain what kind of changes you made to the update\" }",
+        "hasOutputParser": true
+      },
+      "id": "368bb1e6-6b52-4b01-88f2-3c4a82256c43",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1900,
+        120
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflow ensures the player provided update in Raidline is coherent with the established facts. In case of discrespancy detected, an LLM will be called to rewrite the update to make it coherent enough."
+      },
+      "id": "3172f31f-6c1c-4be9-98d1-38737b5bcb62",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        700,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "cypU7UobyXC0MJr2",
+        "options": {}
+      },
+      "id": "986775c9-9e93-4d4d-88a4-bd0cf15c86c1",
+      "name": "Check player update coherency",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        280
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "debug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "coherent_update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "update_item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_item": {
+      "main": [
+        [
+          {
+            "node": "Check player update coherency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "debug": {
+      "main": [
+        [
+          {
+            "node": "update_item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check player update coherency": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "3bebdfe9-474e-4de5-b650-b71cee56093c",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-08T09:56:01.699Z",
+      "updatedAt": "2024-11-08T09:56:01.699Z",
+      "id": "hBollWdIEkBNcsIY",
+      "name": "validate_data"
+    },
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:59:57.307Z",
+      "updatedAt": "2024-11-07T14:59:57.307Z",
+      "id": "klD2jfmCgxMUKetU",
+      "name": "coherency_checks"
+    },
+    {
+      "createdAt": "2024-11-08T08:25:25.641Z",
+      "updatedAt": "2024-11-08T08:25:25.641Z",
+      "id": "xpN8Z3S6TaVmUI6f",
+      "name": "writer_role"
+    }
+  ]
+}

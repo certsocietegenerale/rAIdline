@@ -1,0 +1,651 @@
+{
+  "createdAt": "2024-11-07T13:31:43.825Z",
+  "updatedAt": "2024-11-08T08:48:29.915Z",
+  "id": "9nR5cT5dQjNnNih5",
+  "name": "[REF] Validating each remaining task",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ca6a6750-9485-4051-9682-1ddee66e5201",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        380,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bdaa05af-3cd5-45cd-b254-f5d00204bad1",
+              "name": "win_checklist",
+              "value": "={{ $json.checklists[0] }}",
+              "type": "object"
+            },
+            {
+              "id": "ecbc7067-1f1e-4be1-bd79-bcc5a3d0a68b",
+              "name": "lose_checklist",
+              "value": "={{ $json.checklists[1] }}",
+              "type": "object"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a5cc3307-1913-458e-889d-9c1d50b1d7de",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        900,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "win_checklist.items",
+        "options": {}
+      },
+      "id": "32144136-3b37-408d-85fa-55414dd67c24",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "lose_checklist.items",
+        "options": {}
+      },
+      "id": "29ed18fe-cc39-42b1-a8aa-a3aff138716d",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"task\": \"California\",\n\t\"decision\": true,\n    \"reason\":\"The reason behind the decision\"\n}"
+      },
+      "id": "95e517d0-f435-47af-b082-904570c74cc3",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gemma2:latest",
+        "options": {}
+      },
+      "id": "aba33db6-58c9-40ae-8b46-a069294d5cbd",
+      "name": "Ollama Model",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        40
+      ],
+      "credentials": {
+        "ollamaApi": {
+          "id": "smC31ckuTiI67jHH",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "b69dc53b-5996-4270-b948-d5ce8c32ac10",
+              "leftValue": "={{ $json.output.decision }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5389fab7-4446-4d4b-bb5a-f97d4a066cbd",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2700,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "ee4f7e9a-d2d3-46af-b130-b1bf9823bc08",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "Untitled task",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5e018f1f-6696-49f6-aa50-fe7649c44aee",
+      "name": "If1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "ee4f7e9a-d2d3-46af-b130-b1bf9823bc08",
+              "leftValue": "={{ $json.title }}",
+              "rightValue": "Untitled task",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5a258465-52e9-4291-865d-42cf81695a69",
+      "name": "If2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://raidline_mattermost:8065/plugins/playbooks/api/v0/runs/{{ $('Edit Fields').item.json.run_id }}/checklists/{{ $json.checklist_number }}/item/{{ $json.title.split(\" \").pop() }}/state   ",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mattermostApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "new_state",
+              "value": "closed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "667d985a-d698-4cb9-9a54-3ae51dec337c",
+      "name": "Check the Mattermost task",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3280,
+        340
+      ],
+      "credentials": {
+        "mattermostApi": {
+          "id": "8ZBcuRYNUSKkGA1q",
+          "name": "Mattermost account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "085130e2-fd5e-42cf-8fa0-c27899b4ac7f",
+              "name": "checklist_number",
+              "value": "={{ 1 - $json.title.startsWith(\"Win\").toNumber() }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "2712a177-d466-4654-a5c9-43648f4263bf",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3020,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "description",
+              "field2": "output.task"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5456010-f9f7-4229-b64d-b9a730f6d62e",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "description",
+              "field2": "output.task"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0c9bc816-0735-4551-bdb7-abcf329ae88e",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        2380,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "uli2MV4DimpDPoHD",
+        "options": {}
+      },
+      "id": "906ef6ab-3935-41e5-83f9-f1c43eccc074",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        620,
+        380
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a referee in a tabletop game. The players are incident responders, trying to bring their forces together to handle and resolve an incident together.\n\nHere's the scenario : {{ $('Edit Fields').item.initial_scenario }}\n\nYou must decide based on the last updates if the players filled this condition : \n{{ $json.description }}\n\nHere's the last update sent by players. They're based on actions they have done and knowledge they could have gathered : \n{{ $('Edit Fields').item.latest_player_message }}\nPlease answer with the following JSON scheme (do not alter the task field) : \n{\n\t\"task\": \"{{ $json.description }}\",\n\t\"decision\": Your decision as a true/false boolean.\n}",
+        "hasOutputParser": true
+      },
+      "id": "d41edc24-8076-4c0b-8ac4-c75c1eb67c05",
+      "name": "Basic LLM Chain1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1840,
+        600
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "782fff4b-7bd7-42a3-98e0-9a107c0bfff7",
+              "name": "",
+              "value": "=The player has triggered the following condition : \nName: {{ $('Edit Fields1').item.json.title }} \nDetails: {{ $('Edit Fields1').item.json.description }} ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c6ee6b49-ef1c-436e-8778-81a7dc175ab0",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        3500,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "comments",
+        "options": {}
+      },
+      "id": "a60a0ec7-2e51-4fc9-9fca-3109efdef6ff",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3720,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a referee in a tabletop game. The players are incident responders, trying to bring their forces together to handle and resolve an incident together.\n\nHere's the scenario : {{ $('Edit Fields').item.initial_scenario }}\n\nYou must decide based on the last updates if the players filled this condition : \n{{ $json.description }}\n\nHere's the last update that was sent by the players. They're based on actions they have done and knowledge they could have gathered : \n{{ $('Edit Fields').item.latest_player_msg }}\nPlease answer with the following JSON scheme (do not alter the task field) : \n{\n\t\"task\": \"{{ $json.description }}\",\n\t\"decision\": Your decision as a true/false boolean,\n    \"reason\":\"why you said true/false\"\n}",
+        "hasOutputParser": true
+      },
+      "id": "08bb5f2a-f5dd-4550-b0cd-fe119c9ee9b7",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1840,
+        260
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "This workflow will determine with a LLM chain if each unchecked win condition has been done. It also does the same for each remaining lose condition. "
+      },
+      "id": "a080d5ca-3735-4d52-9b80-4576f08d1571",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -60
+      ]
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Check the Mattermost task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Check the Mattermost task": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+  },
+  "pinData": {},
+  "versionId": "917b8185-2b72-4b4f-8d1c-060a55df96a7",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2024-07-18T12:53:39.827Z",
+      "updatedAt": "2024-07-18T12:53:39.827Z",
+      "id": "skXchd57SLWMXK6r",
+      "name": "llm"
+    },
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-08T08:48:29.021Z",
+      "updatedAt": "2024-11-08T08:48:29.021Z",
+      "id": "qGKrSgIKTMR5ERmB",
+      "name": "agent_role"
+    }
+  ]
+}
