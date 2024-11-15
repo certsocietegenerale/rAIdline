@@ -116,4 +116,4 @@ rm -rf ./temporary_raidline/
 echo "Done ! Don't forget to check that all credentials are correctly setup !"
 echo "Please visit http://localhost:5678/form/f9cc31d9-9328-40b1-a295-d244a043b13d to setup your environment !"
 echo "You can also create your account on http://localhost:8065/"
-echo "Finally, the admin panel can be reached via this url : ttp://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e"data-docs
+echo "Finally, the admin panel can be reached via this url : http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e"
