@@ -1,5 +1,5 @@
 # Raidline on Linux / MacOS
-![Raidline](raidline.png)
+![Raidline](./img/raidline.png)
 
 ## Prerequsites
 
@@ -13,13 +13,17 @@ You should make sure to have the following installed on your machine beforehand:
 
 Clone the repo from github.
 
-Then ensure the install file is executable :
+Navigate to the `scripts` directory.
+
+Then ensure the install and check files are executable :
 
 ```
 chmod +x setup_raidline_response.sh
+
+chmod +x check_all_is_good.sh
 ```
 
-And then check with check_all_is_good.sh script to ensure that everything seems to be in place :
+And then perform controls and initial setup with check_all_is_good.sh script to ensure that everything seems to be in place :
 
 ```
 ./check_all_is_good.sh
@@ -45,7 +49,7 @@ and test the login and password setup in the .ENV file.
 
 Then you can check if the playbook template Raidline Response exist, and join it:
 
-![Playbook](playbook.png)
+![Playbook](./img/playbook.png)
 
 
 ### N8N 
@@ -58,7 +62,7 @@ Start by creating your user.
 #### Credentials and Workflows
 You should see the workflows and credentials in you home page, in the corresponding tabs.
 
-![Credentials](setup.png)
+![Credentials](./img/setup.png)
 
 * Ollama :
 If the credential is not recognized by n8n (for Ollama on Linux for instance) :

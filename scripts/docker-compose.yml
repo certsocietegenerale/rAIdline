@@ -1,0 +1,111 @@
+volumes:
+  raidline_db_storage:
+  raidline_n8n_storage:
+
+services:
+  raidline_n8n_postgres:
+    image: postgres:11
+    container_name: raidline-raidline_n8n_postgres-1
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    volumes:
+      - raidline_db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    env_file:
+      - ".env"
+  raidline_n8n:
+    image: n8nio/n8n:1.61.0
+    container_name: raidline-raidline_n8n-1
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=raidline_n8n_postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    ports:
+      - 5678:5678
+    env_file:
+      - ".env"
+    links:
+      - raidline_n8n_postgres
+    volumes:
+      - raidline_n8n_storage:/home/node/.n8n
+      - ./data-docs:/home/node/data-docs
+    depends_on:
+      raidline_n8n_postgres:
+        condition: service_healthy
+  raidline_mattermost:
+    image: "mattermost/mattermost-enterprise-edition:9.5" # https://hub.com/r/mattermost/mattermost-enterprise-edition/tags
+    restart: "unless-stopped"
+    container_name: raidline-raidline_mattermost-1
+    depends_on:
+      - "raidline_mattermost_db"
+    ports:
+      - "8065:8065"
+    env_file:
+      - ".env"
+    environment:
+      MM_SQLSETTINGS_DRIVERNAME: "postgres"
+      MM_SQLSETTINGS_DATASOURCE: "postgres://${MM_POSTGRES_USER}:${MM_POSTGRES_PASSWORD}@raidline_mattermost_db/${MM_POSTGRES_DB}?sslmode=disable&connect_timeout=10"
+      MM_SERVICESETTINGS_LISTENADDRESS: ":8065"
+      MM_SERVICESETTINGS_SITEURL: "http://raidline_mattermost:8065"
+      MM_SERVICESETTINGS_ENABLEBOTACCOUNTCREATION: "true"
+      MM_SERVICESETTINGS_ENABLEUSERACCESSTOKENS: "true"
+      MM_SERVICESETTINGS_ENABLEOAUTHSERVICEPROVIDER: "true"
+      MM_SERVICESETTINGS_ENABLEDEVELOPER: "true"
+      MM_SERVICESETTINGS_ENABLETESTING: "true"
+      MM_PLUGINSETTINGS_AUTOMATICPREPACKAGEDPLUGINS: "true"
+      MM_EXPERIMENTALSETTINGS_ENABLEAPPBAR: "true"
+      MM_PLUGINSETTINGS_ENABLEUPLOADS: "true"
+      MM_LOGSETTINGS_CONSOLELEVEL: "DEBUG"
+      MM_LOGSETTINGS_FILELEVEL: "DEBUG"
+      MM_FILESETTINGS_MAXFILESIZE: 123524266
+      MM_FEATUREFLAGS_AppsEnabled: "true"
+      MM_FEATUREFLAGS_PluginApps: "1.1.0" # https://github.com/mattermost/mattermost-plugin-apps/releases
+      MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
+  #    volumes:
+  #      - "./mm-logs:/mattermost/logs:rw"
+  raidline_mattermost_db:
+      image: "postgres"
+      container_name: raidline-raidline_mattermost_db-1
+      restart: "unless-stopped"
+      environment:
+        POSTGRES_PASSWORD: "${MM_POSTGRES_PASSWORD}"
+        POSTGRES_USER: "${MM_POSTGRES_USER}"
+        POSTGRES_DB: "${MM_POSTGRES_DB}"
+      env_file:
+      - ".env"
+  myapplication:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    environment:
+      - CONN_STR=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@raidline_mongodb
+    command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
+    depends_on:
+      - raidline_mongodb
+    env_file:
+      - ".env"
+  raidline_mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    container_name: raidline-raidline_mongodb-1
+    restart: "unless-stopped"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    env_file:
+      - ".env"
+    volumes:
+      - type: bind
+        source: ./data-mongo
+        target: /data/db 
