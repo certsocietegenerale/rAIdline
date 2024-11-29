@@ -68,13 +68,12 @@ You should see the workflows and credentials in you home page, in the correspond
 ![Credentials](./img/setup.png)
 
 * Ollama :
+
 If the credential is not recognized by n8n (for Ollama on Linux for instance) :
 You might have to replace the host/IP (172.17.0.1).
 If you're using custom port (different from 11434), you might want to change it here as well.
 
-Please check this FAQ out :
-https://github.com/ollama/ollama/blob/main/docs/faq.md
-
+Please check this FAQ out on [Ollama Github](https://github.com/ollama/ollama/blob/main/docs/faq.md)
 
 ## Uninstall / Reset your install of Raidline
 
