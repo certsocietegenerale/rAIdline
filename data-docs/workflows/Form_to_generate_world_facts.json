@@ -12,10 +12,43 @@
         "formFields": {
           "values": [
             {
-              "fieldLabel": "What kind of industry are your players working in ?",
+              "fieldLabel": "What is the name of your Team ?"
+            },
+            {
+              "fieldLabel": "In what industry are you working ? Or Which sector do you want to emulate ?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Technology"
+                  },
+                  {
+                    "option": "Finance"
+                  },
+                  {
+                    "option": "HealthCare"
+                  },
+                  {
+                    "option": "Education"
+                  },
+                  {
+                    "option": "Manufacturing"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              },
               "requiredField": true
+            },
+            {
+              "fieldLabel": "What's the size of your team ?",
+              "fieldType": "number",
+              "placeholder": "42"
+            },
+            {
+              "fieldLabel": "Do you want to include ??"
             }
-          ]
         },
         "options": {
           "ignoreBots": true
