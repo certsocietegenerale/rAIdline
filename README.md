@@ -1,5 +1,6 @@
-<img alt="Raidline Logo" align="right" src="img/raidline.png"/> 
 # Raidline on Linux / MacOS
+
+<img alt="Raidline Logo" align="right" src="img/raidline.png"/> 
 
 RAIdline is a gaming platform to practice your Incident Response skills, leveraging Mattermost, n8n automation and LLMs to create and have you play interactive scenario !
 
