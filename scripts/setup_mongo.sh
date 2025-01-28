@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Running script to setup mongoDB..."
-CONNECTION_STRING="mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@raidline_mongodb"
+CONNECTION_STRING="mongodb://${MONGODB_INITDB_ROOT_USERNAME}:${MONGODB_INITDB_ROOT_PASSWORD}@raidline_mongodb"
 # Look if DB exists in mongo
 if [ $(mongosh $CONNECTION_STRING --eval 'db.getMongo().getDBNames().indexOf("game")' --quiet) -lt 0 ]; then
     echo "[+] Creating mongoDB database..."

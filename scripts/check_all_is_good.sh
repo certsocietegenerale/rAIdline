@@ -86,6 +86,7 @@ if test -d ../data-mongo; then
 else
    if ask_auto_remediate; then
     echo "User proceeded with auto-remediation"
+    mkdir ../data-mongo
   fi
 fi
 
@@ -95,6 +96,7 @@ else
   echo "Directory data-docs does not exist."
   if ask_auto_remediate; then
     echo "User proceeded with auto-remediation"
+    mkdir ../data-docs
   fi
 fi
 
@@ -136,7 +138,7 @@ else
 fi
 COMMENT
 
-to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGO_INITDB_ROOT_USERNAME" "MONGO_INITDB_ROOT_PASSWORD")
+to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGODB_INITDB_ROOT_USERNAME" "MONGODB_INITDB_ROOT_PASSWORD")
 echo "Starting variable checks..."
 for VAR in "${to_check[@]}"; do
   echo "[*] Checking $VAR...."
