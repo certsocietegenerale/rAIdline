@@ -106,5 +106,5 @@ services:
     env_file:
       - ".env"
     volumes:
-      - ./data-mongo:/data/db 
+      - ../data-mongo:/data/db 
  

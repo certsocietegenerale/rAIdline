@@ -84,9 +84,12 @@ function ask_auto_remediate() {
 if test -d ../data-mongo; then
   echo "Directory data-mongo exists."
 else
-   if ask_auto_remediate; then
+  echo "Directory data-mongo does not exist."
+  if ask_auto_remediate; then
     echo "User proceeded with auto-remediation"
+    echo "Creating data-mongo"
     mkdir ../data-mongo
+    chmod 777 ../data-mongo
   fi
 fi
 
@@ -95,8 +98,7 @@ if test -d ../data-docs; then
 else 
   echo "Directory data-docs does not exist."
   if ask_auto_remediate; then
-    echo "User proceeded with auto-remediation"
-    mkdir ../data-docs
+    echo "No auto-remediation"
   fi
 fi
 
