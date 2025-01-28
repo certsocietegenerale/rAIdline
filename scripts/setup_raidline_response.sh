@@ -105,6 +105,7 @@ echo "Importing workflows and credentials"
 docker cp ./temporary_raidline/creds.json $N8N_CONTAINER_ID:/tmp/
 docker exec -it $N8N_CONTAINER_ID n8n import:workflow --separate --input=/home/node/data-docs/workflows
 docker exec -it $N8N_CONTAINER_ID n8n import:credentials --input=/tmp/creds.json
+# issue here with import of n8n token ; we need to create a new API and replace it
 echo "Activating workflows"
 for wkflw_id in "${N8N_WKFLWS_ID[@]}"; do
     docker exec -it $N8N_CONTAINER_ID n8n update:workflow --id=$wkflw_id --active=true

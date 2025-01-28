@@ -70,7 +70,12 @@ You should see the workflows and credentials in you home page, in the correspond
 * Ollama :
 
 If the credential is not recognized by n8n (for Ollama on Linux for instance) :
-You might have to replace the host/IP (172.17.0.1).
+You might have to replace the host/IP (e.g. 172.17.0.1).
+You can check it with the following command: 
+```
+ip addr show | grep "\binet\b.*\bdocker0\b" | awk '{print $2}' | cut -d '/' -f 1
+```
+
 If you're using custom port (different from 11434), you might want to change it here as well.
 
 Please check this FAQ out on [Ollama Github](https://github.com/ollama/ollama/blob/main/docs/faq.md)
