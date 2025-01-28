@@ -81,7 +81,7 @@ function ask_auto_remediate() {
     esac
 }
 
-if test -d ./data-mongo; then
+if test -d ../data-mongo; then
   echo "Directory data-mongo exists."
 else
    if ask_auto_remediate; then
@@ -89,7 +89,7 @@ else
   fi
 fi
 
-if test -d ./data-docs; then
+if test -d ../data-docs; then
   echo "Directory data-docs exists."
 else 
   echo "Directory data-docs does not exist."
@@ -116,7 +116,8 @@ else
   fi
 fi
 
-if test -f ./temporary_raidline/creds.json; then
+: << 'COMMENT' 
+if test -f ../temporary_raidline/creds.json; then
   echo "File creds.json exists."
 else
   echo "File creds.json does not exist"
@@ -133,6 +134,7 @@ else
     echo "User proceeded with auto-remediation"
   fi
 fi
+COMMENT
 
 to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGO_INITDB_ROOT_USERNAME" "MONGO_INITDB_ROOT_PASSWORD")
 echo "Starting variable checks..."

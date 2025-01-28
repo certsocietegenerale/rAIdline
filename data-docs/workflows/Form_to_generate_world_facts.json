@@ -47,8 +47,9 @@
               "placeholder": "42"
             },
             {
-              "fieldLabel": "Do you want to include ??"
+              "fieldLabel": "Do you want to include another context ??"
             }
+          ]
         },
         "options": {
           "ignoreBots": true

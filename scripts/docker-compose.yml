@@ -42,7 +42,7 @@ services:
       - raidline_n8n_postgres
     volumes:
       - raidline_n8n_storage:/home/node/.n8n
-      - ./data-docs:/home/node/data-docs
+      - ../data-docs:/home/node/data-docs
     depends_on:
       raidline_n8n_postgres:
         condition: service_healthy
@@ -107,5 +107,5 @@ services:
       - ".env"
     volumes:
       - type: bind
-        source: ./data-mongo
+        source: ../data-mongo
         target: /data/db 
