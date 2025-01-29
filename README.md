@@ -80,6 +80,32 @@ If you're using custom port (different from 11434), you might want to change it 
 
 Please check this FAQ out on [Ollama Github](https://github.com/ollama/ollama/blob/main/docs/faq.md)
 
+* N8N :
+
+Ensure that the API key is created and then added to the related credential.
+
+![n8n_api](./img/n8n_api_key.png)
+
+### Ollama
+
+To be able to run rAIdline, you should at least have 2 models installed via Ollama :
+* Gemma2
+* Llama3
+* Mistral
+
+You should thus, depending on your install (dockerized or not), run the following commands :
+```
+docker exec -it ollama ollama run gemma2
+```
+or 
+```
+ollama run gemma2
+```
+Depending on your machine/architecture, you might have to downgrade to smaller models or could be able to run heavier models.
+
+see Ollama documentation for more details.
+
+
 ## Uninstall / Reset your install of Raidline
 
 Ensure the proper file is executable :
