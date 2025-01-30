@@ -101,7 +101,7 @@ or
 ```
 ollama run gemma2
 ```
-Depending on your machine/architecture, you might have to downgrade to smaller models or could be able to run heavier models.
+Depending on your machine/architecture, you might upgrade you r experience and could be able to run heavier models.
 
 see Ollama documentation for more details.
 
