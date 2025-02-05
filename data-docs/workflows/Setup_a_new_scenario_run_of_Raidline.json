@@ -495,7 +495,7 @@
             {
               "id": "f3dd0ee5-c5cf-47da-8f52-6ea52c448077",
               "leftValue": "={{ $json.title }}",
-              "rightValue": "Redline Response - PLAYER",
+              "rightValue": "Raidline Response - PLAYER",
               "operator": {
                 "type": "string",
                 "operation": "contains"
@@ -950,7 +950,7 @@
     {
       "parameters": {
         "respondWith": "text",
-        "responseBody": "=<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n\n  <meta charset=\"UTF-8\" />\n  <title>Redline Response - Admin </title>\n</head>\n\n<body>\n<main class=\"container\">\n<div class=\"grid\">\n<article>\n  <header class=\"pico-background-purple-500\"> <h1 class=\"pico-color-zinc-50\">Generation started </h1></header>\n  <h3> A channel will be created in Mattermost soon </h3>\n</article>\n</div>\n<div class=\"grid\"><div></div><a href=\"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\" role=button class=\"pico-background-purple-500\"> Return to dashboard </a><div></div>\n</div>\n</main>\n</body>\n\n</html>",
+        "responseBody": "=<!DOCTYPE html>\n\n<html>\n<head>\n<link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"\n>\n  <link\n  rel=\"stylesheet\"\n  href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css\"\n>\n\n  <meta charset=\"UTF-8\" />\n  <title>Raidline Response - Admin </title>\n</head>\n\n<body>\n<main class=\"container\">\n<div class=\"grid\">\n<article>\n  <header class=\"pico-background-purple-500\"> <h1 class=\"pico-color-zinc-50\">Generation started </h1></header>\n  <h3> A channel will be created in Mattermost soon </h3>\n</article>\n</div>\n<div class=\"grid\"><div></div><a href=\"http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e\" role=button class=\"pico-background-purple-500\"> Return to dashboard </a><div></div>\n</div>\n</main>\n</body>\n\n</html>",
         "options": {}
       },
       "id": "5ca993d7-3337-41c9-b833-3ff1a554f47b",
