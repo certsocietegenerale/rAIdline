@@ -17,6 +17,7 @@ Then ensure the install file is executable :
 
 ```
 chmod +x setup_raidline_response.sh
+chmod +x check_all_is_good.sh
 ```
 
 And then check with check_all_is_good.sh script to ensure that everything seems to be in place :
