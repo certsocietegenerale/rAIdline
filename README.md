@@ -1,5 +1,8 @@
 # Raidline on Linux / MacOS
-![Raidline](raidline.png)
+
+<img alt="Raidline Logo" align="right" src="img/raidline.png"/> 
+
+RAIdline is a gaming platform to practice your Incident Response skills, leveraging Mattermost, n8n automation and LLMs to create and have you play interactive scenario !
 
 ## Prerequsites
 
@@ -13,14 +16,17 @@ You should make sure to have the following installed on your machine beforehand:
 
 Clone the repo from github.
 
-Then ensure the install file is executable :
+Navigate to the `scripts` directory.
+
+Then ensure the install and check files are executable :
 
 ```
 chmod +x setup_raidline_response.sh
+
 chmod +x check_all_is_good.sh
 ```
 
-And then check with check_all_is_good.sh script to ensure that everything seems to be in place :
+And then perform controls and initial setup with check_all_is_good.sh script to ensure that everything seems to be in place :
 
 ```
 ./check_all_is_good.sh
@@ -46,7 +52,7 @@ and test the login and password setup in the .ENV file.
 
 Then you can check if the playbook template Raidline Response exist, and join it:
 
-![Playbook](playbook.png)
+![Playbook](./img/playbook.png)
 
 
 ### N8N 
@@ -59,15 +65,45 @@ Start by creating your user.
 #### Credentials and Workflows
 You should see the workflows and credentials in you home page, in the corresponding tabs.
 
-![Credentials](setup.png)
+![Credentials](./img/setup.png)
 
 * Ollama :
+
 If the credential is not recognized by n8n (for Ollama on Linux for instance) :
-You might have to replace the host/IP (172.17.0.1).
+You might have to replace the host/IP (e.g. 172.17.0.1).
+You can check it with the following command: 
+```
+ip addr show | grep "\binet\b.*\bdocker0\b" | awk '{print $2}' | cut -d '/' -f 1
+```
+
 If you're using custom port (different from 11434), you might want to change it here as well.
 
-Please check this FAQ out :
-https://github.com/ollama/ollama/blob/main/docs/faq.md
+Please check this FAQ out on [Ollama Github](https://github.com/ollama/ollama/blob/main/docs/faq.md)
+
+* N8N :
+
+Ensure that the API key is created and then added to the related credential.
+
+![n8n_api](./img/n8n_api_key.png)
+
+### Ollama
+
+To be able to run rAIdline, you should at least have 2 models installed via Ollama :
+* Gemma2
+* Llama3
+* Mistral
+
+You should thus, depending on your install (dockerized or not), run the following commands :
+```
+docker exec -it ollama ollama run gemma2
+```
+or 
+```
+ollama run gemma2
+```
+Depending on your machine/architecture, you might upgrade you r experience and could be able to run heavier models.
+
+see Ollama documentation for more details.
 
 
 ## Uninstall / Reset your install of Raidline

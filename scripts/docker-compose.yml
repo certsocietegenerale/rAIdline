@@ -42,7 +42,7 @@ services:
       - raidline_n8n_postgres
     volumes:
       - raidline_n8n_storage:/home/node/.n8n
-      - ./data-docs:/home/node/data-docs
+      - ../data-docs:/home/node/data-docs
     depends_on:
       raidline_n8n_postgres:
         condition: service_healthy
@@ -90,7 +90,7 @@ services:
   myapplication:
     image: mongodb/mongodb-community-server:6.0-ubi8
     environment:
-      - CONN_STR=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@raidline_mongodb
+      - CONN_STR=mongodb://${MONGODB_INITDB_ROOT_USERNAME}:${MONGODB_INITDB_ROOT_PASSWORD}@raidline_mongodb
     command: '/bin/bash -c "sleep 5; mongosh $$CONN_STR --eval \"show dbs;\""'
     depends_on:
       - raidline_mongodb
@@ -101,11 +101,10 @@ services:
     container_name: raidline-raidline_mongodb-1
     restart: "unless-stopped"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
     env_file:
       - ".env"
     volumes:
-      - type: bind
-        source: ./data-mongo
-        target: /data/db 
+      - ../data-mongo:/data/db 
+ 

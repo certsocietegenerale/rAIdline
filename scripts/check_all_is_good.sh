@@ -81,20 +81,24 @@ function ask_auto_remediate() {
     esac
 }
 
-if test -d ./data-mongo; then
+if test -d ../data-mongo; then
   echo "Directory data-mongo exists."
 else
-   if ask_auto_remediate; then
+  echo "Directory data-mongo does not exist."
+  if ask_auto_remediate; then
     echo "User proceeded with auto-remediation"
+    echo "Creating data-mongo"
+    mkdir ../data-mongo
+    chmod 777 ../data-mongo
   fi
 fi
 
-if test -d ./data-docs; then
+if test -d ../data-docs; then
   echo "Directory data-docs exists."
 else 
   echo "Directory data-docs does not exist."
   if ask_auto_remediate; then
-    echo "User proceeded with auto-remediation"
+    echo "No auto-remediation"
   fi
 fi
 
@@ -116,7 +120,8 @@ else
   fi
 fi
 
-if test -f ./temporary_raidline/creds.json; then
+: << 'COMMENT' 
+if test -f ../temporary_raidline/creds.json; then
   echo "File creds.json exists."
 else
   echo "File creds.json does not exist"
@@ -133,8 +138,9 @@ else
     echo "User proceeded with auto-remediation"
   fi
 fi
+COMMENT
 
-to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGO_INITDB_ROOT_USERNAME" "MONGO_INITDB_ROOT_PASSWORD")
+to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGODB_INITDB_ROOT_USERNAME" "MONGODB_INITDB_ROOT_PASSWORD")
 echo "Starting variable checks..."
 for VAR in "${to_check[@]}"; do
   echo "[*] Checking $VAR...."

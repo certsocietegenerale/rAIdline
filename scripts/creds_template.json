@@ -6,7 +6,7 @@
         "name": "MongoDB account",
         "data": {
             "configurationType": "connectionString",
-            "connectionString": "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@raidline_mongodb:27017",
+            "connectionString": "mongodb://${MONGODB_INITDB_ROOT_USERNAME}:${MONGODB_INITDB_ROOT_PASSWORD}@raidline_mongodb:27017",
             "database": "game"
         },
         "type": "mongoDb"
