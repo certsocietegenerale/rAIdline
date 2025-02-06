@@ -91,6 +91,9 @@ Ensure that the API key is created and then added to the related credential.
 To be able to run rAIdline, you should at least have 2 models installed via Ollama :
 * Gemma2
 * Llama3
+ 
+or alternatively 
+
 * Mistral
 
 You should thus, depending on your install (dockerized or not), run the following commands :
@@ -101,7 +104,7 @@ or
 ```
 ollama run gemma2
 ```
-Depending on your machine/architecture, you might upgrade you r experience and could be able to run heavier models.
+Depending on your machine/architecture, you might upgrade your experience and be able to run heavier models.
 
 see Ollama documentation for more details.
 
