@@ -2,20 +2,22 @@
   "createdAt": "2024-11-07T13:31:43.825Z",
   "updatedAt": "2024-11-12T12:27:23.862Z",
   "id": "RlQBk8rlcxkwJ08A",
-  "name": "Form to generate world facts",
-  "active": true,
+  "name": "Form to generate initial world facts",
   "nodes": [
     {
       "parameters": {
         "path": "f9cc31d9-9328-40b1-a295-d244a043b13d",
         "formTitle": "Generate the initial context for rAIdline Response",
+        "formDescription": "Below some questions about your context that will be saved as world facts;\n\nYou can always add new world facts here : http://localhost:5678/form/71e9b08b-da05-42e6-b771-89a42753dab4",
         "formFields": {
           "values": [
             {
-              "fieldLabel": "What is the name of your Team ?"
+              "fieldLabel": "Team_name",
+              "fieldType": "textarea",
+              "placeholder": "What is the name of your Team ?"
             },
             {
-              "fieldLabel": "In what industry are you working ? Or Which sector do you want to emulate ?",
+              "fieldLabel": "Industry",
               "fieldType": "dropdown",
               "fieldOptions": {
                 "values": [
@@ -42,12 +44,42 @@
               "requiredField": true
             },
             {
-              "fieldLabel": "What's the size of your team ?",
+              "fieldLabel": "Team_size",
               "fieldType": "number",
-              "placeholder": "42"
+              "placeholder": "What's the size of your team ? 42"
             },
             {
-              "fieldLabel": "Do you want to include another context ??"
+              "fieldLabel": "tag",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "service_provider"
+                  },
+                  {
+                    "option": "software"
+                  },
+                  {
+                    "option": "architecture"
+                  },
+                  {
+                    "option": "threat_intelligence"
+                  },
+                  {
+                    "option": "adversaries"
+                  },
+                  {
+                    "option": "thirdparty"
+                  }
+                ]
+              },
+              "multiselect": true
+            },
+            {
+              "fieldLabel": "fact",
+              "fieldType": "textarea",
+              "placeholder": "Name of the software...",
+              "requiredField": true
             }
           ]
         },
@@ -77,21 +109,74 @@
         440,
         120
       ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "world_facts",
+        "fields": "=fact,tag, Team_name, Industry, Team_size",
+        "options": {
+          "dateFields": ""
+        }
+      },
+      "id": "e220c76c-67c0-4eca-852e-82157db43fb9",
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        280
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "Y4GoWOnzopdVAsVe",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
-  "connections": {},
+  "pinData": {},
+  "connections": {
+    "n8n Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "versionId": "202ae121-da96-44b4-b984-f738441ae4ad",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
+    "instanceId": "57b61a23b74deb976c4869a85636d25524c7b4ca826f71953fc5a32e0f0a81f2"
   },
-  "pinData": {},
-  "versionId": "ba8f797b-409c-440d-a609-ad14b2a729e2",
-  "triggerCount": 2,
+  "id": "RlQBk8rlcxkwJ08A",
   "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:25:37.556Z",
+      "updatedAt": "2024-11-07T14:25:37.556Z",
+      "id": "LeP5vx3dh2pLAhW6",
+      "name": "admin_dashboard"
+    },
     {
       "createdAt": "2024-11-07T14:25:26.715Z",
       "updatedAt": "2024-11-07T14:25:26.715Z",
@@ -109,18 +194,6 @@
       "updatedAt": "2024-11-07T14:27:44.043Z",
       "id": "NBLfL397in5lVM6d",
       "name": "generate_data"
-    },
-    {
-      "createdAt": "2024-11-07T14:25:37.556Z",
-      "updatedAt": "2024-11-07T14:25:37.556Z",
-      "id": "LeP5vx3dh2pLAhW6",
-      "name": "admin_dashboard"
-    },
-    {
-      "createdAt": "2024-11-07T14:30:19.879Z",
-      "updatedAt": "2024-11-07T14:30:19.879Z",
-      "id": "KHPEAotJ2GfBZijJ",
-      "name": "raidline"
     }
   ]
 }
