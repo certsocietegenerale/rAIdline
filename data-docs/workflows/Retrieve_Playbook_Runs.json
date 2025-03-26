@@ -53,7 +53,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"pccbq73z4pb53csucqdec44cxe\";\n}\n\nreturn $input.all();"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"r5zmfjfbt7f5ujrkzh9y36t9dy\";\n}\n\nreturn $input.all();"
       },
       "id": "ad3630be-12fe-4dab-977c-8378168281fa",
       "name": "playbook_id",

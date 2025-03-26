@@ -18,7 +18,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"pccbq73z4pb53csucqdec44cxe\";\n}\n\nreturn $input.all();"
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.playbook_id = \"r5zmfjfbt7f5ujrkzh9y36t9dy\";\n}\n\nreturn $input.all();"
       },
       "id": "c04d7faa-56cd-4219-98eb-fdc16bde3ee0",
       "name": "playbook_id",
@@ -59,7 +59,7 @@
       ],
       "credentials": {
         "mattermostApi": {
-          "id": "8ZBcuRYNUSKkGA1q",
+          "id": "TNzZYIwqrkSkHVU8",
           "name": "Mattermost account"
         }
       }

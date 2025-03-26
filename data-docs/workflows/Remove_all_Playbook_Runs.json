@@ -73,7 +73,7 @@
             {
               "id": "571bbae7-d224-45f2-931f-af7640c55d93",
               "leftValue": "={{ $json.playbook_id }}",
-              "rightValue": "pccbq73z4pb53csucqdec44cxe",
+              "rightValue": "r5zmfjfbt7f5ujrkzh9y36t9dy",
               "operator": {
                 "type": "string",
                 "operation": "equals",
