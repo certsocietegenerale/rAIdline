@@ -83,8 +83,8 @@ find ./data-docs/workflows/ -type f -name "*json" -exec sed -i "" -e "s/MATTERMO
 export MONGODB_CONTAINER_ID=$(docker inspect --format='{{ .Id }}' $(docker ps -q -f name=raidline-raidline_mongodb-1))
 # Copying files to mongoDB container
 docker cp ./mongo $MONGODB_CONTAINER_ID:/tmp/mongo
-chmod a+x ./setup_mongo.sh
-docker cp ./setup_mongo.sh $MONGODB_CONTAINER_ID:/tmp/
+chmod a+x ./mongo_setup.sh
+docker cp ./mongo_setup.sh $MONGODB_CONTAINER_ID:/tmp/
 docker exec $MONGODB_CONTAINER_ID bash -c 'chmod a+x /tmp/setup_mongo.sh'
 docker exec $MONGODB_CONTAINER_ID bash -c '/tmp/setup_mongo.sh'
 # Launching mongo script
