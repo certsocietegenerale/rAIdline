@@ -1,8 +1,9 @@
 {
   "createdAt": "2024-11-07T13:31:43.825Z",
-  "updatedAt": "2024-11-12T12:27:23.862Z",
+  "updatedAt": "2025-03-27T16:07:12.139Z",
   "id": "RlQBk8rlcxkwJ08A",
   "name": "Form to generate initial world facts",
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -12,12 +13,12 @@
         "formFields": {
           "values": [
             {
-              "fieldLabel": "Team_name",
+              "fieldLabel": "The Incident Response team is named",
               "fieldType": "textarea",
               "placeholder": "What is the name of your Team ?"
             },
             {
-              "fieldLabel": "Industry",
+              "fieldLabel": "The I.R. team works in the following sector :",
               "fieldType": "dropdown",
               "fieldOptions": {
                 "values": [
@@ -44,41 +45,111 @@
               "requiredField": true
             },
             {
-              "fieldLabel": "Team_size",
+              "fieldLabel": "The team has the following number of analysts",
               "fieldType": "number",
               "placeholder": "What's the size of your team ? 42"
             },
             {
-              "fieldLabel": "tag",
+              "fieldLabel": "The I.T. is handled",
               "fieldType": "dropdown",
               "fieldOptions": {
                 "values": [
                   {
-                    "option": "service_provider"
+                    "option": "In-House"
                   },
                   {
-                    "option": "software"
+                    "option": "By an MSSP"
                   },
                   {
-                    "option": "architecture"
-                  },
-                  {
-                    "option": "threat_intelligence"
-                  },
-                  {
-                    "option": "adversaries"
-                  },
-                  {
-                    "option": "thirdparty"
+                    "option": "in an hybrid-setup"
                   }
                 ]
               },
-              "multiselect": true
+              "requiredField": true
             },
             {
-              "fieldLabel": "fact",
-              "fieldType": "textarea",
-              "placeholder": "Name of the software...",
+              "fieldLabel": "What is the name of the I.T. Team",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "The company uses the following I.T. model :",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "The I.T. is fully hosted on a cloud provider"
+                  },
+                  {
+                    "option": "The I.T. is hybrid (some assets are in the cloud, others are on-prem)"
+                  },
+                  {
+                    "option": "The I.T. is fully hosted on premises."
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "There are the following technologies in the I.T. environment of the company",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Linux"
+                  },
+                  {
+                    "option": "Windows"
+                  },
+                  {
+                    "option": "Mac"
+                  },
+                  {
+                    "option": "GCP"
+                  },
+                  {
+                    "option": "Azure"
+                  },
+                  {
+                    "option": "AWS"
+                  },
+                  {
+                    "option": "Kubernetes"
+                  }
+                ]
+              },
+              "multiselect": true,
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "The EDR deployed in the company is ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "The security team has access to the SIEM named",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "The main adversary of the company are",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "State-sponsored groups. Also known as APT, those attackers are meticulous, determined with virtually unlimited resources, time and precise objectives."
+                  },
+                  {
+                    "option": "An hacktivist group. They use their offensive security skills in order to further their political agenda or to expose their ideology."
+                  },
+                  {
+                    "option": "Script kiddies, who main objective is pwning our site for bragging rights. They're careless in their approach and will try about anything (bruteforce, automated scanners and pwnkits) to manage to do any kind of damage and brag about it."
+                  },
+                  {
+                    "option": "Insiders. They're employees of my company who use their privileged access to cause nefarious falldown for our company. "
+                  },
+                  {
+                    "option": "Ransomware operators. They're looking for an entry to encrypt our systems and ask for a financial transaction to unlock our systems."
+                  }
+                ]
+              },
               "requiredField": true
             }
           ]
@@ -92,8 +163,8 @@
       "type": "n8n-nodes-base.formTrigger",
       "typeVersion": 2.1,
       "position": [
-        640,
-        320
+        420,
+        300
       ],
       "webhookId": "f9cc31d9-9328-40b1-a295-d244a043b13d"
     },
@@ -114,7 +185,7 @@
       "parameters": {
         "operation": "insert",
         "collection": "world_facts",
-        "fields": "=fact,tag, Team_name, Industry, Team_size",
+        "fields": "=fact,tags",
         "options": {
           "dateFields": ""
         }
@@ -124,7 +195,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        920,
+        1020,
         280
       ],
       "credentials": {
@@ -133,15 +204,27 @@
           "name": "MongoDB account"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nlet WorldFacts = new Array();\nlet s = \"\";\nfor (const item of $input.all()) {\n  for (let key in item.json){\n    //WorldFacts.push(s)\n    if (key == \"submittedAt\" || key ==\"formMode\"){}\n    else{\n      s = key + \" \" + item.json[key]\n      console.log(s)\n      WorldFacts.push({\n        \"fact\": s\n      })\n    }\n  }\n}\nWorldFacts[0].tags = [\"incident_response\"]\nWorldFacts[1].tags = [\"player_side\"]\nWorldFacts[2].tags = [\"player_side\"]\nWorldFacts[3].tags = [\"service_provider\"]\nWorldFacts[4].tags = [\"service_provider\"]\nWorldFacts[5].tags = [\"architecture\"]\nWorldFacts[6].tags = [\"architecture\"]\nWorldFacts[7].tags = [\"software\"]\nWorldFacts[8].tags = [\"software\"]\nWorldFacts[9].tags = [\"adversary\"]\n\nreturn WorldFacts;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        300
+      ],
+      "id": "18ddd2c4-0b8c-48fc-a40d-1e940060c426",
+      "name": "Code"
     }
   ],
-  "pinData": {},
   "connections": {
     "n8n Form Trigger": {
       "main": [
         [
           {
-            "node": "MongoDB",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -152,18 +235,30 @@
       "main": [
         []
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "202ae121-da96-44b4-b984-f738441ae4ad",
+  "staticData": null,
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "57b61a23b74deb976c4869a85636d25524c7b4ca826f71953fc5a32e0f0a81f2"
   },
-  "id": "RlQBk8rlcxkwJ08A",
+  "pinData": {},
+  "versionId": "2f644ed8-8453-4fe1-8e1c-134224fc00a4",
+  "triggerCount": 2,
   "tags": [
     {
       "createdAt": "2024-11-07T14:30:19.879Z",
