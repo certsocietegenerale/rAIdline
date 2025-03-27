@@ -21,7 +21,7 @@ Navigate to the `scripts` directory.
 Then ensure the install and check files are executable :
 
 ```
-chmod +x setup_raidline_response.sh
+chmod +x *_setup_raidline_response.sh
 
 chmod +x check_all_is_good.sh
 ```
@@ -34,10 +34,15 @@ And then perform controls and initial setup with check_all_is_good.sh script to 
 
 This will create a .env file with adhoc credentials.
 
-and finally execute the shell file in the same directory :
+and finally execute the shell file in the same directory, depending on you architecture :
 
 ```
-./setup_raidline_response.sh
+./linux_setup_raidline_response.sh
+```
+or
+
+```
+./mac_setup_raidline_response.sh
 ```
 
 ## Launch Raidline to validate install
