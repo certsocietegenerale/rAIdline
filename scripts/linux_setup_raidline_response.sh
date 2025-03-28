@@ -77,6 +77,10 @@ echo "Retrieved $MATTERMOST_PLAYBOOK_ID"
 
 find ../data-docs/workflows/ -type f -name "*json" -exec sed -i "s/MATTERMOST_PLAYBOOK_ID/$MATTERMOST_PLAYBOOK_ID/" {} \; 
   
+echo "[*] Setting up Slash Commands"
+docker exec -ti $MATTERMOST_CONTAINER_ID mmctl command create raidline --title Ask --description "Ask the Raidline GM" --trigger-word ask --url http://raidline_n8n:5678/webhook/9c2844d2-1664-43b5-bed5-5b95b953dad9 --creator raidline_gamemaster --response-username Raidline_gamemaster --autocomplete --post
+docker exec -ti $MATTERMOST_CONTAINER_ID mmctl command create raidline --title Hints --description "Get the outstanding questions" --trigger-word hints --url http://raidline_n8n:5678/webhook/7f63dfce-dc8b-4c4a-9268-8956f715bf6e --creator raidline_gamemaster --response-username Raidline_gamemaster --autocomplete
+
 ######################
 ### mongoDB SETUP  ###
 ######################
