@@ -76,10 +76,15 @@ export MATTERMOST_PLAYBOOK_ID=$(docker exec $MATTERMOST_CONTAINER_ID /bin/bash -
 echo "Retrieved $MATTERMOST_PLAYBOOK_ID"
 
 find ../data-docs/workflows/ -type f -name "*json" -exec sed -i "" -e "s/MATTERMOST_PLAYBOOK_ID/$MATTERMOST_PLAYBOOK_ID/" {} \; 
-  
+
+echo "[*] Setting up Slash Commands"
+docker exec -ti $MATTERMOST_CONTAINER_ID mmctl command create raidline --title Ask --description "Ask the Raidline GM" --trigger-word ask --url http://raidline_n8n:5678/webhook/9c2844d2-1664-43b5-bed5-5b95b953dad9 --creator raidline_gamemaster --response-username Raidline_gamemaster --autocomplete --post
+docker exec -ti $MATTERMOST_CONTAINER_ID mmctl command create raidline --title Hints --description "Get the outstanding questions" --trigger-word hints --url http://raidline_n8n:5678/webhook/7f63dfce-dc8b-4c4a-9268-8956f715bf6e --creator raidline_gamemaster --response-username Raidline_gamemaster --autocomplete
+
 ######################
 ### mongoDB SETUP  ###
 ######################
+echo "[*] Setting up MongoDB"
 export MONGODB_CONTAINER_ID=$(docker inspect --format='{{ .Id }}' $(docker ps -q -f name=raidline-raidline_mongodb-1))
 # Copying files to mongoDB container
 docker cp ./mongo $MONGODB_CONTAINER_ID:/tmp/mongo
@@ -94,25 +99,27 @@ docker exec $MONGODB_CONTAINER_ID bash -c '/tmp/mongo_setup.sh'
 ######################
 
 # Build the n8n Credentials file
-echo "Generating creds.json file..."
+echo "[*] Generating creds.json file..."
 
 cat creds_template.json|envsubst > ./temporary_raidline/creds.json
 
 # Import the file in n8n
-echo "Copying file to n8n..."
+echo "[*] Copying file to n8n..."
 export N8N_CONTAINER_ID=$(docker inspect --format='{{ .Id }}' $(docker ps -q -f name=raidline-raidline_n8n-1))
-echo "Importing workflows and credentials"
+echo "[*] Importing workflows and credentials"
 docker cp ./temporary_raidline/creds.json $N8N_CONTAINER_ID:/tmp/
 docker exec -it $N8N_CONTAINER_ID n8n import:workflow --separate --input=/home/node/data-docs/workflows
 docker exec -it $N8N_CONTAINER_ID n8n import:credentials --input=/tmp/creds.json
-echo "Activating workflows"
+echo "[*] Activating workflows"
 for wkflw_id in "${N8N_WKFLWS_ID[@]}"; do
     docker exec -it $N8N_CONTAINER_ID n8n update:workflow --id=$wkflw_id --active=true
 done
-echo "Restarting n8n..."
+echo "[*] Restarting n8n..."
 docker container restart $N8N_CONTAINER_ID
 echo "[*] Cleaning up. Deleting ./temporary_raidline"
 rm -rf ./temporary_raidline/
 echo "Done ! Don't forget to check that all credentials are correctly setup !"
-echo "Please visit http://localhost:5678/form/f9cc31d9-9328-40b1-a295-d244a043b13d to setup your environment !"
-echo "You can also create your account on http://localhost:8065/"
+echo "Please visit http://localhost:5678/form/f9cc31d9-9328-40b1-a295-d244a043b13d \
+to setup your environment !"
+echo "You can also create your Mattermost account on http://localhost:8065/ to play the game"
+echo "Admin Panel is accessible at : http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e"

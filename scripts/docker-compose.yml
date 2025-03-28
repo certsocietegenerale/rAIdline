@@ -24,7 +24,7 @@ services:
     env_file:
       - ".env"
   raidline_n8n:
-    image: n8nio/n8n:1.84.2
+    image: n8nio/n8n:1.84.3
     container_name: raidline-raidline_n8n-1
     restart: always
     environment:
@@ -75,6 +75,7 @@ services:
       MM_FEATUREFLAGS_AppsEnabled: "true"
       MM_FEATUREFLAGS_PluginApps: "1.1.0" # https://github.com/mattermost/mattermost-plugin-apps/releases
       MM_SERVICESETTINGS_ENABLELOCALMODE: "true"
+      MM_SERVICESETTINGS_ALLOWEDUNTRUSTEDINTERNALCONNECTIONS: "raidline_n8n"
   #    volumes:
   #      - "./mm-logs:/mattermost/logs:rw"
   raidline_mattermost_db:
