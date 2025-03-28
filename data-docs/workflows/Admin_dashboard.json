@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-11-07T13:31:43.825Z",
-  "updatedAt": "2024-11-12T12:27:16.463Z",
+  "updatedAt": "2025-03-28T09:29:09.448Z",
   "id": "tLVrZfdaHkqhbbwI",
   "name": "Admin dashboard",
   "active": true,
@@ -241,7 +241,9 @@
       "position": [
         400,
         460
-      ]
+      ],
+      "executeOnce": false,
+      "alwaysOutputData": false
     },
     {
       "parameters": {
@@ -255,7 +257,8 @@
       "position": [
         620,
         460
-      ]
+      ],
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -552,7 +555,7 @@
     "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
   },
   "pinData": {},
-  "versionId": "6ecbaa5a-52d9-43f7-9215-3f929ddb8618",
+  "versionId": "afbfd394-f715-4bb4-bcf7-4fc2301f5c9f",
   "triggerCount": 1,
   "tags": [
     {
@@ -560,6 +563,12 @@
       "updatedAt": "2024-11-07T14:30:19.879Z",
       "id": "KHPEAotJ2GfBZijJ",
       "name": "raidline"
+    },
+    {
+      "createdAt": "2024-11-07T14:35:34.363Z",
+      "updatedAt": "2024-11-07T14:35:34.363Z",
+      "id": "188hnexWkO1ALnRc",
+      "name": "access_data"
     },
     {
       "createdAt": "2024-11-07T14:25:37.556Z",
@@ -572,12 +581,6 @@
       "updatedAt": "2024-11-07T14:25:26.715Z",
       "id": "bEfk9NVaBJXMqlT1",
       "name": "admin_role"
-    },
-    {
-      "createdAt": "2024-11-07T14:35:34.363Z",
-      "updatedAt": "2024-11-07T14:35:34.363Z",
-      "id": "188hnexWkO1ALnRc",
-      "name": "access_data"
     }
   ]
 }

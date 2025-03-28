@@ -1,6 +1,6 @@
 {
   "createdAt": "2024-11-07T13:31:43.825Z",
-  "updatedAt": "2024-11-12T12:27:14.469Z",
+  "updatedAt": "2025-03-28T09:27:07.661Z",
   "id": "qJa6wHpmMEYmGzRp",
   "name": "Access questions",
   "active": true,
@@ -135,7 +135,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "{\n  \"text\": \"Sorry, there's doesn't seem to be any queries for now ! Ask your gamemaster to see if we can generate some queries to get you started :)\",\n  \"user\":\"@gamemaster\"\n}",
+        "responseBody": "{\n  \"response_type\":\"ephemeral\",\n  \"text\": \"Sorry, there's doesn't seem to be any queries for now ! Ask your gamemaster to see if we can generate some queries to get you started :)\",\n  \"user\":\"@gamemaster\"\n}",
         "options": {}
       },
       "id": "af1644c4-6d4a-47b5-865d-2b0d49fc31d2",
@@ -150,7 +150,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({\"text\": \"### Current questions ongoing for your incident\\n\\n\" + $json.msg }) }}",
+        "responseBody": "={{ JSON.stringify({\"response_type\":\"ephemeral\",\"text\": \"### Current questions ongoing for your incident\\n\\n\" + $json.msg }) }}",
         "options": {}
       },
       "id": "6346b363-05aa-4638-acad-e0b33c1726db",
@@ -271,9 +271,15 @@
     "instanceId": "70fb14d65d1efc3bf383b2aa106e6e224a0ebb0d7bbe904fb212db7a9b65bcf7"
   },
   "pinData": {},
-  "versionId": "819463ed-9137-40c1-b70c-c864e239829d",
+  "versionId": "5e0eaa31-6fb6-4d08-878c-540f2bf94bce",
   "triggerCount": 1,
   "tags": [
+    {
+      "createdAt": "2024-11-07T14:30:19.879Z",
+      "updatedAt": "2024-11-07T14:30:19.879Z",
+      "id": "KHPEAotJ2GfBZijJ",
+      "name": "raidline"
+    },
     {
       "createdAt": "2024-11-07T15:28:52.539Z",
       "updatedAt": "2024-11-07T15:28:52.539Z",
@@ -285,12 +291,6 @@
       "updatedAt": "2024-11-07T14:38:58.895Z",
       "id": "Ow3sh0ktkxlCmc3B",
       "name": "access_incident_queries"
-    },
-    {
-      "createdAt": "2024-11-07T14:30:19.879Z",
-      "updatedAt": "2024-11-07T14:30:19.879Z",
-      "id": "KHPEAotJ2GfBZijJ",
-      "name": "raidline"
     }
   ]
 }
