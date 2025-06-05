@@ -9,7 +9,7 @@ RAIdline is a gaming platform to practice your Incident Response skills, leverag
 You should make sure to have the following installed on your machine beforehand:
 * Docker (https://docs.docker.com/desktop/install/mac-install/ or https://docs.docker.com/desktop/install/linux/)
 * Ollama (https://ollama.com/)
-    * With Gemma2 (ollama run gemma2) and Llama3 (ollama run llama3) models running
+    * With Gemma2 (ollama run gemma2) and Llama3 (ollama run llama3) and mistral-nemo models running
 * jq (https://jqlang.github.io/jq/)
 
 ## Install Raidline from scratch
@@ -93,13 +93,14 @@ Ensure that the API key is created and then added to the related credential.
 
 ### Ollama
 
-To be able to run rAIdline, you should at least have 2 models installed via Ollama :
-* Gemma2
-* Llama3
- 
-or alternatively 
+To be able to run rAIdline, you should at least have 3 models installed via Ollama :
+* gemma2 (9b by default)
+* llama3.1 (8b by default)
+* mistral-nemo (12b by default)
 
-* Mistral
+or test alternatively :
+
+* mistral (7b)
 
 You should thus, depending on your install (dockerized or not), run the following commands :
 ```
@@ -113,17 +114,36 @@ Depending on your machine/architecture, you might upgrade your experience and be
 
 see Ollama documentation for more details.
 
+## Checkup Raidline first steps to be able to use it
+
+Once previous steps have been done, you can connect to the form workflow as instructed at the end of the installation script :
+
+http://localhost:5678/form/f9cc31d9-9328-40b1-a295-d244a043b13d
+
+And then go directly to the admin panel to start a new run :
+
+http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e 
+
+This should create a new playbook run in your mattermost environnement (reachable here: http://localhost:8065/)
 
 ## Uninstall / Reset your install of Raidline
 
-Ensure the proper file is executable :
+Sorry to see you go... But it surely is to start a new fresh instance of rAIdline !
+
+To delete current instance : 
+
+* Navigate to the `scripts` directory.
+
+* Ensure the proper file is executable :
 
 ```
 chmod +x destroy_raidline_response.sh
 ```
 
-and execute the shell file in the directory :
+* and execute the shell file in the same directory :
 
 ```
 ./destroy_raidline_response.sh
 ```
+
+This should stop and remove the related containers via a docker compose down and suppress the mongodb. If you have added any related volume, you can uncomment the 'docker volume prune' command in the script.
