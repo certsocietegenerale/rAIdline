@@ -7,7 +7,7 @@ if [ $(mongosh $CONNECTION_STRING --eval 'db.getMongo().getDBNames().indexOf("ga
     mongosh $CONNECTION_STRING --eval 'db.getMongo().getDB("game").createCollection("setup")'
 fi
 
-echo "[+] Importing colllections..."
+echo "[+] Importing collections..."
 # Loop through all JSON files in the current directory
 for file in ./mongo/*.json; do
   # Check if there are any JSON files present

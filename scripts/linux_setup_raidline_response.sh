@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # This function will retrieve files
 N8N_WKFLWS_ID=("qJa6wHpmMEYmGzRp" \
@@ -20,8 +19,9 @@ N8N_WKFLWS_ID=("qJa6wHpmMEYmGzRp" \
 )
 echo "Importing env"
 set -a && source .env && set +a
-# If n8n already there ? @ade
-env|grep "N8N"
+
+env|grep "MONGO"
+
 mkdir ./temporary_raidline
 # Start the docker-compose
 echo "Starting docker compose...."
@@ -84,12 +84,13 @@ docker exec -ti $MATTERMOST_CONTAINER_ID mmctl command create raidline --title H
 ######################
 ### mongoDB SETUP  ###
 ######################
+echo "[+] Starting to setup MongoDB"
 export MONGODB_CONTAINER_ID=$(docker inspect --format='{{ .Id }}' $(docker ps -q -f name=raidline-raidline_mongodb-1))
 # Copying files to mongoDB container
 docker cp ../mongo $MONGODB_CONTAINER_ID:/tmp/mongo
 chmod a+x ./mongo_setup.sh
 docker cp ./mongo_setup.sh $MONGODB_CONTAINER_ID:/tmp/
-docker exec $MONGODB_CONTAINER_ID bash -c 'chmod a+x /tmp/mongo_setup.sh'
+#docker exec $MONGODB_CONTAINER_ID bash -c 'chmod a+x /tmp/mongo_setup.sh'
 docker exec $MONGODB_CONTAINER_ID bash -c '/tmp/mongo_setup.sh'
 # Launching mongo script
 
