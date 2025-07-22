@@ -30,19 +30,18 @@ function remediate_inexistant_variable(){
 
   *)
     remediate_inexistant_user $1
-    # Do stuff
+    
     ;;
   esac
-
-
-
 }
+
 function commit_inexistant_variable()
 {
   export $1=$2
   echo "$1=$2"
   echo "$1=$2" >> "./.env"
 }
+
 function remediate_inexistant_user(){
   value=$(LC_ALL=C tr -dc 'a-z' </dev/urandom | head -c 10; echo)
   commit_inexistant_variable $1 $value
@@ -120,7 +119,7 @@ else
   fi
 fi
 
-: << 'COMMENT' 
+ 
 if test -f ../temporary_raidline/creds.json; then
   echo "File creds.json exists."
 else
@@ -138,9 +137,9 @@ else
     echo "User proceeded with auto-remediation"
   fi
 fi
-COMMENT
 
-to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGO_INITDB_ROOT_USERNAME" "MONGO_INITDB_ROOT_PASSWORD")
+
+to_check=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "POSTGRES_NON_ROOT_USER" "POSTGRES_NON_ROOT_PASSWORD" "MM_POSTGRES_USER" "MM_POSTGRES_PASSWORD" "MM_POSTGRES_DB" "MM_USER_EMAIL" "MM_USER_PASSWORD" "MONGODB_INITDB_ROOT_USERNAME" "MONGODB_INITDB_ROOT_PASSWORD")
 echo "Starting variable checks..."
 for VAR in "${to_check[@]}"; do
   echo "[*] Checking $VAR...."
