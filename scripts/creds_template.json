@@ -40,7 +40,7 @@
         "id": "smC31ckuTiI67jHH",
         "name": "Ollama account",
         "data": {
-            "baseUrl": "http://host.docker.internal:11434"
+            "baseUrl": "http://172.17.0.1:11434"
         },
         "type": "ollamaApi"
     }
