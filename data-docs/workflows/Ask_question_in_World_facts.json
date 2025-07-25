@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "model": "llama3-chatqa:8b",
+        "model": "gemma2:latest",
         "options": {}
       },
       "id": "66a77a2f-5e45-433f-a300-49196264a407",

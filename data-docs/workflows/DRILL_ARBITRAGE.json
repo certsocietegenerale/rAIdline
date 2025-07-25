@@ -18,7 +18,7 @@
     },
     {
       "parameters": {
-        "model": "llama3:latest",
+        "model": "llama3.2:latest",
         "options": {}
       },
       "id": "abbbd21b-b671-48f3-9e15-7efdc1411a97",

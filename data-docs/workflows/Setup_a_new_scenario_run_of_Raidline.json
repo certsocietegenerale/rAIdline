@@ -595,7 +595,7 @@
     },
     {
       "parameters": {
-        "model": "llama3:latest",
+        "model": "llama3.2:latest",
         "options": {}
       },
       "id": "d5edaecf-1fb4-4687-b3cd-84bfcc18a625",
