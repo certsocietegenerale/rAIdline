@@ -127,6 +127,11 @@ http://localhost:5678/webhook/dba9d340-6994-417b-8cff-7c7abae42a5e
 
 This should create a new playbook run in your mattermost environnement (reachable here: http://localhost:8065/)
 
+
+If you experience some issue with slash commands, try and check this settings: 
+
+![CORS](./img/CORS.png)
+
 ## Uninstall / Reset your install of Raidline
 
 Sorry to see you go... But it surely is to start a new fresh instance of rAIdline !
@@ -148,3 +153,4 @@ chmod +x destroy_raidline_response.sh
 ```
 
 This should stop and remove the related containers via a docker compose down and suppress the mongodb. If you have added any related volume, you can uncomment the 'docker volume prune' command in the script.
+
