@@ -95,12 +95,13 @@ Ensure that the API key is created and then added to the related credential.
 
 To be able to run rAIdline, you should at least have 3 models installed via Ollama :
 * gemma2 (9b by default)
-* llama3.1 (8b by default)
+* llama3.2 (8b by default)
 * mistral-nemo (12b by default)
 
-or test alternatively :
+or test alternatively if this is too slow:
 
 * mistral (7b)
+* gemma2 (2B)
 
 You should thus, depending on your install (dockerized or not), run the following commands :
 ```
